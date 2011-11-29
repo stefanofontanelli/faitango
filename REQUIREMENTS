@@ -1,0 +1,18 @@
+Tango-app REQUIREMENTS
+**********************
+
+- a user should be able to access the whole database
+  entries
+- a user should be able to query the database to find
+  events of interest
+- a user should be able to login to post events
+- a user should be able to access the database even with
+  no internet connection (if some data were cached before)
+- a user should be able to specify if the update service
+  must be started at boot time or only when the application
+  is first opened
+
+Fancy features
+**************
+
+- new events widget on the home screen
