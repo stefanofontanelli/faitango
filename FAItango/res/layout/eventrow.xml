@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content" android:orientation="vertical"
+  android:layout_width="fill_parent">
+  
+  <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:stretchColumns="1">
+	<TableRow>
+    	<TextView
+    	    android:layout_height="wrap_content"
+      		android:layout_width="fill_parent"
+      		android:layout_weight="1"
+      		android:id="@+id/textCity"
+      		android:text="City"
+      		android:textStyle="bold" />
+		<TextView
+		    android:id="@+id/textDate"
+		    android:padding="3dp"
+		    android:layout_height="wrap_content"
+		    android:gravity="right"
+		    android:text="date" />
+	</TableRow>
+	<TableRow >
+	    <TextView
+		    android:id="@+id/textEventType"
+		    android:padding="3dp"
+		    android:gravity="center"
+		    android:text="Event type" />
+	    <TextView
+		      android:id="@+id/textTime"
+		      android:padding="3dp"
+		      android:layout_height="wrap_content"
+		      android:gravity="right"
+		      android:text="from what time to what time" />
+	</TableRow>
+  </TableLayout>
+
+    <TextView
+        android:id="@+id/textEventName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="event name..."/>
+    
+</LinearLayout>
