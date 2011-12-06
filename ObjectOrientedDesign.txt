@@ -1,0 +1,6 @@
+DataEventParser [social event fields: ..., getter methods, abstract parse() ]
+    ^
+    |-- DataEventParserJSON [implements parse()]
+    |-- ...
+
+

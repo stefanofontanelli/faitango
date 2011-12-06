@@ -3,6 +3,7 @@ package com.retis.faitango;
 import com.retis.faitango.DbHelper;
 import com.retis.faitango.EventsAdapter;
 import com.retis.faitango.EventsListener;
+import com.retis.faitango.DataEventParserJSON; // chris TODO: move to another class (Service?) 
 import com.retis.faitango.R;
 
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.Toast; // chris TODO: using just for debugging PRINTs
 
 public class EventsList extends Activity {
 	ListView listEvents;
@@ -64,6 +66,16 @@ public class EventsList extends Activity {
         dbHelper = new DbHelper(this);
         dbFill(dbHelper.getWritableDatabase());
         db = dbHelper.getReadableDatabase();
+        
+        String jsonTest = "[{\"id\":89174,\"tx\":\"Milonga Linda Sp\u00E9cial Anniversaire\",\"dt\":" +
+                            "mar 06\\/12\\/2011\",\"citta\":\"Francia - Cagnes sur Mer\",\"type\"" + 
+        		            ":\"Milonga\",\"af\":null}]";
+        DataEventParserJSON PLUTO = new DataEventParserJSON(jsonTest);
+        Toast.makeText(this, PLUTO.PIPPO, Toast.LENGTH_LONG).show();
+        
+        DataEventParser MINNI = PLUTO;
+        MINNI.parse();
+        Toast.makeText(this, PLUTO.PIPPO, Toast.LENGTH_LONG).show();
     }
     
 	@Override
