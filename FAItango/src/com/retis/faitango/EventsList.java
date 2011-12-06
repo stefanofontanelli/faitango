@@ -68,8 +68,9 @@ public class EventsList extends Activity {
         db = dbHelper.getReadableDatabase();
         
         String jsonTest = "[{\"id\":89174,\"tx\":\"Milonga Linda Sp\u00E9cial Anniversaire\",\"dt\":" +
-                            "mar 06\\/12\\/2011\",\"citta\":\"Francia - Cagnes sur Mer\",\"type\"" + 
+                            "\"mar 06\\/12\\/2011\",\"citta\":\"Francia - Cagnes sur Mer\",\"type\"" + 
         		            ":\"Milonga\",\"af\":null}]";
+        
         DataEventParserJSON PLUTO = new DataEventParserJSON(jsonTest);
         Toast.makeText(this, PLUTO.PIPPO, Toast.LENGTH_LONG).show();
         
