@@ -41,7 +41,9 @@ public class StartupService extends Service {
         
         // Schedule the alarm
         AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, period, alarmSender);
+        //am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, period, alarmSender);
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, 0, alarmSender);
+        //am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, alarmSender);
         
         // chris TODO: how do we stop this periodic timer? There should be an activity that
         //             kills any access to internet!

@@ -3,5 +3,13 @@
 
     <string name="eventsTitle">Lista Eventi</string>
     <string name="app_name">FAItango</string>
+    <string name="bgUpdater">Background Updater</string>
+    <string-array name="bgUpdaterPeriods">
+        <item>1</item>
+        <item>5</item>
+        <item>15</item>
+        <item>30</item>
+    </string-array>
+        
 
 </resources>
