@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bgUpdater"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ToggleButton
+                android:id="@+id/togglePeriodicEventReader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PeriodicEventReader" />
+
+            <Spinner
+                android:id="@+id/spinnerPeriodicEventReader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/bgUpdaterPeriods" />
+
+        </TableRow>
+
+    </TableLayout>
