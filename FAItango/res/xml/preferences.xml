@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This is a primitive example showing the different types of preferences available. -->
+
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/bgUpdater">
+            
+        <CheckBoxPreference
+                android:key="checkboxBgUpdater"
+                android:title="@string/prefTitleBgUpdater"
+                android:summary="@string/prefSummaryBgUpdater" />
+        <ListPreference
+                android:key="listBgUpdaterPeriods"
+                android:title="@string/prefTitleBgUpdaterPeriods"
+                android:summary="@string/prefSummaryBgUpdaterPeriods"
+                android:entries="@array/bgUpdaterPeriods"
+                android:entryValues="@array/bgUpdaterPeriods"
+                android:dialogTitle="@string/prefTitleBgUpdaterPeriods" />
+                
+    </PreferenceCategory>
+    
+</PreferenceScreen>

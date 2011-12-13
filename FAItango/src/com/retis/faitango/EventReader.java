@@ -38,7 +38,7 @@ public class EventReader extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Called by the StartCommand mechanism
 		Log.d("chris", "onStartCommand() on EventReader");
-		// chris NOTE: this is called periodically due to the timer set in 
+		// chris NOTE: this is periodically called due to the timer set in 
 		//             the StartupService (using AlarmManager)
 		
 		// chris NOTE: perform operations in a thread
@@ -61,13 +61,16 @@ public class EventReader extends Service {
 	
 	private Runnable readingTask = new Runnable() {
         public void run() {
-        	
-        	// chris TODO: Add thread body!
-        	//             ....
-    		
     		// chris TODO: - Access the network (retrieve the event data from web)
     		//             - Parse the event data (JSON supported)
     		//             - Add parsed data in the DB
+        	
+        	// chris FIXME: Policies and Checks need to be implemented:
+        	//              - Do I fetch all event data every time?
+        	//              - Shall I check if the entry is already in the DB?
+       		//              - Shall I remove entries from the DB?
+        	
+        	// chris FIXME: As for now I insert any time this Service is called! 
         	String data = evFetcher.fetch();
         	evParser.parse(data);
         	dbFill(dbHelper.getWritableDatabase(), evParser.getEvents());
@@ -97,5 +100,6 @@ public class EventReader extends Service {
 			else
 				Log.d("chris", "Inserting Row " + i);
 		}
+		db.close();
 	}
 }

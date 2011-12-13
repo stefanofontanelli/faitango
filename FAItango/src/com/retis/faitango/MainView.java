@@ -1,6 +1,6 @@
 package com.retis.faitango;
 
-import com.retis.faitango.ConfigurationView.SpinnerPeriodicEventReaderListener;
+//import com.retis.faitango.ConfigurationView.SpinnerPeriodicEventReaderListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -37,7 +37,7 @@ public class MainView extends Activity {
     }
     
     private void createTemporaryLayout() {
-        // List button configuration
+ 
         Button buttonList = (Button) findViewById(R.id.buttonOpenList);
         buttonList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

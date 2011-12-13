@@ -4,6 +4,24 @@
     <string name="eventsTitle">Lista Eventi</string>
     <string name="app_name">FAItango</string>
     <string name="bgUpdater">Background Updater</string>
+    
+    <string name="prefTitleBgUpdater">Periodic Updates</string>
+    <string name="prefSummaryBgUpdater">Enable/Disable periodic updates</string>
+    
+	<string name="prefTitleBgUpdaterPeriods">Update Period</string>
+	<string name="prefSummaryBgUpdaterPeriods">Select update period</string>
+	<!-- 
+	<string name="prefDialogTitleBgUpdaterPeriods">Enable/Disable periodic updates</string>
+	 -->
+    
+    <!--
+    <string-array name="prefEntriesBgUpdaterPeriods">
+        <item>1 min</item>
+        <item>5 min</item>
+        <item>15 min</item>
+        <item>30 min</item>
+    </string-array>
+    -->
     <string-array name="bgUpdaterPeriods">
         <item>1</item>
         <item>5</item>
