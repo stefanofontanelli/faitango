@@ -6,7 +6,11 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/bgUpdater">
-            
+    	<EditTextPreference
+                android:key="remoteHTTPServer" 
+                android:title="@string/prefTitleRemoteServer"
+                android:summary="@string/prefSummaryRemoteServer"
+                android:dialogTitle="@string/prefDialogTitleRemoteServer"/>
         <CheckBoxPreference
                 android:key="checkboxBgUpdater"
                 android:title="@string/prefTitleBgUpdater"
@@ -17,8 +21,7 @@
                 android:summary="@string/prefSummaryBgUpdaterPeriods"
                 android:entries="@array/bgUpdaterPeriods"
                 android:entryValues="@array/bgUpdaterPeriods"
-                android:dialogTitle="@string/prefTitleBgUpdaterPeriods" />
-                
+                android:dialogTitle="@string/prefTitleBgUpdaterPeriods" />    
     </PreferenceCategory>
-    
+                
 </PreferenceScreen>

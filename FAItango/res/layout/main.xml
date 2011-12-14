@@ -28,6 +28,18 @@
                 android:layout_height="wrap_content"
                 android:text="Configuration" />
 
+            <Button
+                android:id="@+id/buttonSynchronize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sync" />
+
+            <Button
+                android:id="@+id/buttonCleanDB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CleanDB" />
+
         </TableRow>
 
     </TableLayout>

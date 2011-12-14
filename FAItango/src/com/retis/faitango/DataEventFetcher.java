@@ -3,6 +3,9 @@ package com.retis.faitango;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
+import android.content.Context;
+import android.util.Log;
+
 public abstract class DataEventFetcher {
 
 	/* Factory (inner) class to create DataEventFetcher objects
@@ -24,11 +27,9 @@ public abstract class DataEventFetcher {
 			if (registry.containsKey(id)) 
 				return;//chris TODO: generate error: exception? return boolean?
 			try {
-				registry.put(id, fetcher.getConstructor());
-			} catch (Exception e) {}
-			/* 
-			 * chris TODO: handle specific exceptions?
-			 *
+				registry.put(id, fetcher.getConstructor(Context.class));
+			//} catch (Exception e) {}
+			///*chris TODO: handle specific exceptions?
 			} catch (SecurityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -36,18 +37,20 @@ public abstract class DataEventFetcher {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			*/
+			//*/
 		}
 		
 		/* Factory creator methods: access the registry and uses the proper
 		 * registered constructor. */
-		static public DataEventFetcher create(String id) {
+		static public DataEventFetcher create(String id, Context context) {
 			if (!registry.containsKey(id)) 
 				return null;//chris TODO: generate error: exception? return boolean?
 			DataEventFetcher fetcher = null;
 			try {
-				fetcher = registry.get(id).newInstance();
+				fetcher = registry.get(id).newInstance(context);
 			} catch (Exception e) {
+				Log.e("chris", "CREATING FETCHER: ");
+				e.printStackTrace();
 				return null;
 			}
 			/* 
@@ -85,5 +88,5 @@ public abstract class DataEventFetcher {
 		}
 	}
 	
-	abstract public String fetch();
+	abstract public String fetch(EventFilter filter);
 }

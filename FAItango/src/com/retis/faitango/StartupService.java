@@ -23,6 +23,9 @@ public class StartupService extends Service {
 		// chris FIXME: REMOVE THIS CODE WHEN TEST IS DONE!
 		this.deleteDatabase(DbHelper.DB_NAME);
 		
+		// chris TODO: when we install the application for the first time, 
+		//             all preferences should be set to a default value!
+		
 		// chris TODO: put in here all the code to be executed at startup (BOOT)
 		//             - Read configuration files?
 		//             - Plan actions to be done?

@@ -1,6 +1,7 @@
 package com.retis.faitango;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Service;
 import android.content.ContentValues;
@@ -14,12 +15,13 @@ public class EventReader extends Service {
 	private DataEventFetcher evFetcher;
 	private DataEventParser evParser;
 	private DbHelper dbHelper;
+	private boolean properlyCreated;
 	
 	@Override
 	public void onCreate() {
-		// TODO: Called when creating the Service
+		properlyCreated = false;
 		Log.d("chris", "onCreate() on EventReader");
-		evFetcher = DataEventFetcher.Factory.create("http");
+		evFetcher = DataEventFetcher.Factory.create("http", this);
 		if (evFetcher == null) {
 			Log.e("chris", "Error while creating DataEventFetcher");
 			return;
@@ -30,8 +32,9 @@ public class EventReader extends Service {
 			Log.e("chris", "Error while creating DataEventParser");
 			return;
 		}
-		
+
 		dbHelper = new DbHelper(this);
+		properlyCreated = true;
 	}
 	
 	@Override 
@@ -40,6 +43,12 @@ public class EventReader extends Service {
 		Log.d("chris", "onStartCommand() on EventReader");
 		// chris NOTE: this is periodically called due to the timer set in 
 		//             the StartupService (using AlarmManager)
+		
+		// chris FIXME: change this stupid work-around
+		if (!properlyCreated) {
+			stopSelf();
+			return START_STICKY;
+		}
 		
 		// chris NOTE: perform operations in a thread
 		
@@ -71,7 +80,21 @@ public class EventReader extends Service {
        		//              - Shall I remove entries from the DB?
         	
         	// chris FIXME: As for now I insert any time this Service is called! 
-        	String data = evFetcher.fetch();
+        	EventFilter filter = new EventFilter();
+        	filter.types.add(DataEvent.Types.MILONGA);
+        	filter.types.add(DataEvent.Types.SHOW);
+        	filter.dateFrom = new Date(2011, 12, 14);
+        	filter.dateTo = new Date(2011, 12, 20);
+        	filter.country = "Italia";
+        	filter.region = "Toscana";
+        	//String data = evFetcher.fetch(null);
+        	String data = evFetcher.fetch(filter);
+        	if (data == null) {
+                Log.d("chris", "DataEventFetcher has failed.");
+        		// Done with our work...  stop the service!
+                EventReader.this.stopSelf(); // chris TODO: do we need this?
+                return;
+        	}
         	evParser.parse(data);
         	dbFill(dbHelper.getWritableDatabase(), evParser.getEvents());
         	
@@ -83,22 +106,22 @@ public class EventReader extends Service {
 	
 	private void dbFill(SQLiteDatabase db, ArrayList<DataEvent> events) {
 		ContentValues values = new ContentValues();
-		long i = 0;
 		for (DataEvent ev : events) {
 			values.clear();
-			values.put(DbHelper.C_ID, i);
+			values.put(DbHelper.C_ID, ev.id);
 			values.put(DbHelper.C_CITY, ev.city);
 			values.put(DbHelper.C_DATE, ev.date);
 			values.put(DbHelper.C_TIME, ev.date);
 			values.put(DbHelper.C_TYPE, ev.type);
 			values.put(DbHelper.C_NAME, ev.text);
-			i++;
 			long r;
-			r =db.insertWithOnConflict(DbHelper.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+			// chris TODO: after discussing with Stefano it's likely that the conflict resolution
+			//             mechanism to be used could simply be CONFLICT_REPLACE, to force update!
+			r = db.insertWithOnConflict(DbHelper.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 			if (r < 0)
-				Log.w("chris", "Error while inserting row " + i);
+				Log.w("chris", "Error while inserting row ");
 			else
-				Log.d("chris", "Inserting Row " + i);
+				Log.d("chris", "Inserting Row " + r);
 		}
 		db.close();
 	}

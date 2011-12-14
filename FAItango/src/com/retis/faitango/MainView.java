@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainView extends Activity {
 	
@@ -54,6 +55,26 @@ public class MainView extends Activity {
             	Context c = v.getContext();
             	Intent intent = new Intent(c, com.retis.faitango.ConfigurationView.class);
             	c.startActivity(intent);
+            }
+        });
+        
+        Button buttonSync = (Button) findViewById(R.id.buttonSynchronize);
+        buttonSync.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d("chris", "Synchronized CLICKED!");
+            	Context c = v.getContext();
+            	Intent intent = new Intent(c, com.retis.faitango.EventReader.class);
+            	c.startService(intent);
+            }
+        });
+        
+        Button buttonCleanDB = (Button) findViewById(R.id.buttonCleanDB);
+        buttonCleanDB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d("chris", "CleanDB CLICKED!");
+            	Context c = v.getContext();
+            	c.deleteDatabase(DbHelper.DB_NAME);
+            	Toast.makeText(c, "Internal DB just Cleaned", Toast.LENGTH_LONG).show();
             }
         });
     }

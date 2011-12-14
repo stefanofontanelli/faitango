@@ -1,0 +1,14 @@
+TO GET FILTERED EVENTS:
+- EventType = Milonga + Spettacolo
+- DateFrom = 14/12/2011
+- DateTo = 20/12/2011
+- Country = Italy
+- Region = Toscana
+
+http://newagenda.faitango.it/eventi/eventilistaJSON.asp?cat_evento_4=1&cat_evento_5=1&dt_dal=14%2F12%2F2011&dt_al=20%2F12%2F2011&id_stati=118&regione=Toscana&provincia=&titolo=
+
+
+
+TO GET ALL EVENTS
+
+http://newagenda.faitango.it/eventi/eventilistaJSON.asp?

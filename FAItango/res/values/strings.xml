@@ -10,6 +10,8 @@
     
 	<string name="prefTitleBgUpdaterPeriods">Update Period</string>
 	<string name="prefSummaryBgUpdaterPeriods">Select update period</string>
+	
+	
 	<!-- 
 	<string name="prefDialogTitleBgUpdaterPeriods">Enable/Disable periodic updates</string>
 	 -->
@@ -28,6 +30,20 @@
         <item>15</item>
         <item>30</item>
     </string-array>
+    
+    <string name="prefTitleRemoteServer">Server</string>
+    <string name="prefSummaryRemoteServer">Set remote event server</string>
+    <string name="prefDialogTitleRemoteServer">Set remote server</string>
+    
+    <string name="eventTypeCONCERT">Concerto</string>
+    <string name="eventTypePARTY">Festa</string>
+    <string name="eventTypeFESTIVAL">Festival</string>
+    <string name="eventTypeMARATHON">Maratona</string>
+    <string name="eventTypeMILONGA">Milonga</string>
+    <string name="eventTypeSHOW">Spettacolo</string>
+    <string name="eventTypeSTAGE">Stage</string>
+    <string name="eventTypeVACATION">Vacanza/Viaggio</string>
+    
         
 
 </resources>
