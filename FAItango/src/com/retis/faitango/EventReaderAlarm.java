@@ -5,7 +5,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 
 /* This class is responsible to set and clear the alarm 
@@ -51,8 +52,9 @@ public class EventReaderAlarm  {
 	}
 	
 	private void readConfiguration() {
-		// chris TODO: should access a preference file to get offset and period!
-		 alarmOffset = SystemClock.elapsedRealtime(); // chris TODO: understand this!
-	     alarmPeriod = 5 * 1000; 
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    	long period =  Long.decode(prefs.getString("listBgUpdaterPeriods", "10"));
+    	alarmPeriod = period * 1000; // In milliseconds
+    	alarmOffset = alarmPeriod;
 	}
 }

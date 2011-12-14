@@ -1,7 +1,5 @@
 package com.retis.faitango;
 
-import com.retis.faitango.*;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.widget.SimpleCursorAdapter;

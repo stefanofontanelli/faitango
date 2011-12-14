@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.Toast; // chris TODO: using just for debugging PRINTs
 
 public class EventsList extends Activity {
 	ListView listEvents;
