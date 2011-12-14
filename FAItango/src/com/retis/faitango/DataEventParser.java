@@ -95,6 +95,4 @@ public abstract class DataEventParser {
 
 	// Abstract method to be implemented in by concrete parsers
 	abstract public void parse(String input);
-
-	abstract String getTestString();
 }
