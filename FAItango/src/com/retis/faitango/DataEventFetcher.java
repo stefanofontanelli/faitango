@@ -88,5 +88,13 @@ public abstract class DataEventFetcher {
 		}
 	}
 	
-	abstract public String fetch(EventFilter filter);
+	
+	protected Context appContext;
+	
+	protected DataEventFetcher(Context context) {
+		appContext = context;
+	}
+	
+	abstract public String fetchEventList(EventFilter filter);
+	abstract public String fetchEventDetail(long id);
 }

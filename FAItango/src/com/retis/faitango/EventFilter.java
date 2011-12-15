@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class EventFilter {
 
-	public Set<DataEvent.Types> types;
+	public Set<EventType> types;
 	public Date dateFrom;
 	public Date dateTo;
 	public String country;
@@ -15,7 +15,7 @@ public class EventFilter {
 	public String title; 
 	
 	public EventFilter() {
-		types = new HashSet<DataEvent.Types>();
+		types = new HashSet<EventType>();
 		dateFrom = null;
 		dateTo = null;
 		country = null;

@@ -10,11 +10,7 @@
     
 	<string name="prefTitleBgUpdaterPeriods">Update Period</string>
 	<string name="prefSummaryBgUpdaterPeriods">Select update period</string>
-	
-	
-	<!-- 
-	<string name="prefDialogTitleBgUpdaterPeriods">Enable/Disable periodic updates</string>
-	 -->
+	<!-- <string name="prefDialogTitleBgUpdaterPeriods">Update periods</string> -->
     
     <!--
     <string-array name="prefEntriesBgUpdaterPeriods">
@@ -35,6 +31,7 @@
     <string name="prefSummaryRemoteServer">Set remote event server</string>
     <string name="prefDialogTitleRemoteServer">Set remote server</string>
     
+    <!-- Event Type Strings -->
     <string name="eventTypeCONCERT">Concerto</string>
     <string name="eventTypePARTY">Festa</string>
     <string name="eventTypeFESTIVAL">Festival</string>
@@ -44,6 +41,8 @@
     <string name="eventTypeSTAGE">Stage</string>
     <string name="eventTypeVACATION">Vacanza/Viaggio</string>
     
-        
+    <!-- Event Type Strings -->
+    <string name="httpUriPathEventList">/eventi/eventilistaJSON.asp</string>
+    <string name="httpUriPathEventDetail">/unknown/path/for/eventDetail.asp</string>
 
 </resources>

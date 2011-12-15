@@ -27,7 +27,7 @@ public class EventReader extends Service {
 			return;
 		}
 		
-		evParser = DataEventParser.Factory.create("json");
+		evParser = DataEventParser.Factory.create("json", this);
 		if (evParser == null) {
 			Log.e("chris", "Error while creating DataEventParser");
 			return;
@@ -52,10 +52,14 @@ public class EventReader extends Service {
 		
 		// chris NOTE: perform operations in a thread
 		
+		// chris TODO: there should be a parameter passed from the Intent to 
+		//             tell if we have to perform either event list 
+		//             or event detail fetching.	
+		
 		// Start up the thread running the service.  Note that we create a
         // separate thread because the service normally runs in the process's
         // main thread, which we don't want to block.
-        Thread thr = new Thread(null, readingTask, "EventReader");
+        Thread thr = new Thread(null, eventListReadingTask, "EventReader");
         thr.start();
 		
 		return START_STICKY;
@@ -68,51 +72,64 @@ public class EventReader extends Service {
 		return null;
 	}
 	
-	private Runnable readingTask = new Runnable() {
+	private Runnable eventListReadingTask = new Runnable() {
         public void run() {
-    		// chris TODO: - Access the network (retrieve the event data from web)
-    		//             - Parse the event data (JSON supported)
-    		//             - Add parsed data in the DB
-        	
-        	// chris FIXME: Policies and Checks need to be implemented:
-        	//              - Do I fetch all event data every time?
-        	//              - Shall I check if the entry is already in the DB?
-       		//              - Shall I remove entries from the DB?
-        	
         	// chris FIXME: As for now I insert any time this Service is called! 
         	EventFilter filter = new EventFilter();
-        	filter.types.add(DataEvent.Types.MILONGA);
-        	filter.types.add(DataEvent.Types.SHOW);
+        	filter.types.add(EventType.MILONGA);
+        	filter.types.add(EventType.SHOW);
         	filter.dateFrom = new Date(2011, 12, 14);
         	filter.dateTo = new Date(2011, 12, 20);
         	filter.country = "Italia";
         	filter.region = "Toscana";
         	//String data = evFetcher.fetch(null);
-        	String data = evFetcher.fetch(filter);
+        	String data = evFetcher.fetchEventList(filter);
         	if (data == null) {
-                Log.d("chris", "DataEventFetcher has failed.");
-        		// Done with our work...  stop the service!
-                EventReader.this.stopSelf(); // chris TODO: do we need this?
+                Log.d("chris", "EventList Fetcher has failed.");
+                EventReader.this.stopSelf();
                 return;
         	}
-        	evParser.parse(data);
-        	dbFill(dbHelper.getWritableDatabase(), evParser.getEvents());
+        	evParser.parseEventList(data);
+        	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
         	
-        	Log.d("chris", "READING TASK DONE!");
+        	Log.d("chris", "READING EVENT LIST TASK DONE!");
             // Done with our work...  stop the service!
-            EventReader.this.stopSelf(); // chris TODO: do we need this?
+            EventReader.this.stopSelf(); 
         }
 	};
 	
-	private void dbFill(SQLiteDatabase db, ArrayList<DataEvent> events) {
+	
+	private Runnable eventDetailReadingTask = new Runnable() {
+        public void run() { 
+        	// chris TODO: this tack should get the detail of the single event.
+        	//             Arguments (event id) might be passed throught the activation intent
+        	//String data = evFetcher.fetch(null);
+        	long eventId = 0; // chris FIXME: this should be passed from the intent
+        	String data = evFetcher.fetchEventDetail(eventId);
+        	if (data == null) {
+                Log.d("chris", "Fetching event details Failure");
+                EventReader.this.stopSelf();
+                return;
+        	}
+        	evParser.parseEventDetail(data);
+        	// chris TODO: insert in the DB (another table?) the event detail
+        	//dbFillEventDetail(dbHelper.getWritableDatabase(), evParser.getEvents());
+        	
+        	Log.d("chris", "READING DETAIL TASK DONE!");
+            // Done with our work...  stop the service!
+            EventReader.this.stopSelf(); 
+        }
+	};
+	
+	private void dbFillEventList(SQLiteDatabase db, ArrayList<DataEvent> events) {
 		ContentValues values = new ContentValues();
 		for (DataEvent ev : events) {
 			values.clear();
 			values.put(DbHelper.C_ID, ev.id);
 			values.put(DbHelper.C_CITY, ev.city);
 			values.put(DbHelper.C_DATE, ev.date);
-			values.put(DbHelper.C_TIME, ev.date);
-			values.put(DbHelper.C_TYPE, ev.type);
+			values.put(DbHelper.C_TIME, "There's no time in JSON");
+			values.put(DbHelper.C_TYPE, this.getResources().getString(ev.type.resId));
 			values.put(DbHelper.C_NAME, ev.text);
 			long r;
 			// chris TODO: after discussing with Stefano it's likely that the conflict resolution

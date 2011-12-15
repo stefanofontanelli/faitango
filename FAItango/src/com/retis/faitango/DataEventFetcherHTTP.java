@@ -24,22 +24,22 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 
 	/* Register the concrete Product's constructor to the Factory */
 	static { DataEventFetcher.Factory.register("http", DataEventFetcherHTTP.class); }
-	
-	private Context appContext;
-	private String uriScheme;
+
+	private final String uriScheme;
 	private String uriHost;
-	private String uriPath;
-	private String uriQuery;
+	private final String uriPathEventList;
+	private final String uriPathEventDetail;
+	private String uriQueryEventList;
+	private String uriQueryEventDetail;
 	private HttpClient httpClient;
 	
 	public DataEventFetcherHTTP(Context context) throws DataEventFetcherException {
-		// chris TODO: do some initialization? read some configuration?
-		appContext = context;
+		super(context);
 		
 		uriScheme = "http";
-		//chris FIXME: value HARDCODED, we have to read this from somewhere!
-		uriPath = "/eventi/eventilistaJSON.asp"; 
-		loadUriHost();
+		uriPathEventList = appContext.getResources().getString(R.string.httpUriPathEventList); 
+		uriPathEventDetail = appContext.getResources().getString(R.string.httpUriPathEventDetail);
+		loadUriHost(); // read host from Preferences (through context)
 		
     	Log.d("chris", "Reading servename: '" + uriHost + "' len=" + uriHost.length() 
     			+ " context=" + appContext.toString());
@@ -48,18 +48,25 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 	}
 	
 	@Override
-	public String fetch(EventFilter filter) {
-		// chris NOTE: we might implement the null policy (no filter)!
-		
+	public String fetchEventList(EventFilter filter) {
 		createHttpClient();
-		createQuery(filter);
-		String response = performHttpGet();
+		createQueryEventList(filter);
+		String response = performHttpGet(uriPathEventList, uriQueryEventList);
 		// chris TODO: do some check on this response?
 		
 		return response;
 	}
+
+	@Override
+	public String fetchEventDetail(long eventId) {
+		createHttpClient();
+		createQueryEventDetail(eventId);
+		String response = performHttpGet(uriPathEventDetail, uriQueryEventDetail);
+		// chris TODO: do some check on this response?
+		return response;
+	}
 	
-	private String performHttpGet() {
+	private String performHttpGet(String uriPath, String uriQuery) {
 		
 		String responseMessage = null;
 		BufferedReader in = null;
@@ -110,38 +117,42 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
     	uriHost =  prefs.getString("remoteHTTPServer", "");
 	}
 	
-	private void createQuery(EventFilter f) {
-		uriQuery  = "";
+	private void createQueryEventList(EventFilter f) {
+		uriQueryEventList  = "";
 		if (f == null)			
 			return;
 		try {
 		
-		for (DataEvent.Types t : f.types)
-			uriQuery += "cat_evento_" + t.enumId + "=1&";
+		for (EventType t : f.types)
+			uriQueryEventList += "cat_evento_" + t.enumId + "=1&";
 		if (f.dateFrom != null) {
 			String s = f.dateFrom.getDay() + "/" 
 						+ f.dateFrom.getMonth() + "/" 
 						+ f.dateFrom.getYear() ;
-			uriQuery += "dt_dal=" + URLEncoder.encode(s,"UTF-8") + "&";
+			uriQueryEventList += "dt_dal=" + URLEncoder.encode(s,"UTF-8") + "&";
 		}
 		if (f.dateTo != null) {
 			String s = f.dateTo.getDay() + "/" 
 						+ f.dateTo.getMonth() + "/" 
 						+ f.dateTo.getYear() ;
-			uriQuery += "dt_al=" + URLEncoder.encode(s,"UTF-8") + "&";
+			uriQueryEventList += "dt_al=" + URLEncoder.encode(s,"UTF-8") + "&";
 		}
 		if (f.country != null)
-			uriQuery += "id_stati=" + "118" + "&"; // chris FIXME: REMOVE HARDCODING: 118 is the code for ITALY
+			uriQueryEventList += "id_stati=" + "118" + "&"; // chris FIXME: REMOVE HARDCODING: 118 is the code for ITALY
 		if (f.region != null)
-			uriQuery += "regione=" + URLEncoder.encode(f.region,"UTF-8") + "&";
+			uriQueryEventList += "regione=" + URLEncoder.encode(f.region,"UTF-8") + "&";
 		if (f.area != null)
-			uriQuery += "provincia=" + URLEncoder.encode(f.area,"UTF-8") + "&";
+			uriQueryEventList += "provincia=" + URLEncoder.encode(f.area,"UTF-8") + "&";
 		if (f.title != null)
-				uriQuery += "titolo=" + URLEncoder.encode(f.title,"UTF-8") + "&";		
+				uriQueryEventList += "titolo=" + URLEncoder.encode(f.title,"UTF-8") + "&";		
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+	}
+	
+	private void createQueryEventDetail(long eventId) {
+		uriQueryEventDetail = "idevento=" + eventId;
 	}
 	
 	private void createHttpClient() {

@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.Context;
+
 import com.retis.faitango.DataEvent;
 
 // Base class for the parser of the social event data
@@ -28,7 +30,7 @@ public abstract class DataEventParser {
 			if (registry.containsKey(id)) 
 				return;//chris TODO: generate error: exception? return boolean?
 			try {
-				registry.put(id, parser.getConstructor());
+				registry.put(id, parser.getConstructor(Context.class));
 			} catch (Exception e) {}
 			/* 
 			 * chris TODO: handle specific exceptions?
@@ -45,12 +47,12 @@ public abstract class DataEventParser {
 		
 		/* Factory creator methods: access the registry and uses the proper
 		 * registered constructor. */
-		static public DataEventParser create(String id) {
+		static public DataEventParser create(String id, Context context) {
 			if (!registry.containsKey(id)) 
 				return null;//chris TODO: generate error: exception? return boolean?
 			DataEventParser parser = null;
 			try {
-				parser = registry.get(id).newInstance();
+				parser = registry.get(id).newInstance(context);
 			} catch (Exception e) {
 				return null;
 			}
@@ -90,9 +92,24 @@ public abstract class DataEventParser {
 	}
 	
 	protected ArrayList<DataEvent> events = new ArrayList<DataEvent>();
+	protected Context appContext;
+	
+	protected DataEventParser(Context context) {
+		appContext = context;
+	}
 	
 	public ArrayList<DataEvent> getEvents() {return events;}
 
-	// Abstract method to be implemented in by concrete parsers
-	abstract public void parse(String input);
+	
+	protected EventType getFromString(String s) {
+		EventType allTypes[] = EventType.values();
+		for (EventType t : allTypes) {
+			if (appContext.getResources().getString(t.resId).equalsIgnoreCase(s))
+				return t;
+		}
+		return null;
+	}
+	
+	abstract public void parseEventList(String input);
+	abstract public void parseEventDetail(String input);
 }
