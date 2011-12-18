@@ -11,10 +11,10 @@
         android:textSize="30dp"
         android:gravity="center" />
     
-    <ListView
+    <ExpandableListView
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:id="@+id/listEvents"
+        android:id="@+id/expListEvents"
     	android:background="#6000" />
 
 </LinearLayout>

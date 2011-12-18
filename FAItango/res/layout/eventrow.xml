@@ -41,7 +41,6 @@
         android:id="@+id/textEventName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="event name..."/>
     
 </LinearLayout>
