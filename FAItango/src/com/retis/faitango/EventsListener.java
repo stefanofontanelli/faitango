@@ -1,13 +1,14 @@
 package com.retis.faitango;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 
-public class EventsListener implements OnItemClickListener {
+public class EventsListener implements OnChildClickListener {
+	private final String TAG = "EventsListener";
 	Context mcontext;
 	
 	public EventsListener (Context context) {
@@ -15,18 +16,16 @@ public class EventsListener implements OnItemClickListener {
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		//Toast.makeText(mcontext, "You clicked " + arg2, Toast.LENGTH_LONG).show();
-		TextView info = (TextView) arg1.findViewById(R.id.textEventName);
-		int visible = info.getVisibility();
-		Log.d("ForecastListener", "visibility = " + visible);
-		if (visible != View.VISIBLE) {
-			info.setVisibility(View.VISIBLE);
-		}
-			
-		else {
-			info.setVisibility(View.GONE);
-		}
+	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
+	        int childPosition, long id) {
+	    // use groupPosition and childPosition to locate the current item in the adapter
+		Log.d(TAG, "groupPos = " + Integer.toString(groupPosition)+
+				" childPos = " + Integer.toString(childPosition));
+		Context c = v.getContext();
+    	Intent intent = new Intent(c, com.retis.faitango.EventContent.class);
+    	intent.putExtra("city", "PISA");
+    	c.startActivity(intent);
+	    return true;
 	}
 
 }

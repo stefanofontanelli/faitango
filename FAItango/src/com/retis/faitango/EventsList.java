@@ -12,13 +12,15 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.Contacts.People;
+import android.util.Log;
+import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 
-public class EventsList extends Activity {
-	private int mGroupIdColumnIndex;
+public class EventsList extends Activity{
+	private final String TAG = "EventsList";
 	private ExpandableListAdapter expAdapter;
 	ExpandableListView expListEvents;
 	ListView listEvents;
@@ -108,11 +110,12 @@ public class EventsList extends Activity {
 		
 		// Create the adapter
 	    //adapter = new EventsAdapter(this, cursor);
-	    //listener = new EventsListener(this);
+	    listener = new EventsListener(this);
 	    expAdapter = new EventsTreeAdapter(cursor, this, db);
 	    //listEvents.setAdapter(adapter);
 	    //listEvents.setOnItemClickListener(listener);
 	    expListEvents.setAdapter(expAdapter);
-		
+	    expListEvents.setOnChildClickListener(listener);
 	}
+	
 }
