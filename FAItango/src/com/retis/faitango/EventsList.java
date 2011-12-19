@@ -109,11 +109,9 @@ public class EventsList extends Activity{
 		startManagingCursor(cursor);
 		
 		// Create the adapter
-	    //adapter = new EventsAdapter(this, cursor);
 	    listener = new EventsListener(this);
 	    expAdapter = new EventsTreeAdapter(cursor, this, db);
-	    //listEvents.setAdapter(adapter);
-	    //listEvents.setOnItemClickListener(listener);
+	  
 	    expListEvents.setAdapter(expAdapter);
 	    expListEvents.setOnChildClickListener(listener);
 	}

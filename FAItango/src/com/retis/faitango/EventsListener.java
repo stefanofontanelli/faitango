@@ -18,12 +18,18 @@ public class EventsListener implements OnChildClickListener {
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
 	        int childPosition, long id) {
-	    // use groupPosition and childPosition to locate the current item in the adapter
 		Log.d(TAG, "groupPos = " + Integer.toString(groupPosition)+
 				" childPos = " + Integer.toString(childPosition));
 		Context c = v.getContext();
     	Intent intent = new Intent(c, com.retis.faitango.EventContent.class);
-    	intent.putExtra("id", Long.toString(id));
+    	
+    	/*
+    	 * before starting the new intent bundle the event ID
+    	 * so the new created activity can fetch info from the
+    	 * database
+    	 */
+    	Log.d(TAG, Integer.toString(EventsTreeAdapter.childMap.get(childPosition)));
+    	intent.putExtra("id", Integer.toString(EventsTreeAdapter.childMap.get(childPosition)));
     	c.startActivity(intent);
 	    return true;
 	}

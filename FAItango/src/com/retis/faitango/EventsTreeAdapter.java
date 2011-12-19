@@ -1,5 +1,7 @@
 package com.retis.faitango;
 
+import java.util.HashMap;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +17,11 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 	  
 	  private final String TAG = "EventsTreeAdapter";
 	  private SQLiteDatabase db;
+	  /*
+	   *  this map is used to associate an ID to a child
+	   *  position inside a parent group expanded list entry
+	   */
+	  static HashMap<Integer, Integer> childMap = new HashMap<Integer, Integer>();
  
 	 
 	  // Constructor
@@ -29,6 +36,12 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 	@Override
 	protected Cursor getChildrenCursor(Cursor groupCursor) {
 		Cursor cursor;
+		/* 
+		 * since this function is called every time the user
+		 * expands a group we must be sure that the map is
+		 * cleared and then filled again with actual IDs
+		 */
+		EventsTreeAdapter.childMap.clear();
 		
 		Log.d("EventsTreeAdapter", DbHelper.C_DATE + " = " +
 				groupCursor.getString(groupCursor.getColumnIndexOrThrow(DbHelper.C_DATE)));
@@ -37,7 +50,21 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 				groupCursor.getString(groupCursor.getColumnIndexOrThrow(DbHelper.C_DATE)) + "'",
 				null, null, null, null);
 		Log.d(TAG, Integer.toString(cursor.getCount()));
-		//startManagingCursor(cursor);
+		cursor.moveToFirst();
+		while(cursor.isAfterLast() == false) {
+			Log.d(TAG, Integer.toString(cursor.getPosition()));
+			Log.d(TAG, Integer.toString(cursor.getInt(cursor.getColumnIndex(DbHelper.C_ID))));
+			/*
+			 * we associate an event ID with the position of a child
+			 * in an expandable list hierarchy
+			 */
+			EventsTreeAdapter.childMap.put(cursor.getPosition(),
+					cursor.getInt(cursor.getColumnIndex(DbHelper.C_ID)));
+			Log.d(TAG, Integer.toString(EventsTreeAdapter.childMap.get(cursor.getPosition())));
+			cursor.moveToNext();
+		}
+		cursor.moveToFirst();
+		
 		return cursor;
 	}
 
