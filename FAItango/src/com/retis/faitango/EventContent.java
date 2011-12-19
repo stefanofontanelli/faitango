@@ -12,7 +12,7 @@ public class EventContent extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.eventcont);
 		Bundle extras = getIntent().getExtras();
-		Log.d(TAG, extras.getString("city"));
+		Log.d(TAG, extras.getString("id"));
 	}
 
 	@Override

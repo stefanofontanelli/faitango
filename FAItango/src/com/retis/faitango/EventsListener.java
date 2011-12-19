@@ -23,7 +23,7 @@ public class EventsListener implements OnChildClickListener {
 				" childPos = " + Integer.toString(childPosition));
 		Context c = v.getContext();
     	Intent intent = new Intent(c, com.retis.faitango.EventContent.class);
-    	intent.putExtra("city", "PISA");
+    	intent.putExtra("id", Long.toString(id));
     	c.startActivity(intent);
 	    return true;
 	}

@@ -31,7 +31,7 @@ public class EventsList extends Activity{
 	EventsListener listener;
 	
 	
-	public enum Events {
+	/*public enum Events {
 		CONCERTO, FESTA, FESTIVAL, MARATONA,
 		MILONGA, SPETTACOLO, STAGE, VACANZA
 	}
@@ -63,7 +63,7 @@ public class EventsList extends Activity{
 			i++;
 			db.insertWithOnConflict(DbHelper.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 		}
-	}
+	}*/
 	
     /** Called when the activity is first created. */
     @Override
@@ -74,7 +74,7 @@ public class EventsList extends Activity{
         expListEvents = (ExpandableListView) findViewById(R.id.expListEvents);
         
         dbHelper = new DbHelper(this);
-        dbFill(dbHelper.getWritableDatabase());
+        //dbFill(dbHelper.getWritableDatabase());
         db = dbHelper.getReadableDatabase();
         
         /*
