@@ -20,7 +20,11 @@ public class EventsListener implements OnChildClickListener {
 	        int childPosition, long id) {
 		Log.d(TAG, "groupPos = " + Integer.toString(groupPosition)+
 				" childPos = " + Integer.toString(childPosition));
-		Context c = v.getContext();
+		// chris FIX: the startActivity was failing because the context was not the one 
+		//            of an Activity (according to the exception I got).
+		//            Using the context of the parent object to solve the problem. 
+		//Context c = v.getContext(); 
+		Context c = parent.getContext();
     	Intent intent = new Intent(c, com.retis.faitango.EventContent.class);
     	
     	/*
