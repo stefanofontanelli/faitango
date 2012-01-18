@@ -50,6 +50,12 @@
         <item>Francia</item>
         <item>Germania</item>
     </string-array>
+    <string-array name="prefEntryValuesSearchCountry">
+        <item>118</item>
+        <item>67</item>
+        <item>71</item>
+    </string-array>
+    
     
     <string name="prefTitleSearchRegion">Region</string>
     <string name="prefSummarySearchRegion"></string>

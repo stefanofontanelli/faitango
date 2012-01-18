@@ -126,19 +126,19 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 		for (EventType t : f.types)
 			uriQueryEventList += "cat_evento_" + t.enumId + "=1&";
 		if (f.dateFrom != null) {
-			String s = f.dateFrom.getDay() + "/" 
-						+ f.dateFrom.getMonth() + "/" 
-						+ f.dateFrom.getYear() ;
+			String s = f.dateFrom.getDate() + "/" 
+						+ (f.dateFrom.getMonth() + 1) + "/" 
+						+ (f.dateFrom.getYear() + 1900);
 			uriQueryEventList += "dt_dal=" + URLEncoder.encode(s,"UTF-8") + "&";
 		}
 		if (f.dateTo != null) {
-			String s = f.dateTo.getDay() + "/" 
-						+ f.dateTo.getMonth() + "/" 
-						+ f.dateTo.getYear() ;
+			String s = f.dateTo.getDate() + "/" 
+					+ (f.dateTo.getMonth() + 1) + "/" 
+					+ (f.dateTo.getYear() + 1900);
 			uriQueryEventList += "dt_al=" + URLEncoder.encode(s,"UTF-8") + "&";
 		}
 		if (f.country != null)
-			uriQueryEventList += "id_stati=" + "118" + "&"; // chris FIXME: REMOVE HARDCODING: 118 is the code for ITALY
+			uriQueryEventList += "id_stati=" + f.country + "&";
 		if (f.region != null)
 			uriQueryEventList += "regione=" + URLEncoder.encode(f.region,"UTF-8") + "&";
 		if (f.area != null)

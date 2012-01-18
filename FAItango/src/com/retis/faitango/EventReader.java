@@ -49,8 +49,12 @@ public class EventReader extends Service {
 			stopSelf();
 			return START_STICKY;
 		}
-		evFilter = (EventFilter) intent.getParcelableExtra("EventFilter");
+		Log.d("chris", "PROVIAMO INTENTO 2: " + intent.toString());
+		Log.d("chris", "PROVIAMO INTENTO 2: " + intent.hashCode());
 		
+		evFilter = (EventFilter) intent.getParcelableExtra("EventFilter");
+		Log.d("chris", "PROVIAMO filtro:  " + evFilter.country);
+		Log.d("chris", "PROVIAMO filtro:  " + evFilter.hashCode());
 		// chris NOTE: perform operations in a thread
 		
 		// chris TODO: there should be a parameter passed from the Intent to 
@@ -84,7 +88,7 @@ public class EventReader extends Service {
         	}
         	evParser.parseEventList(data);
         	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
-        	
+        	evFilter = null;
         	Log.d("chris", "READING EVENT LIST TASK DONE!");
             // Done with our work...  stop the service!
             EventReader.this.stopSelf(); 

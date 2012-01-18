@@ -1,5 +1,7 @@
 package com.retis.faitango;
 
+import java.util.Calendar;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,7 +16,7 @@ public final class PreferenceHelper {
 	private static final String keySearchParamsArea = "autoSyncSearchProvince";
 
 	public static boolean hasPeriodicAutoSync(Context c) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keyAutoSyncType))
 			//; //TODO: throw some exception!
 		if (prefs.getString(keyAutoSyncType, "").contentEquals("2"))
@@ -23,27 +25,36 @@ public final class PreferenceHelper {
 	}
 	
 	public static long getPeriodicAutoSyncPeriod(Context c) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keyPeriodicAutoSyncPeriod))
 			//; //TODO: throw some exception!
 		return Long.decode(prefs.getString(keyPeriodicAutoSyncPeriod, "0"));
 	}
 	
 	public static EventFilter getSearchParams(Context c) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keySearchParamsCountry))
 			//; //TODO: throw some exception!
 		String country = prefs.getString(keySearchParamsCountry, "");
 		String region = prefs.getString(keySearchParamsRegion, "");
 		String area = prefs.getString(keySearchParamsArea, "");
 		
-		EventFilter f = new EventFilter();
+		EventFilter filter = new EventFilter();
 		if (!country.isEmpty())
-			f.country = country;
+			filter.country = country;
 		if (!region.isEmpty())
-			f.region = region;
+			filter.region = region;
 		if (!area.isEmpty())
-			f.area = area;
-		return f;
+			filter.area = area;
+		// Add all event types to the filter
+		for (EventType t : EventType.values())
+			filter.types.add(t);
+		Calendar now = Calendar.getInstance();
+		filter.dateFrom = now.getTime();
+		now.add(Calendar.MONTH, 1);
+		filter.dateTo = now.getTime();
+		//filter.dateFrom = (new GregorianCalendar(2011, Calendar.JANUARY, 1)).getTime();
+		//filter.dateTo = (new GregorianCalendar(2012, Calendar.DECEMBER, 31)).getTime();
+		return filter;
 	}
 }

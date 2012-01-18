@@ -1,7 +1,5 @@
 package com.retis.faitango;
 
-import java.util.Date;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -48,15 +46,11 @@ public class EventReaderAlarm  {
 	
 	private void init(Context c) {
 		context = c;
-		Intent i = new Intent(context, EventReader.class); 
+		Intent passedIntent = new Intent(context, EventReader.class); 
+		// Read filter from default search parameters
 		EventFilter filter = PreferenceHelper.getSearchParams(context);
-    	// chris FIXME: As for now I insert any time this Service is called!
-    	filter.types.add(EventType.MILONGA);
-    	filter.types.add(EventType.SHOW);
-    	filter.dateFrom = new Date(2011, 12, 14);
-    	filter.dateTo = new Date(2011, 12, 20);
-		i.putExtra("EventFilter", filter);
-		alarmIntent = PendingIntent.getService(context, 0, i, 0);
+		passedIntent.putExtra("EventFilter", filter);
+		alarmIntent = PendingIntent.getService(context, 0, passedIntent, PendingIntent.FLAG_ONE_SHOT);
 		alarmManager = (AlarmManager)context.getSystemService(Service.ALARM_SERVICE);
 	}
 	

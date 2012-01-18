@@ -36,8 +36,8 @@
             android:title="@string/prefTitleSearchCountry"
         	android:summary="@string/prefSummarySearchCountry"
         	android:entries="@array/prefEntriesSearchCountry"
-			android:entryValues="@array/prefEntriesSearchCountry"
-			android:defaultValue="Italia"
+			android:entryValues="@array/prefEntryValuesSearchCountry"
+			android:defaultValue="118"
 			android:dialogTitle="@string/prefDialogTitleSearchCountry" />
 		<ListPreference
        		android:key="autoSyncSearchRegion"

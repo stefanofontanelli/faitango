@@ -79,7 +79,7 @@ public class ConfigurationView extends PreferenceActivity {
         
     	// FIXME: TEMPORARY SOLUTION: treat each change as the same
     	// TODO:  The Country, Region, Province preference should be influenced each other according
-    	//        to the following hierarchical order: Contry->Region->Province!!!
+    	//        to the following hierarchical order: Country->Region->Province!!!
         ListPreference country = (ListPreference) findPreference("autoSyncSearchCountry");  
         ListPreference region = (ListPreference) findPreference("autoSyncSearchRegion");
         ListPreference province = (ListPreference) findPreference("autoSyncSearchProvince");
