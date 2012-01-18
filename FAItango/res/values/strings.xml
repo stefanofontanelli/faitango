@@ -55,6 +55,7 @@
     <string name="prefSummarySearchRegion"></string>
     <string name="prefDialogTitleSearchRegion"></string>    
     <string-array name="prefEntriesSearchRegion">
+        <item></item>
         <item>Toscana</item>
         <item>Emilia-Romagna</item>
     </string-array>
@@ -63,8 +64,14 @@
     <string name="prefSummarySearchProvince"></string>
     <string name="prefDialogTitleSearchProvince"></string>    
     <string-array name="prefEntriesSearchProvince">
+        <item>Tutte le province</item>
         <item>Pisa</item>
         <item>Firenze</item>
+    </string-array>
+    <string-array name="prefEntryValuesSearchProvince">
+        <item></item>
+        <item>PI</item>
+        <item>FI</item>
     </string-array>
     
     <!-- Event Type Strings -->

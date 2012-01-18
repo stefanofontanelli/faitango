@@ -1,8 +1,6 @@
 package com.retis.faitango;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -16,6 +14,7 @@ public class EventReader extends Service {
 	private DataEventParser evParser;
 	private DbHelper dbHelper;
 	private boolean properlyCreated;
+	private EventFilter evFilter;
 	
 	@Override
 	public void onCreate() {
@@ -34,6 +33,7 @@ public class EventReader extends Service {
 		}
 
 		dbHelper = new DbHelper(this);
+		evFilter = null;
 		properlyCreated = true;
 	}
 	
@@ -49,6 +49,7 @@ public class EventReader extends Service {
 			stopSelf();
 			return START_STICKY;
 		}
+		evFilter = (EventFilter) intent.getParcelableExtra("EventFilter");
 		
 		// chris NOTE: perform operations in a thread
 		
@@ -74,16 +75,8 @@ public class EventReader extends Service {
 	
 	private Runnable eventListReadingTask = new Runnable() {
         public void run() {
-        	// chris FIXME: As for now I insert any time this Service is called! 
-        	EventFilter filter = new EventFilter();
-        	filter.types.add(EventType.MILONGA);
-        	filter.types.add(EventType.SHOW);
-        	filter.dateFrom = new Date(2011, 12, 14);
-        	filter.dateTo = new Date(2011, 12, 20);
-        	filter.country = "Italia";
-        	filter.region = "Toscana";
         	//String data = evFetcher.fetch(null);
-        	String data = evFetcher.fetchEventList(filter);
+        	String data = evFetcher.fetchEventList(evFilter);
         	if (data == null) {
                 Log.d("chris", "EventList Fetcher has failed.");
                 EventReader.this.stopSelf();
@@ -102,7 +95,7 @@ public class EventReader extends Service {
 	private Runnable eventDetailReadingTask = new Runnable() {
         public void run() { 
         	// chris TODO: this tack should get the detail of the single event.
-        	//             Arguments (event id) might be passed throught the activation intent
+        	//             Arguments (event id) might be passed through the activation intent
         	//String data = evFetcher.fetch(null);
         	long eventId = 0; // chris FIXME: this should be passed from the intent
         	String data = evFetcher.fetchEventDetail(eventId);

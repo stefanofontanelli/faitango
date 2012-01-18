@@ -1,6 +1,11 @@
 package com.retis.faitango;
 
-public enum EventType {
+import java.util.HashSet;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public enum EventType implements Parcelable {
 	
 	CONCERT(R.string.eventTypeCONCERT),
 	PARTY(R.string.eventTypePARTY),
@@ -29,4 +34,26 @@ public enum EventType {
 		enumId = enumInitId;
 		Counter.nextValue = enumInitId + 1;
 	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeInt(ordinal());
+	}
+	
+	public static final Parcelable.Creator<EventType> CREATOR = 
+			new Parcelable.Creator<EventType>() {
+				public EventType createFromParcel(Parcel in) {
+					return EventType.values()[in.readInt()];
+				}
+
+				public EventType[] newArray(int size) {
+					return new EventType[size];
+				}
+			};
 }

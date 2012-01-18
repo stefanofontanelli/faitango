@@ -2,6 +2,8 @@ package com.retis.faitango;
 
 //import com.retis.faitango.ConfigurationView.SpinnerPeriodicEventReaderListener;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -64,6 +66,13 @@ public class MainView extends Activity {
             	Log.d("chris", "Synchronized CLICKED!");
             	Context c = v.getContext();
             	Intent intent = new Intent(c, com.retis.faitango.EventReader.class);
+        		EventFilter filter = PreferenceHelper.getSearchParams(c);
+            	// chris FIXME: As for now I insert any time this Service is called!
+            	filter.types.add(EventType.MILONGA);
+            	filter.types.add(EventType.SHOW);
+            	filter.dateFrom = new Date(2011, 12, 14);
+            	filter.dateTo = new Date(2011, 12, 20);
+        		intent.putExtra("EventFilter", filter);
             	c.startService(intent);
             }
         });

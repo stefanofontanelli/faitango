@@ -2,11 +2,8 @@ package com.retis.faitango;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
-import android.preference.PreferenceManager;
-
 
 public class StartupService extends Service {
 
@@ -31,10 +28,7 @@ public class StartupService extends Service {
 		//             - Plan actions to be done?
 		
 		// Access the (default) preference file (also used by the ConfigurationView)
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		boolean startReader = prefs.getBoolean("checkboxBgUpdater", false);
-        if (startReader) {
+		if (PreferenceHelper.hasPeriodicAutoSync(this)) {
         	Log.d("chris", "Starting EventReaderAlarm");
         	EventReaderAlarm alarm = new EventReaderAlarm(this);
         	alarm.start();

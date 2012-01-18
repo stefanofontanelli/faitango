@@ -52,8 +52,8 @@
             android:title="@string/prefTitleSearchProvince"
         	android:summary="@string/prefSummarySearchProvince"
         	android:entries="@array/prefEntriesSearchProvince"
-			android:entryValues="@array/prefEntriesSearchProvince"
-			android:defaultValue="Firenze"
+			android:entryValues="@array/prefEntryValuesSearchProvince"
+			android:defaultValue=""
 			android:dialogTitle="@string/prefDialogTitleSearchProvince" />
 	</PreferenceCategory>		
 	                
