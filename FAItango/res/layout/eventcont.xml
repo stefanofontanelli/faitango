@@ -37,8 +37,8 @@
 		      android:gravity="right"
 		      android:text="from what time to what time" />
 	</TableRow>
-  </TableLayout>
-
+    </TableLayout>
+	
     <TextView
         android:id="@+id/textDetEventName"
         android:layout_width="fill_parent"
@@ -48,9 +48,14 @@
     <com.google.android.maps.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:clickable="true"
+        android:layout_height="200dp"
         android:apiKey="0ZxUMcBaPhNKI88pq2tq4l2F1asEmt7QsARoJoA"
-    />
+        android:clickable="true" />
+    
+    <Button
+        android:id="@+id/calbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/calButton" />
     
 </LinearLayout>

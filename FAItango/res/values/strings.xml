@@ -44,5 +44,6 @@
     <!-- Event Type Strings -->
     <string name="httpUriPathEventList">/eventi/eventilistaJSON.asp</string>
     <string name="httpUriPathEventDetail">/unknown/path/for/eventDetail.asp</string>
+    <string name="calButton">Add remainder</string>
 
 </resources>

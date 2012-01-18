@@ -2,6 +2,7 @@ package com.retis.faitango;
 
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 import com.google.android.maps.GeoPoint;
@@ -13,13 +14,18 @@ import com.google.android.maps.OverlayItem;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class EventContent extends MapActivity {
@@ -27,7 +33,7 @@ public class EventContent extends MapActivity {
 	private DbHelper dbHelper;
 	private SQLiteDatabase db;
 	private Cursor cursor;
-	private String eventID;
+	private String eventID, title, description, city, date;
 	private TextView textView;
 	private MapView mapView;
 	private List<Overlay> mapOverlays;
@@ -63,6 +69,48 @@ public class EventContent extends MapActivity {
 		geocoder = new Geocoder(getApplicationContext());
 		
 		mapController = mapView.getController();
+		
+		final Button button = (Button) findViewById(R.id.calbutton);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d(TAG, "remainder button pressed!");
+
+                /*
+                 * ugly.. but web site database doesn't have
+                 * a proper date field :-/
+                 */
+                String[] datetmp = date.split(" ");
+                String[] dateFields = datetmp[1].split("/");
+                Calendar beginTime = Calendar.getInstance();
+                Calendar endTime = Calendar.getInstance();
+                Log.d(TAG, dateFields[2]+" "+dateFields[1]+" "+dateFields[0]+
+                		"  = "+beginTime.getTimeInMillis());
+                /*
+                 * dateFields[1] - 1 makes no sense, but it's the only
+                 * way to correctly set month inside calendar event
+                 * activity
+                 */
+                beginTime.set(Integer.parseInt(dateFields[2]),
+                		Integer.parseInt(dateFields[1])-1,
+                		Integer.parseInt(dateFields[0]),
+                		22, 30);
+                endTime.set(Integer.parseInt(dateFields[2]),
+                		Integer.parseInt(dateFields[1])-1,
+                		Integer.parseInt(dateFields[0])+1,
+                		02, 00);
+                
+                
+                Intent intent = new Intent(Intent.ACTION_EDIT)
+                        .setType("vnd.android.cursor.item/event")
+                		.putExtra("title", title)
+                        .putExtra("description", description)
+                        .putExtra("eventLocation", city)
+                		.putExtra("beginTime", beginTime.getTimeInMillis())
+                		.putExtra("endTime", endTime.getTimeInMillis());
+                startActivity(intent);
+                
+          }
+        });
 	}
 
 	@Override
@@ -86,17 +134,20 @@ public class EventContent extends MapActivity {
 		
 		if (cursor.getCount() > 0) {
 			textView = (TextView) findViewById(R.id.textDetEventType);
-			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_TYPE)));
+			title = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_TYPE));
+			textView.setText(title);
 			
 			textView = (TextView) findViewById(R.id.textDetCity);
-			String city = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_CITY));
+			city = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_CITY));
 			textView.setText(city);
 			
 			textView = (TextView) findViewById(R.id.textDetDate);
-			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_DATE)));
+			date = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_DATE));
+			textView.setText(date);
 			
 			textView = (TextView) findViewById(R.id.textDetEventName);
-			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_NAME)));
+			description = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_NAME));
+			textView.setText(description);
 			
 			textView = (TextView) findViewById(R.id.textDetTime);
 			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_TIME)));
