@@ -5,8 +5,16 @@ import java.util.HashSet;
 import java.util.Set;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
+/** Search parameter container
+ * 
+ * This parcelable class holds the query parameters to be used by the EventReader when
+ * fetching data from the remote server. 
+ * The class is implements Parcelable in order to be included as extras to the Intent
+ * passed to EventReader.  
+ * 
+ * @author chris
+ */
 public class EventFilter implements Parcelable {
 
 	public Set<EventType> types;
@@ -14,7 +22,7 @@ public class EventFilter implements Parcelable {
 	public Date dateTo;
 	public String country;
 	public String region;
-	public String area; // provincia
+	public String area; // chris FIXME: in preference is called province. Shall we rename uniformly?
 	public String title; 
 	
 	public EventFilter() {
@@ -48,7 +56,6 @@ public class EventFilter implements Parcelable {
 		else
 			out.writeLong(0);
 		out.writeString(country);
-		Log.d("chris", "NEL FILTRO A: " + country);
 		out.writeString(region);
 		out.writeString(area);
 		out.writeString(title);
@@ -80,7 +87,6 @@ public class EventFilter implements Parcelable {
 		if (time != 0)
 			dateTo = new Date(time);
 		country = in.readString();
-		Log.d("chris", "NEL FILTRO B: " + country);
 		region = in.readString();
 		area = in.readString();
 		title = in.readString();

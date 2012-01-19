@@ -7,14 +7,15 @@ import android.util.Log;
 
 public class StartupService extends Service {
 
+	private static final String TAG = "StartupService";
+	
 	@Override
 	public void onCreate() {
-		Log.d("chris", "onCreate() on Startup Service");
+		// TODO: something?
 	}
 	
 	@Override 
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d("chris", "onStartCommand() on Startup Service");
 		
 		// chris FIXME: remove manually the DB. JUST FOR TESTING!
 		// chris FIXME: REMOVE THIS CODE WHEN TEST IS DONE!
@@ -24,12 +25,12 @@ public class StartupService extends Service {
 		//             all preferences should be set to a default value!
 		
 		// chris TODO: put in here all the code to be executed at startup (BOOT)
-		//             - Read configuration files?
-		//             - Plan actions to be done?
+		//             - Read configuration files? -> DONE
+		//             - Plan actions to be done?  -> DONE
 		
 		// Access the (default) preference file (also used by the ConfigurationView)
 		if (PreferenceHelper.hasPeriodicAutoSync(this)) {
-        	Log.d("chris", "Starting EventReaderAlarm");
+        	Log.d(TAG, "AutoSync active: configure and start EventReaderAlarm");
         	EventReaderAlarm alarm = new EventReaderAlarm(this);
         	alarm.start();
         }
@@ -39,9 +40,7 @@ public class StartupService extends Service {
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.d("chris", "onBind() on Startup Service");
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

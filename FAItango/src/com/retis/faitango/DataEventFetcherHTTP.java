@@ -7,17 +7,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class DataEventFetcherHTTP extends DataEventFetcher {
@@ -25,26 +21,23 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 	/* Register the concrete Product's constructor to the Factory */
 	static { DataEventFetcher.Factory.register("http", DataEventFetcherHTTP.class); }
 
-	private final String uriScheme;
+	private static final String uriScheme = "http";
 	private String uriHost;
 	private final String uriPathEventList;
 	private final String uriPathEventDetail;
 	private String uriQueryEventList;
 	private String uriQueryEventDetail;
 	private HttpClient httpClient;
+	private static final String TAG = "DataEventFetcherHTTP";
 	
 	public DataEventFetcherHTTP(Context context) throws DataEventFetcherException {
-		super(context);
+		super(context); // Initializes appContext
 		
-		uriScheme = "http";
 		uriPathEventList = appContext.getResources().getString(R.string.httpUriPathEventList); 
 		uriPathEventDetail = appContext.getResources().getString(R.string.httpUriPathEventDetail);
-		loadUriHost(); // read host from Preferences (through context)
-		
-    	Log.d("chris", "Reading servename: '" + uriHost + "' len=" + uriHost.length() 
-    			+ " context=" + appContext.toString());
+		uriHost = PreferenceHelper.getRemoteServer(appContext);
     	if (uriHost.length() == 0)
-    		throw new DataEventFetcherException("Remote HTTP server not specified"); 
+    		throw new DataEventFetcherException(TAG + ": Remote HTTP server not specified"); 
 	}
 	
 	@Override
@@ -73,14 +66,12 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
         HttpGet request = new HttpGet();
         try {
         	String uri = uriScheme + "://" + uriHost + uriPath + "?" + uriQuery;
-        	Log.d("chris", "TESTIAMO LA URI: " + uri.toString());
 			request.setURI(new URI(uri));
-			Log.d("chris", "URI host is: " + request.getURI().getHost());
-			Log.d("chris", "URI is: " + request.getURI().toASCIIString());
+			Log.d(TAG, "URI is: " + request.getURI().toASCIIString());
 			HttpResponse response = httpClient.execute(request);			
 			HttpEntity entity = response.getEntity();
             if (entity == null) {
-                    Log.e("chris", "Empty Response");
+                    Log.e(TAG, "Empty Response");
                     return null; // chris TODO: Throw exception?
             }
             in = new BufferedReader(new InputStreamReader(entity.getContent()));
@@ -110,11 +101,6 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 			}
 		}
         return responseMessage;
-	}
-	
-	private void loadUriHost() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
-    	uriHost =  prefs.getString("remoteHTTPServer", "");
 	}
 	
 	private void createQueryEventList(EventFilter f) {

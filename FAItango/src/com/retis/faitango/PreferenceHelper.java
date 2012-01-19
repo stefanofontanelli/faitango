@@ -9,12 +9,20 @@ import android.preference.PreferenceManager;
 
 public final class PreferenceHelper {
 	
+	private static final String keyRemoteServer = "remoteHTTPServer";
 	private static final String keyAutoSyncType = "autoSyncType";
 	private static final String keyPeriodicAutoSyncPeriod = "periodicAutoSyncPeriods";
 	private static final String keySearchParamsCountry = "autoSyncSearchCountry";
 	private static final String keySearchParamsRegion = "autoSyncSearchRegion";
 	private static final String keySearchParamsArea = "autoSyncSearchProvince";
 
+	public static String getRemoteServer(Context c) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+		//if (!prefs.contains(keyRemoteServer))
+			//; //TODO: throw some exception!
+		return prefs.getString(keyRemoteServer, "");
+	}
+	
 	public static boolean hasPeriodicAutoSync(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keyAutoSyncType))
