@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.retis.faitango.DataEvent;
 
@@ -56,6 +57,8 @@ public abstract class DataEventParser {
 			try {
 				parser = registry.get(id).newInstance(context);
 			} catch (Exception e) {
+				Log.e(TAG, "Creation faiulure: ");
+				e.printStackTrace();
 				return null;
 			}
 			/* 

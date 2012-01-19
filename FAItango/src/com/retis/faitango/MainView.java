@@ -63,6 +63,9 @@ public class MainView extends Activity {
             	Context c = v.getContext();            	
             	EventReaderAlarm alarm = new EventReaderAlarm(c, 1000, 0);
             	alarm.start();
+            	// chris TODO: there should be a "Please, wait" dialog (maybe including a "cancel" button)
+            	//             which is displayed while performing the Sync operation.
+            	//             DO IT!
             	}
         });
         

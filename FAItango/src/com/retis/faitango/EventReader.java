@@ -88,13 +88,20 @@ public class EventReader extends Service {
 	
 	private Runnable eventListReadingTask = new Runnable() {
         public void run() {
+        	// chris TODO: delete obsolete DB entries
+        	// Maybe...
+        	// dbHelper.getWritableDatabase().delete(table, whereClause, whereArgs);
+        	// ... or maybe not!
+        	// Fetch data
         	String data = evFetcher.fetchEventList(evFilter);
         	if (data == null) {
                 Log.e(THREAD_DATA_TAG, "DataEventFetcher failure: got null data");
                 EventReader.this.stopSelf();
                 return;
         	}
+        	// Parse data
         	evParser.parseEventList(data);
+        	// Fill DB with parsed data
         	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
         	Log.d(THREAD_DATA_TAG, "All process is done!");
             EventReader.this.stopSelf(); 
