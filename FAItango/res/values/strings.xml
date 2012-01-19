@@ -11,6 +11,7 @@
     <string name="prefTitleRemoteServer">Server</string>
     <string name="prefSummaryRemoteServer">Set remote event server</string>
     <string name="prefDialogTitleRemoteServer">Set remote server</string>
+    <string name="prefDefaultRemoteServer">newagenda.faitango.it</string>
     
     <string name="prefTitleAutoSync">Auto Sync</string>
     <string name="prefSummaryAutoSync">Automatic synchronization</string>

@@ -8,6 +8,7 @@
         	android:key="remoteHTTPServer" 
             android:title="@string/prefTitleRemoteServer"
             android:summary="@string/prefSummaryRemoteServer"
+            android:defaultValue="@string/prefDefaultRemoteServer"
             android:dialogTitle="@string/prefDialogTitleRemoteServer"/>
 	</PreferenceCategory>
 	
