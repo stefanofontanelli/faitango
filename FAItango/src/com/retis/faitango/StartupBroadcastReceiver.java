@@ -7,16 +7,16 @@ import android.content.Intent;
 import android.util.Log;
 
 public class StartupBroadcastReceiver extends BroadcastReceiver {
+	
+	private static final String TAG = "StartupBroadcastReceiver";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d("chris", "Intent Received: " + intent.getAction());
-		Log.d("chris", "Attempt to create a new Intent");
+		Log.d(TAG, "Intent received: " + intent.getAction());
+		// Create an intent to start the StartupService service
 		Intent service = new Intent(context, StartupService.class);
-		Log.d("chris", "Attempt to start the Service with the new Intent");
 		ComponentName retv = context.startService(service);
 		if (retv == null)
-			Log.d("chris", "Star service has FAILED!");
-		Log.d("chris", "Activation completed");
+			Log.e(TAG, "Starting StartupService has failed");
 	}
 }

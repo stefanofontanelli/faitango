@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.retis.faitango.DataEvent;
 
@@ -22,11 +23,13 @@ public abstract class DataEventParser {
 	public static class Factory {
 
 		/* Local Registry for Factory Method Pattern */
-		static final private HashMap<String, Constructor<? extends DataEventParser>> registry = 
+		private static final HashMap<String, Constructor<? extends DataEventParser>> registry = 
 				new HashMap<String, Constructor<? extends DataEventParser>>();
 		
+		private static final String TAG = "DataEventParser.Factory";
+		
 		/* Registration function, to be called by the Product classes */
-		static public void register(String id, Class<? extends DataEventParser> parser) {
+		public static void register(String id, Class<? extends DataEventParser> parser) {
 			if (registry.containsKey(id)) 
 				return;//chris TODO: generate error: exception? return boolean?
 			try {
@@ -47,13 +50,15 @@ public abstract class DataEventParser {
 		
 		/* Factory creator methods: access the registry and uses the proper
 		 * registered constructor. */
-		static public DataEventParser create(String id, Context context) {
+		public static DataEventParser create(String id, Context context) {
 			if (!registry.containsKey(id)) 
 				return null;//chris TODO: generate error: exception? return boolean?
 			DataEventParser parser = null;
 			try {
 				parser = registry.get(id).newInstance(context);
 			} catch (Exception e) {
+				Log.e(TAG, "Creation faiulure: ");
+				e.printStackTrace();
 				return null;
 			}
 			/* 

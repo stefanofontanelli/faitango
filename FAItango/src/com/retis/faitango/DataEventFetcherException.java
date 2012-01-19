@@ -6,9 +6,6 @@ public class DataEventFetcherException extends Exception {
 		super(msg);
 	}
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7655847480823614799L;
 
 }

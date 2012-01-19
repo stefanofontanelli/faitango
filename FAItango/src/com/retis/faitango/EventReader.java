@@ -1,8 +1,6 @@
 package com.retis.faitango;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -10,56 +8,72 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.util.Log;
 
+/** Local (Event) DB updater
+ * 
+ * The EventReader service fetches the data event from the remote repository
+ * and fills the local event database.
+ * The service is meant to be activated in two possible ways:
+ * - by the EventReaderAlarm: to perform automatic synchronization
+ * - by the TODO:SearchActivity: to perform manual event search
+ * The EventFilter object (parcelable), used to set an event fetch filter, 
+ * is encoded as an extras in the activation Intent.     
+ * 
+ * The fetching mechanism is delegated to the DataEventFetcher class (subject to the abstract factory pattern).
+ * The fetched data are parsed through the DataEventParser class (subject to abstract factory pattern).
+ * Data are stored in the DB through the DBHelper class using an always-replace policy.
+ * 
+ * @author Christian Nastasi
+ */
 public class EventReader extends Service {
 	
+	private boolean properlyCreated;
 	private DataEventFetcher evFetcher;
 	private DataEventParser evParser;
 	private DbHelper dbHelper;
-	private boolean properlyCreated;
+	private EventFilter evFilter;
+	// NOTE: as for now, the DataEvent fetcher and parser type are 
+	//       manually set respectively to HTTP and JSON
+	private final String evFetcherType = "http";
+	private final String evParserType = "json";
+	private static final String TAG = "EventReader";
+	private static final String THREAD_DATA_TAG = "EventReaderThreadForData";
+	private static final String THREAD_DETAIL_TAG = "EventReaderThreadForDetail";
 	
 	@Override
 	public void onCreate() {
 		properlyCreated = false;
-		Log.d("chris", "onCreate() on EventReader");
-		evFetcher = DataEventFetcher.Factory.create("http", this);
+		// Create the proper DataEventFetcher
+		evFetcher = DataEventFetcher.Factory.create(evFetcherType, this);
 		if (evFetcher == null) {
-			Log.e("chris", "Error while creating DataEventFetcher");
+			Log.e(TAG, "Error while creating DataEventFetcher");
 			return;
 		}
-		
-		evParser = DataEventParser.Factory.create("json", this);
+		// Create the proper DataEventParser
+		evParser = DataEventParser.Factory.create(evParserType, this);
 		if (evParser == null) {
-			Log.e("chris", "Error while creating DataEventParser");
+			Log.e(TAG, "Error while creating DataEventParser");
 			return;
 		}
-
+		// Create a DBHelper
 		dbHelper = new DbHelper(this);
+		// Initialize null filter
+		evFilter = null;
 		properlyCreated = true;
 	}
 	
 	@Override 
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// TODO Called by the StartCommand mechanism
-		Log.d("chris", "onStartCommand() on EventReader");
-		// chris NOTE: this is periodically called due to the timer set in 
-		//             the StartupService (using AlarmManager)
-		
-		// chris FIXME: change this stupid work-around
+		// chris FIXME: change this stupid work-around ?
 		if (!properlyCreated) {
 			stopSelf();
+			Log.e(TAG, "onStartCommand() failure: the object was not properly created by onCreate()");
+			// TODO: shall we do some error notification (in the GUI)?
 			return START_STICKY;
 		}
-		
-		// chris NOTE: perform operations in a thread
-		
-		// chris TODO: there should be a parameter passed from the Intent to 
-		//             tell if we have to perform either event list 
-		//             or event detail fetching.	
-		
-		// Start up the thread running the service.  Note that we create a
-        // separate thread because the service normally runs in the process's
-        // main thread, which we don't want to block.
-        Thread thr = new Thread(null, eventListReadingTask, "EventReader");
+		// Get the EventFilter from the input Intent
+		evFilter = (EventFilter) intent.getParcelableExtra("EventFilter");
+		// NOTE: perform operations in a thread (not to stall the main thread)
+        Thread thr = new Thread(null, eventListReadingTask, THREAD_DATA_TAG);
         thr.start();
 		
 		return START_STICKY;
@@ -74,40 +88,36 @@ public class EventReader extends Service {
 	
 	private Runnable eventListReadingTask = new Runnable() {
         public void run() {
-        	// chris FIXME: As for now I insert any time this Service is called! 
-        	EventFilter filter = new EventFilter();
-        	filter.types.add(EventType.MILONGA);
-        	filter.types.add(EventType.SHOW);
-        	filter.dateFrom = new Date(2011, 12, 14);
-        	filter.dateTo = new Date(2011, 12, 20);
-        	filter.country = "Italia";
-        	filter.region = "Toscana";
-        	//String data = evFetcher.fetch(null);
-        	String data = evFetcher.fetchEventList(filter);
+        	// chris TODO: delete obsolete DB entries
+        	// Maybe...
+        	// dbHelper.getWritableDatabase().delete(table, whereClause, whereArgs);
+        	// ... or maybe not!
+        	// Fetch data
+        	String data = evFetcher.fetchEventList(evFilter);
         	if (data == null) {
-                Log.d("chris", "EventList Fetcher has failed.");
+                Log.e(THREAD_DATA_TAG, "DataEventFetcher failure: got null data");
                 EventReader.this.stopSelf();
                 return;
         	}
+        	// Parse data
         	evParser.parseEventList(data);
+        	// Fill DB with parsed data
         	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
-        	
-        	Log.d("chris", "READING EVENT LIST TASK DONE!");
-            // Done with our work...  stop the service!
+        	Log.d(THREAD_DATA_TAG, "All process is done!");
             EventReader.this.stopSelf(); 
         }
 	};
 	
-	
+	// FIXME: shall we use this? Are we going to have the Event Details?
 	private Runnable eventDetailReadingTask = new Runnable() {
         public void run() { 
         	// chris TODO: this tack should get the detail of the single event.
-        	//             Arguments (event id) might be passed throught the activation intent
+        	//             Arguments (event id) might be passed through the activation intent
         	//String data = evFetcher.fetch(null);
         	long eventId = 0; // chris FIXME: this should be passed from the intent
         	String data = evFetcher.fetchEventDetail(eventId);
         	if (data == null) {
-                Log.d("chris", "Fetching event details Failure");
+                Log.e(THREAD_DETAIL_TAG, "DataEventFetcher failure: got null details");
                 EventReader.this.stopSelf();
                 return;
         	}
@@ -115,7 +125,7 @@ public class EventReader extends Service {
         	// chris TODO: insert in the DB (another table?) the event detail
         	//dbFillEventDetail(dbHelper.getWritableDatabase(), evParser.getEvents());
         	
-        	Log.d("chris", "READING DETAIL TASK DONE!");
+        	Log.d(THREAD_DETAIL_TAG, "All process is done!");
             // Done with our work...  stop the service!
             EventReader.this.stopSelf(); 
         }
@@ -134,11 +144,11 @@ public class EventReader extends Service {
 			long r;
 			// chris TODO: after discussing with Stefano it's likely that the conflict resolution
 			//             mechanism to be used could simply be CONFLICT_REPLACE, to force update!
-			r = db.insertWithOnConflict(DbHelper.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+			r = db.insertWithOnConflict(DbHelper.TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 			if (r < 0)
-				Log.w("chris", "Error while inserting row ");
+				Log.w(THREAD_DATA_TAG, "Error while inserting row");
 			else
-				Log.d("chris", "Inserting Row " + r);
+				Log.d(THREAD_DATA_TAG, "Inserting row " + r);
 		}
 		db.close();
 	}

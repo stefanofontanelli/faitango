@@ -19,11 +19,13 @@ public abstract class DataEventFetcher {
 	public static class Factory {
 
 		/* Local Registry for Factory Method Pattern */
-		static final private HashMap<String, Constructor<? extends DataEventFetcher>> registry = 
+		private static final HashMap<String, Constructor<? extends DataEventFetcher>> registry = 
 				new HashMap<String, Constructor<? extends DataEventFetcher>>();
 		
+		private static final String TAG = "DataEventFetcher.Factory";
+		
 		/* Registration function, to be called by the Product classes */
-		static public void register(String id, Class<? extends DataEventFetcher> fetcher) {
+		public static void register(String id, Class<? extends DataEventFetcher> fetcher) {
 			if (registry.containsKey(id)) 
 				return;//chris TODO: generate error: exception? return boolean?
 			try {
@@ -42,14 +44,14 @@ public abstract class DataEventFetcher {
 		
 		/* Factory creator methods: access the registry and uses the proper
 		 * registered constructor. */
-		static public DataEventFetcher create(String id, Context context) {
+		public static DataEventFetcher create(String id, Context context) {
 			if (!registry.containsKey(id)) 
 				return null;//chris TODO: generate error: exception? return boolean?
 			DataEventFetcher fetcher = null;
 			try {
 				fetcher = registry.get(id).newInstance(context);
 			} catch (Exception e) {
-				Log.e("chris", "CREATING FETCHER: ");
+				Log.e(TAG, "Creation faiulure: ");
 				e.printStackTrace();
 				return null;
 			}
@@ -88,13 +90,12 @@ public abstract class DataEventFetcher {
 		}
 	}
 	
-	
 	protected Context appContext;
 	
 	protected DataEventFetcher(Context context) {
 		appContext = context;
 	}
 	
-	abstract public String fetchEventList(EventFilter filter);
-	abstract public String fetchEventDetail(long id);
+	public abstract String fetchEventList(EventFilter filter);
+	public abstract String fetchEventDetail(long id);
 }

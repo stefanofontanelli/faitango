@@ -3,7 +3,6 @@ package com.retis.faitango;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -11,6 +10,8 @@ public class DataEventParserJSON extends DataEventParser {
 
 	/* Register the concrete Product's constructor to the Factory */
 	static { DataEventParser.Factory.register("json", DataEventParserJSON.class); }
+	
+	private static final String TAG = "DataEventParserJSON";
 	
 	public DataEventParserJSON(Context context) {
 		super(context);
@@ -20,7 +21,7 @@ public class DataEventParserJSON extends DataEventParser {
 	public void parseEventList(String input) { 
 	
 		try {
-			// chris TODO: manage JSON parsing exceptions!
+			// chris TODO: manage JSON parsing exceptions?
 			JSONArray jArray = new JSONArray(input);
 			int len = jArray.length();
 			for (int i = 0; i < len; i++) {
@@ -34,14 +35,12 @@ public class DataEventParserJSON extends DataEventParser {
 				events.add(ev);
 			}
 		} catch (JSONException e) {
-			Log.d("chris", "EXCEPTION in JSON: " + e.toString());
+			Log.d(TAG, "Failure: got exception in JSON: " + e.toString());
 		}
 	}
 
 	@Override
 	public void parseEventDetail(String input) {
-		// TODO Auto-generated method stub
 		// chris FIXME: DO IT!
-		
 	}
 }

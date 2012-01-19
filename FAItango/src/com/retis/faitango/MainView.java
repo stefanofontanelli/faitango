@@ -1,7 +1,5 @@
 package com.retis.faitango;
 
-//import com.retis.faitango.ConfigurationView.SpinnerPeriodicEventReaderListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -62,10 +60,13 @@ public class MainView extends Activity {
         buttonSync.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d("chris", "Synchronized CLICKED!");
-            	Context c = v.getContext();
-            	Intent intent = new Intent(c, com.retis.faitango.EventReader.class);
-            	c.startService(intent);
-            }
+            	Context c = v.getContext();            	
+            	EventReaderAlarm alarm = new EventReaderAlarm(c, 1000, 0);
+            	alarm.start();
+            	// chris TODO: there should be a "Please, wait" dialog (maybe including a "cancel" button)
+            	//             which is displayed while performing the Sync operation.
+            	//             DO IT!
+            	}
         });
         
         Button buttonCleanDB = (Button) findViewById(R.id.buttonCleanDB);

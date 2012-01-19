@@ -1,27 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- This is a primitive example showing the different types of preferences available. -->
-
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/bgUpdater">
+    <PreferenceCategory android:title="@string/prefCategoryConnection">
     	<EditTextPreference
-                android:key="remoteHTTPServer" 
-                android:title="@string/prefTitleRemoteServer"
-                android:summary="@string/prefSummaryRemoteServer"
-                android:dialogTitle="@string/prefDialogTitleRemoteServer"/>
-        <CheckBoxPreference
-                android:key="checkboxBgUpdater"
-                android:title="@string/prefTitleBgUpdater"
-                android:summary="@string/prefSummaryBgUpdater" />
-        <ListPreference
-                android:key="listBgUpdaterPeriods"
-                android:title="@string/prefTitleBgUpdaterPeriods"
-                android:summary="@string/prefSummaryBgUpdaterPeriods"
-                android:entries="@array/bgUpdaterPeriods"
-                android:entryValues="@array/bgUpdaterPeriods"
-                android:dialogTitle="@string/prefTitleBgUpdaterPeriods" />    
-    </PreferenceCategory>
-                
+        	android:key="remoteHTTPServer" 
+            android:title="@string/prefTitleRemoteServer"
+            android:summary="@string/prefSummaryRemoteServer"
+            android:dialogTitle="@string/prefDialogTitleRemoteServer"/>
+	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="@string/prefCategorySync">
+		<ListPreference
+       		android:key="autoSyncType"
+            android:title="@string/prefTitleAutoSync"
+        	android:summary="@string/prefSummaryAutoSync"
+        	android:entries="@array/prefEntriesAutoSync"
+			android:entryValues="@array/prefEntryValuesAutoSync"
+			android:defaultValue="0"
+			android:dialogTitle="@string/prefTitleAutoSync" />
+		 <ListPreference
+			android:key="periodicAutoSyncPeriods"
+			android:title="@string/prefTitlePeriodicAutoSyncPeriods"
+			android:summary="@string/prefSummaryPeriodicAutoSyncPeriods"
+			android:entries="@array/prefEntriesPeriodicAutoSyncPeriods"
+			android:entryValues="@array/prefEntryValuesPeriodicAutoSyncPeriods"
+			android:dialogTitle="@string/prefDialogTitlePeriodicAutoSyncPeriods"
+			android:dependency="autoSyncType" />
+	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="@string/prefCategorySearchParams">
+		<ListPreference
+       		android:key="autoSyncSearchCountry"
+            android:title="@string/prefTitleSearchCountry"
+        	android:summary="@string/prefSummarySearchCountry"
+        	android:entries="@array/prefEntriesSearchCountry"
+			android:entryValues="@array/prefEntryValuesSearchCountry"
+			android:defaultValue="118"
+			android:dialogTitle="@string/prefDialogTitleSearchCountry" />
+		<ListPreference
+       		android:key="autoSyncSearchRegion"
+            android:title="@string/prefTitleSearchRegion"
+        	android:summary="@string/prefSummarySearchRegion"
+        	android:entries="@array/prefEntriesSearchRegion"
+			android:entryValues="@array/prefEntriesSearchRegion"
+			android:defaultValue="Toscana"
+			android:dialogTitle="@string/prefDialogTitleSearchRegion" />
+		<ListPreference
+       		android:key="autoSyncSearchProvince"
+            android:title="@string/prefTitleSearchProvince"
+        	android:summary="@string/prefSummarySearchProvince"
+        	android:entries="@array/prefEntriesSearchProvince"
+			android:entryValues="@array/prefEntryValuesSearchProvince"
+			android:defaultValue=""
+			android:dialogTitle="@string/prefDialogTitleSearchProvince" />
+	</PreferenceCategory>		
+	                
 </PreferenceScreen>
