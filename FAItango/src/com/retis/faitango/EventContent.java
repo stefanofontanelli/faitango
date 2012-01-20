@@ -2,8 +2,11 @@ package com.retis.faitango;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -33,7 +36,8 @@ public class EventContent extends MapActivity {
 	private DbHelper dbHelper;
 	private SQLiteDatabase db;
 	private Cursor cursor;
-	private String eventID, title, description, city, date;
+	private String eventID, title, description, city;
+	private Date beginTime;
 	private TextView textView;
 	private MapView mapView;
 	private List<Overlay> mapOverlays;
@@ -75,40 +79,17 @@ public class EventContent extends MapActivity {
             public void onClick(View v) {
                 Log.d(TAG, "remainder button pressed!");
 
-                /*
-                 * ugly.. but web site database doesn't have
-                 * a proper date field :-/
-                 */
-                String[] datetmp = date.split(" ");
-                String[] dateFields = datetmp[1].split("/");
-                Calendar beginTime = Calendar.getInstance();
-                Calendar endTime = Calendar.getInstance();
-                Log.d(TAG, dateFields[2]+" "+dateFields[1]+" "+dateFields[0]+
-                		"  = "+beginTime.getTimeInMillis());
-                /*
-                 * dateFields[1] - 1 makes no sense, but it's the only
-                 * way to correctly set month inside calendar event
-                 * activity
-                 */
-                beginTime.set(Integer.parseInt(dateFields[2]),
-                		Integer.parseInt(dateFields[1])-1,
-                		Integer.parseInt(dateFields[0]),
-                		22, 30);
-                endTime.set(Integer.parseInt(dateFields[2]),
-                		Integer.parseInt(dateFields[1])-1,
-                		Integer.parseInt(dateFields[0])+1,
-                		02, 00);
-                
-                
+                // Statically add 3 hours, since we have no ending time 
+                long start = beginTime.getTime() + ((21 * 3600000));
+                long stop = start + (8 * 3600000);
                 Intent intent = new Intent(Intent.ACTION_EDIT)
                         .setType("vnd.android.cursor.item/event")
                 		.putExtra("title", title)
                         .putExtra("description", description)
                         .putExtra("eventLocation", city)
-                		.putExtra("beginTime", beginTime.getTimeInMillis())
-                		.putExtra("endTime", endTime.getTimeInMillis());
+                		.putExtra("beginTime", start)
+                		.putExtra("endTime", stop);
                 startActivity(intent);
-                
           }
         });
 	}
@@ -142,8 +123,9 @@ public class EventContent extends MapActivity {
 			textView.setText(city);
 			
 			textView = (TextView) findViewById(R.id.textDetDate);
-			date = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_DATE));
-			textView.setText(date);
+			beginTime = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DbHelper.C_DATE)));
+			String s = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN).format(beginTime); 
+			textView.setText(s);
 			
 			textView = (TextView) findViewById(R.id.textDetEventName);
 			description = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_NAME));

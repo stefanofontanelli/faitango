@@ -1,5 +1,7 @@
 package com.retis.faitango;
 
+import java.util.Date;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,7 +11,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper{
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "events.db";
-	static final int DB_VERSION = 2;
+	static final int DB_VERSION = 3;
 	static final String TABLE ="events";
 	static final String C_ID = BaseColumns._ID;
 	static final String C_CITY = "city";
@@ -27,7 +29,7 @@ public class DbHelper extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String sql = "create table " + TABLE + " (" + C_ID + " int primary key, "
-				+ C_CITY + " text, " + C_DATE + " text, " + C_TIME + " text, "
+				+ C_CITY + " text, " + C_DATE + " integer, " + C_TIME + " text, "
 				+ C_TYPE + " text, " + C_NAME + " text)";
 		
 		db.execSQL(sql);

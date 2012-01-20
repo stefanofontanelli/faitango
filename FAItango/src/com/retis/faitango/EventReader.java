@@ -59,6 +59,7 @@ public class EventReader {
 		//       eventListReadingTask or eventDetailReadingTask has to be executed!
 		// Get the EventFilter from the input Intent
 		
+		/*
     	// chris: FIXME: REMOVE THIS, JUST FOR TESTING!!!!
     	try {
 			Thread.sleep(5000);
@@ -66,7 +67,7 @@ public class EventReader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
 		
        	// chris TODO: delete obsolete DB entries
     	// Maybe...
@@ -82,9 +83,6 @@ public class EventReader {
     	evParser.parseEventList(data);
     	// Fill DB with parsed data
     	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
-
-
-    	// FIXME <<<----- REMOVE PREVIOUS BLOCK
     	Log.d(TAG, "All process is done!");
 	}
 
@@ -119,8 +117,8 @@ public class EventReader {
 			values.clear();
 			values.put(DbHelper.C_ID, ev.id);
 			values.put(DbHelper.C_CITY, ev.city);
-			values.put(DbHelper.C_DATE, ev.date);
-			values.put(DbHelper.C_TIME, "There's no time in JSON");
+			values.put(DbHelper.C_DATE, ev.date.getTime());
+			values.put(DbHelper.C_TIME, "21:00");
 			values.put(DbHelper.C_TYPE, context.getResources().getString(ev.type.resId));
 			values.put(DbHelper.C_NAME, ev.text);
 			long r;

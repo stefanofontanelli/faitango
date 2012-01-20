@@ -1,5 +1,8 @@
 package com.retis.faitango;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -29,7 +32,15 @@ public class DataEventParserJSON extends DataEventParser {
 				DataEvent ev = new DataEvent();
 				ev.id = obj.getLong("id");
 				ev.text = obj.getString("tx");
-				ev.date = obj.getString("dt");
+				 /*
+                 * ugly.. but web site database doesn't have
+                 * a proper date field :-/
+                 */
+                String[] datetmp = obj.getString("dt").split(" ");
+                String[] dateFields = datetmp[1].split("/");
+                ev.date = (new GregorianCalendar(Integer.parseInt(dateFields[2]), 
+                		Integer.parseInt(dateFields[1]) - (12 - Calendar.DECEMBER), 
+                		Integer.parseInt(dateFields[0]))).getTime();
 				ev.city = obj.getString("citta");
 				ev.type = getFromString(obj.getString("type"));
 				events.add(ev);
