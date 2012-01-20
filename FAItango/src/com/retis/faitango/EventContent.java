@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -15,21 +18,25 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+import com.facebook.android.*;
+
+import com.facebook.android.Facebook.*;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EventContent extends MapActivity {
 	private static String TAG = "EventContent";
@@ -47,6 +54,11 @@ public class EventContent extends MapActivity {
 	MapController mapController;
 	private double lat = 43.718326;
 	private double lon = 10.424866;
+	
+	Facebook facebook = new Facebook("151539328293835");
+	String FILENAME = "AndroidSSO_data";
+    private SharedPreferences mPrefs;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +86,8 @@ public class EventContent extends MapActivity {
 		
 		mapController = mapView.getController();
 		
-		final Button button = (Button) findViewById(R.id.calbutton);
-        button.setOnClickListener(new View.OnClickListener() {
+		final Button calButton = (Button) findViewById(R.id.calbutton);
+        calButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "remainder button pressed!");
 
@@ -92,6 +104,34 @@ public class EventContent extends MapActivity {
                 startActivity(intent);
           }
         });
+        
+        final Button faceButton = (Button) findViewById(R.id.facebookButton);
+        faceButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d(TAG, "facebook button pressed!");
+
+                facebookAuth();
+                
+                //post on user's wall.
+                /*
+                 * FIXME this should be correct (according to the
+                 * documentation).. anyway, the post dialog is
+                 * correctly displayed, and the posting works..
+                 * no luck with params :-|
+                 */
+                
+                
+                Bundle params = new Bundle();
+                params.putString("message", "messaggio");
+                params.putString("name", "nome");
+                params.putString("caption", "caption");
+                //params.putString("link", "http://www.londatiga.net");
+                params.putString("description", "Dexter, seven years old dachshund who loves to catch cats, eat carrot and krupuk");
+                //params.putString("picture", "http://twitpic.com/show/thumb/6hqd44");
+            	
+	            facebook.dialog(EventContent.this, "feed", params, new UpdateStatusListener());
+            }
+        });
 	}
 
 	@Override
@@ -105,6 +145,7 @@ public class EventContent extends MapActivity {
 	protected void onResume() {
 		super.onResume();
 		
+		facebook.extendAccessTokenIfNeeded(this, null);
 		cursor = db.query(DbHelper.TABLE, null, DbHelper.C_ID + "=" + eventID,
 				null, null, null, null);
 		startManagingCursor(cursor);
@@ -173,5 +214,94 @@ public class EventContent extends MapActivity {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        facebook.authorizeCallback(requestCode, resultCode, data);
+    }
+
+	private void facebookAuth() {
+		
+		/*
+         * Get existing access_token if any
+         */
+        mPrefs = getPreferences(MODE_PRIVATE);
+        String access_token = mPrefs.getString("access_token", null);
+        long expires = mPrefs.getLong("access_expires", 0);
+        if(access_token != null) {
+            facebook.setAccessToken(access_token);
+        }
+        if(expires != 0) {
+            facebook.setAccessExpires(expires);
+        }
+        
+        /*
+         * Only call authorize if the access_token has expired.
+         */
+        if(!facebook.isSessionValid()) {
+        	/*
+    		 * The user can post events on Facebook wall
+    		 * Let's authorize him after he opens a detailed
+    		 * event view
+    		 */
+			facebook.authorize(this, new DialogListener() {
+			    @Override
+			    public void onComplete(Bundle values) {
+			    	SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putString("access_token", facebook.getAccessToken());
+                    editor.putLong("access_expires", facebook.getAccessExpires());
+                    editor.commit();
+			    }
+	
+			    @Override
+			    public void onFacebookError(FacebookError error) {}
+	
+			    @Override
+			    public void onError(DialogError e) {}
+	
+			    @Override
+			    public void onCancel() {}
+			});
+        }
+	}
+
+    /*
+     * callback for the feed dialog which updates the profile status
+     */
+    public class UpdateStatusListener implements DialogListener {
+        @Override
+        public void onComplete(Bundle values) {
+            final String postId = values.getString("post_id");
+            if (postId != null) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Update Status executed",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "No wall post made",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+
+        @Override
+        public void onFacebookError(FacebookError error) {
+            Toast.makeText(getApplicationContext(), "Facebook Error: " + error.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel() {
+            Toast toast = Toast.makeText(getApplicationContext(), "Update status cancelled",
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+		@Override
+		public void onError(DialogError e) {
+			// TODO Auto-generated method stub
+			
+		}
+    }
 }
