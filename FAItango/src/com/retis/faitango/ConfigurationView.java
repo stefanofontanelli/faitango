@@ -23,22 +23,23 @@ public class ConfigurationView extends PreferenceActivity {
 		 configureSearchParams();
 	 }
 	    
-    /*****************************************/
-    /***Cccdslkdjsalkdjaslkd configuration ***/
-    /*****************************************/    
     private void configureAutoSyncType() {
-    	
     	// List setup
         autoSyncType = (ListPreference) findPreference("autoSyncType");  
         autoSyncType.setSummary(autoSyncType.getEntry());
         autoSyncType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
         	public boolean onPreferenceChange(Preference pce, Object value) {
         		long type = Long.decode((String)value);
-        		if (type == 0) {
-        			periodicAutoSync = false;
-        		} else if (type == 1) {
+        		// chris FIXME: treating type0 and type1 as the SAME!
+        		if (type == 0 || type == 1) {
+        			// NOTE: The period and offset params (0 and 0) are not important, we just need
+        			//       to call the alarm.stop() 
+        			EventReaderAlarm alarm = new EventReaderAlarm(pce.getContext(), 0, 0);
+    				alarm.stop();
         			periodicAutoSync = false;
         		} else if (type == 2) {
+        			EventReaderAlarm alarm = new EventReaderAlarm(pce.getContext());
+    				alarm.start();
         			periodicAutoSync = true;
         		} else {
         			// TODO: generate some error?
@@ -51,7 +52,6 @@ public class ConfigurationView extends PreferenceActivity {
     }
     
     private void configurePeriodicAutoSyncPeriods() {
-
         // List setup
         periodicAutoSyncPeriods = (ListPreference) findPreference("periodicAutoSyncPeriods");  
         periodicAutoSyncPeriods.setSummary(periodicAutoSyncPeriods.getEntry());
@@ -63,7 +63,8 @@ public class ConfigurationView extends PreferenceActivity {
         			if (period != 0) {
         				period = period * 1000; // In milliseconds
         				EventReaderAlarm alarm = new EventReaderAlarm(pce.getContext(), period, period);
-        				alarm.start();
+        				alarm.stop();  // Cancel previous alarm (if any)
+        				alarm.start(); // Start the new alarm
         			}
         		}
             	String s = "UpdaterPerdiods = " + (String)value;

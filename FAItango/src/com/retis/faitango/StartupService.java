@@ -24,10 +24,6 @@ public class StartupService extends Service {
 		// chris TODO: when we install the application for the first time, 
 		//             all preferences should be set to a default value!
 		
-		// chris TODO: put in here all the code to be executed at startup (BOOT)
-		//             - Read configuration files? -> DONE
-		//             - Plan actions to be done?  -> DONE
-		
 		// Access the (default) preference file (also used by the ConfigurationView)
 		if (PreferenceHelper.hasPeriodicAutoSync(this)) {
         	Log.d(TAG, "AutoSync active: configure and start EventReaderAlarm");

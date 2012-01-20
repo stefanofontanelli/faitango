@@ -31,6 +31,7 @@ public class EventReader extends Service {
 	private DataEventParser evParser;
 	private DbHelper dbHelper;
 	private EventFilter evFilter;
+	private static boolean threadDataRunning = false;
 	// NOTE: as for now, the DataEvent fetcher and parser type are 
 	//       manually set respectively to HTTP and JSON
 	private final String evFetcherType = "http";
@@ -70,12 +71,22 @@ public class EventReader extends Service {
 			// TODO: shall we do some error notification (in the GUI)?
 			return START_STICKY;
 		}
+		synchronized(this) {
+			if (threadDataRunning) {
+				stopSelf();
+				Log.d(TAG, "The reading thread '" + THREAD_DATA_TAG + "' is already running. Stopping.");
+				return START_STICKY;
+			}
+			threadDataRunning = true;
+		}
+		// TODO: there should be some extra in the Intent defining if the either
+		//       eventListReadingTask or eventDetailReadingTask has to be executed!
 		// Get the EventFilter from the input Intent
 		evFilter = (EventFilter) intent.getParcelableExtra("EventFilter");
 		// NOTE: perform operations in a thread (not to stall the main thread)
         Thread thr = new Thread(null, eventListReadingTask, THREAD_DATA_TAG);
         thr.start();
-		
+        
 		return START_STICKY;
 	}
 	
@@ -87,6 +98,12 @@ public class EventReader extends Service {
 	}
 	
 	private Runnable eventListReadingTask = new Runnable() {
+		private void terminating() {
+			EventReader.this.stopSelf();
+			synchronized (EventReader.this) {
+				threadDataRunning = false;
+			}
+		}
         public void run() {
         	// chris TODO: delete obsolete DB entries
         	// Maybe...
@@ -96,15 +113,24 @@ public class EventReader extends Service {
         	String data = evFetcher.fetchEventList(evFilter);
         	if (data == null) {
                 Log.e(THREAD_DATA_TAG, "DataEventFetcher failure: got null data");
-                EventReader.this.stopSelf();
+                terminating();
                 return;
         	}
         	// Parse data
         	evParser.parseEventList(data);
         	// Fill DB with parsed data
         	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
+
+        	// chris: FIXME: REMOVE THIS, JUST FOR TESTING!!!!
+        	try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
         	Log.d(THREAD_DATA_TAG, "All process is done!");
-            EventReader.this.stopSelf(); 
+        	terminating(); 
         }
 	};
 	

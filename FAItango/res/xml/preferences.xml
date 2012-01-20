@@ -27,6 +27,7 @@
 			android:summary="@string/prefSummaryPeriodicAutoSyncPeriods"
 			android:entries="@array/prefEntriesPeriodicAutoSyncPeriods"
 			android:entryValues="@array/prefEntryValuesPeriodicAutoSyncPeriods"
+			android:defaultValue="60"
 			android:dialogTitle="@string/prefDialogTitlePeriodicAutoSyncPeriods"
 			android:dependency="autoSyncType" />
 	</PreferenceCategory>
@@ -54,7 +55,7 @@
         	android:summary="@string/prefSummarySearchProvince"
         	android:entries="@array/prefEntriesSearchProvince"
 			android:entryValues="@array/prefEntryValuesSearchProvince"
-			android:defaultValue=""
+			android:defaultValue="PI"
 			android:dialogTitle="@string/prefDialogTitleSearchProvince" />
 	</PreferenceCategory>		
 	                

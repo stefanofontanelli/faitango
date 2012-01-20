@@ -82,6 +82,6 @@ public class EventReaderAlarm  {
 		// Get automatic synchronization periods (repeat time) from preferences.
     	long period =  PreferenceHelper.getPeriodicAutoSyncPeriod(context);
     	alarmPeriod = period * 1000; // In milliseconds
-    	alarmOffset = alarmPeriod + 10000; // Period + 10 seconds
+    	alarmOffset = alarmPeriod + 1000; // Period + 1 second
 	}
 }
