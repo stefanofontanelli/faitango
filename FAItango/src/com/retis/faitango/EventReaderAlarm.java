@@ -66,7 +66,7 @@ public class EventReaderAlarm  {
 	
 	private void init(Context c) {
 		context = c;
-		Intent passedIntent = new Intent(context, EventReader.class); 
+		Intent passedIntent = new Intent(context, EventReaderService.class); 
 		// Read filter from default search parameters
 		EventFilter filter = PreferenceHelper.getSearchParams(context);
 		// Encode the EventFilter in the passed Intent

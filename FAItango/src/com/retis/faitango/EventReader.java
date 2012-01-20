@@ -1,11 +1,10 @@
 package com.retis.faitango;
 
 import java.util.ArrayList;
-import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.IBinder;
 import android.util.Log;
 
 /** Local (Event) DB updater
@@ -24,116 +23,72 @@ import android.util.Log;
  * 
  * @author Christian Nastasi
  */
-public class EventReader extends Service {
+public class EventReader {
 	
-	private boolean properlyCreated;
+	private Context context;
 	private DataEventFetcher evFetcher;
 	private DataEventParser evParser;
 	private DbHelper dbHelper;
-	private EventFilter evFilter;
-	private static boolean threadDataRunning = false;
 	// NOTE: as for now, the DataEvent fetcher and parser type are 
 	//       manually set respectively to HTTP and JSON
 	private final String evFetcherType = "http";
 	private final String evParserType = "json";
 	private static final String TAG = "EventReader";
-	private static final String THREAD_DATA_TAG = "EventReaderThreadForData";
-	private static final String THREAD_DETAIL_TAG = "EventReaderThreadForDetail";
 	
-	@Override
-	public void onCreate() {
-		properlyCreated = false;
+	public EventReader(Context c) throws Exception {
+		context = c;
 		// Create the proper DataEventFetcher
-		evFetcher = DataEventFetcher.Factory.create(evFetcherType, this);
+		evFetcher = DataEventFetcher.Factory.create(evFetcherType, context);
 		if (evFetcher == null) {
 			Log.e(TAG, "Error while creating DataEventFetcher");
-			return;
+			throw new Exception(TAG + ": Error while creating DataEventFetcher");
 		}
 		// Create the proper DataEventParser
-		evParser = DataEventParser.Factory.create(evParserType, this);
+		evParser = DataEventParser.Factory.create(evParserType, context);
 		if (evParser == null) {
 			Log.e(TAG, "Error while creating DataEventParser");
-			return;
+			throw new Exception(TAG + ": Error while creating DataEventParser");
 		}
 		// Create a DBHelper
-		dbHelper = new DbHelper(this);
+		dbHelper = new DbHelper(c);
 		// Initialize null filter
-		evFilter = null;
-		properlyCreated = true;
 	}
 	
-	@Override 
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		// chris FIXME: change this stupid work-around ?
-		if (!properlyCreated) {
-			stopSelf();
-			Log.e(TAG, "onStartCommand() failure: the object was not properly created by onCreate()");
-			// TODO: shall we do some error notification (in the GUI)?
-			return START_STICKY;
-		}
-		synchronized(this) {
-			if (threadDataRunning) {
-				stopSelf();
-				Log.d(TAG, "The reading thread '" + THREAD_DATA_TAG + "' is already running. Stopping.");
-				return START_STICKY;
-			}
-			threadDataRunning = true;
-		}
+	public synchronized void execute(EventFilter filter) {
 		// TODO: there should be some extra in the Intent defining if the either
 		//       eventListReadingTask or eventDetailReadingTask has to be executed!
 		// Get the EventFilter from the input Intent
-		evFilter = (EventFilter) intent.getParcelableExtra("EventFilter");
-		// NOTE: perform operations in a thread (not to stall the main thread)
-        Thread thr = new Thread(null, eventListReadingTask, THREAD_DATA_TAG);
-        thr.start();
-        
-		return START_STICKY;
-	}
-	
-	@Override 
-	public IBinder onBind(Intent arg0) {
-		// TODO Called by the Binding mechanism
-		Log.d("chris", "onBind() on EventReader");
-		return null;
-	}
-	
-	private Runnable eventListReadingTask = new Runnable() {
-		private void terminating() {
-			EventReader.this.stopSelf();
-			synchronized (EventReader.this) {
-				threadDataRunning = false;
-			}
+		
+    	// chris: FIXME: REMOVE THIS, JUST FOR TESTING!!!!
+    	try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-        public void run() {
-        	// chris TODO: delete obsolete DB entries
-        	// Maybe...
-        	// dbHelper.getWritableDatabase().delete(table, whereClause, whereArgs);
-        	// ... or maybe not!
-        	// Fetch data
-        	String data = evFetcher.fetchEventList(evFilter);
-        	if (data == null) {
-                Log.e(THREAD_DATA_TAG, "DataEventFetcher failure: got null data");
-                terminating();
-                return;
-        	}
-        	// Parse data
-        	evParser.parseEventList(data);
-        	// Fill DB with parsed data
-        	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
+		
+		
+       	// chris TODO: delete obsolete DB entries
+    	// Maybe...
+    	// dbHelper.getWritableDatabase().delete(table, whereClause, whereArgs);
+    	// ... or maybe not!
+    	// Fetch data
+    	String data = evFetcher.fetchEventList(filter);
+    	if (data == null) {
+            Log.e(TAG, "DataEventFetcher failure: got null data");
+            return;
+    	}
+    	// Parse data
+    	evParser.parseEventList(data);
+    	// Fill DB with parsed data
+    	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
 
-        	// chris: FIXME: REMOVE THIS, JUST FOR TESTING!!!!
-        	try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	
-        	Log.d(THREAD_DATA_TAG, "All process is done!");
-        	terminating(); 
-        }
-	};
-	
+
+    	// FIXME <<<----- REMOVE PREVIOUS BLOCK
+    	Log.d(TAG, "All process is done!");
+	}
+
+	/*
 	// FIXME: shall we use this? Are we going to have the Event Details?
 	private Runnable eventDetailReadingTask = new Runnable() {
         public void run() { 
@@ -156,6 +111,7 @@ public class EventReader extends Service {
             EventReader.this.stopSelf(); 
         }
 	};
+	*/
 	
 	private void dbFillEventList(SQLiteDatabase db, ArrayList<DataEvent> events) {
 		ContentValues values = new ContentValues();
@@ -165,16 +121,16 @@ public class EventReader extends Service {
 			values.put(DbHelper.C_CITY, ev.city);
 			values.put(DbHelper.C_DATE, ev.date);
 			values.put(DbHelper.C_TIME, "There's no time in JSON");
-			values.put(DbHelper.C_TYPE, this.getResources().getString(ev.type.resId));
+			values.put(DbHelper.C_TYPE, context.getResources().getString(ev.type.resId));
 			values.put(DbHelper.C_NAME, ev.text);
 			long r;
 			// chris TODO: after discussing with Stefano it's likely that the conflict resolution
 			//             mechanism to be used could simply be CONFLICT_REPLACE, to force update!
 			r = db.insertWithOnConflict(DbHelper.TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 			if (r < 0)
-				Log.w(THREAD_DATA_TAG, "Error while inserting row");
+				Log.w(TAG, "Error while inserting row");
 			else
-				Log.d(THREAD_DATA_TAG, "Inserting row " + r);
+				Log.d(TAG, "Inserting row " + r);
 		}
 		db.close();
 	}

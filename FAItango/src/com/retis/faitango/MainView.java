@@ -60,9 +60,9 @@ public class MainView extends Activity {
         buttonSync.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d("chris", "Synchronized CLICKED!");
-            	Context c = v.getContext();            	
-            	EventReaderAlarm alarm = new EventReaderAlarm(c, 1000, 0);
-            	alarm.start();
+        		EventFilter filter = PreferenceHelper.getSearchParams(v.getContext());
+        		new EventReaderAsyncTask(v.getContext()).execute(filter);
+        		
             	// chris TODO: there should be a "Please, wait" dialog (maybe including a "cancel" button)
             	//             which is displayed while performing the Sync operation.
             	//             DO IT!
