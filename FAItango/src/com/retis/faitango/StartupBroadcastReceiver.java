@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+/** Activate {@link StartupService} (on system boot completed) <br><br>
+ * 
+ * @author Christian Nastasi
+ */
 public class StartupBroadcastReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "StartupBroadcastReceiver";

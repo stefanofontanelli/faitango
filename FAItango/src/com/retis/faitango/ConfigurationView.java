@@ -34,11 +34,11 @@ public class ConfigurationView extends PreferenceActivity {
 				long type = Long.decode((String)value);
 				// chris FIXME: treating type0 and type1 as the SAME!
 				if (type == 0 || type == 1) {
-					Log.d(ConfigurationView.TAG, "Changing preference autoSyncType to " + (String)value);
+					Log.d(ConfigurationView.TAG, "Changing preference autoSyncType to NEVER/ON-STARTUP");
 					EventReaderAlarm.instance(getApplicationContext()).stop();
 					periodicAutoSync = false;
 				} else if (type == 2) {
-					Log.d(ConfigurationView.TAG, "Changing preference autoSyncType to " + (String)value);
+					Log.d(ConfigurationView.TAG, "Changing preference autoSyncType to ON-BOOT");
 					EventFilter filter = PreferenceHelper.getSearchParams(getApplicationContext());
 		        	long period =  PreferenceHelper.getPeriodicAutoSyncPeriod(getApplicationContext());
 		        	period = period * 1000;
@@ -47,7 +47,8 @@ public class ConfigurationView extends PreferenceActivity {
 		        	alarm.start();
 					periodicAutoSync = true;
 				} else {
-					Log.d(ConfigurationView.TAG, "Changing preference autoSyncType to invalid value=" + (String)value);
+					Log.w(ConfigurationView.TAG, "Changing preference autoSyncType to invalid value=" + 
+							(String)value + ". Check code against string.xml file");
 					// TODO: generate some error?
 				}
 				int idx = autoSyncType.findIndexOfValue((String)value);
@@ -67,13 +68,11 @@ public class ConfigurationView extends PreferenceActivity {
 					Log.d(ConfigurationView.TAG, "Changing preference autoSync period to " + (String)value);
 					// Update alarm if necessary
 					long period =  Long.decode((String)value);
-					if (period != 0) {
-						period = period * 1000; // In milliseconds
-						EventFilter filter = PreferenceHelper.getSearchParams(getApplicationContext());
-			        	EventReaderAlarm alarm = EventReaderAlarm.instance(getApplicationContext());
-			        	alarm.update(filter, period, period);
-						alarm.start(); // Start the new alarm
-					}
+					period = period * 1000; // In milliseconds
+					EventFilter filter = PreferenceHelper.getSearchParams(getApplicationContext());
+					EventReaderAlarm alarm = EventReaderAlarm.instance(getApplicationContext());
+					alarm.update(filter, period, period);
+					alarm.start(); // Start the new alarm
 				}
 				int idx = periodicAutoSyncPeriods.findIndexOfValue((String)value);
 				CharSequence valueText = periodicAutoSyncPeriods.getEntries()[idx]; 

@@ -21,13 +21,18 @@ public class EventReaderAsyncTask extends AsyncTask<EventFilter, Void, Boolean> 
 	private ProgressDialog dialog;
 	private Context activityContext;
 	private EventReader reader;
+	private String waitMessage;
 	private static final String TAG = "EventReaderAsyncTask";
 
-	public EventReaderAsyncTask(Context contextOfActivity) {
+	public EventReaderAsyncTask(Context contextOfActivity, String displayedWaitMessage) {
 		activityContext = contextOfActivity;
+		if (displayedWaitMessage != null)
+			waitMessage = displayedWaitMessage;
+		else
+			waitMessage = "Perfavore, spetta un attimo! CRIBBIO";
 		dialog = new ProgressDialog(activityContext);
 		try {
-			reader = EventReader.instance(activityContext);
+			reader = new EventReader(activityContext);
 		} catch (Exception e) {
 			reader = null;
 			Log.e(TAG, "Error while creating the EventReader: " + e.getMessage());
@@ -41,9 +46,9 @@ public class EventReaderAsyncTask extends AsyncTask<EventFilter, Void, Boolean> 
 			Log.e(TAG, "EventReader is null. Exiting without parsing (check EventReaderAsyncTask constructor)");
 			return false;
 		}
-		if (reader.isExecuting())
+		if (EventReader.isExecuting())
 			Log.d(TAG, "EventReader already exetuing (probably in Service). Waiting");
-		while (reader.isExecuting()) {
+		while (EventReader.isExecuting()) {
 			try { Thread.sleep(100); } catch (InterruptedException e) {}
 			// chris TODO: implement some MAX looping logic: if waiting too much do something!
 		}
@@ -54,7 +59,7 @@ public class EventReaderAsyncTask extends AsyncTask<EventFilter, Void, Boolean> 
 
 	@Override
 	protected void onPreExecute() {
-		dialog.setMessage("Perfavore, spetta un attimo! CRIBBIO");
+		dialog.setMessage(waitMessage);
 		dialog.show();
 	}
 

@@ -33,7 +33,7 @@ public class EventReaderService extends Service {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					EventReader reader = EventReader.instance(EventReaderService.this);
+					EventReader reader = new EventReader(EventReaderService.this);
 					// Execute actual service code
 					Log.d(TAG, "Exetuting EventReader from SERVICE");
 					reader.execute((EventFilter) intent.getParcelableExtra("EventFilter"));

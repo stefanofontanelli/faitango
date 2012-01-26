@@ -6,9 +6,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 
-/** Activator for EventReader <br><br>
+/** Activator for EventReader (singleton) <br><br>
  * 
- * The class is responsible to set and clear the alarm for the (non-)periodic execution
+ * This singleton class is responsible to set and clear the alarm for the (non-)periodic execution
  * of the EventReader service.
  * The {@link EventReaderAlarm} implements the automatic synchronization paradigm.
  * It supports periodic activations as well as one-shot delayed ones.
@@ -26,7 +26,7 @@ public class EventReaderAlarm  {
 	private Context context;
 	private long alarmOffset;
 	private long alarmPeriod;
-	private static EventReaderAlarm singletone = null;
+	private static EventReaderAlarm singleton = null;
 
 	/** Creates alarm from preferences
 	 * 
@@ -37,10 +37,15 @@ public class EventReaderAlarm  {
 		alarmManager = (AlarmManager)context.getSystemService(Service.ALARM_SERVICE);
 	}
 
+	/** Get the singleton instance
+	 * 
+	 * @param c The Context of the application
+	 * @return	The singleton object
+	 */
 	public static EventReaderAlarm instance(Context c) {
-		if (singletone == null)
-			singletone = new EventReaderAlarm(c);
-		return singletone;
+		if (singleton == null)
+			singleton = new EventReaderAlarm(c);
+		return singleton;
 	}
 
 	/** Update alarm from parameters
@@ -67,8 +72,7 @@ public class EventReaderAlarm  {
 		if (alarmIntent == null)
 			return;
 		if (alarmPeriod != 0)
-			alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,	
-					alarmOffset, alarmPeriod, alarmIntent);
+			alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,	alarmOffset, alarmPeriod, alarmIntent);
 		else
 			alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, alarmOffset, alarmIntent);
 	}

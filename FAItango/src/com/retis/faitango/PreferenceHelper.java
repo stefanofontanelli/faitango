@@ -31,6 +31,15 @@ public final class PreferenceHelper {
 			return true;
 		return false;
 	}
+	
+	public static boolean hasStartupAutoSync(Context c) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+		//if (!prefs.contains(keyAutoSyncType))
+		//; //TODO: throw some exception!
+		if (prefs.getString(keyAutoSyncType, "").contentEquals("1"))
+			return true;
+		return false;
+	}
 
 	public static long getPeriodicAutoSyncPeriod(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());

@@ -37,6 +37,7 @@
         <item>1 h</item>
     </string-array>
     <string-array name="prefEntryValuesPeriodicAutoSyncPeriods">
+        <!-- Values in minutes -->
         <item>0</item>
         <item>5</item>
         <item>15</item>

@@ -20,6 +20,7 @@ public class MainView extends Activity {
 		Log.d("chris", "Creating MainView");
 		setContentView(R.layout.main);
 		createTemporaryLayout();
+		doOnStartup();
 	}
 
 	@Override
@@ -32,6 +33,14 @@ public class MainView extends Activity {
 	protected void onResume() {
 		super.onResume();
 		Log.d("chris", "Resuming MainView");
+	}
+	
+	private void doOnStartup() {
+		if (PreferenceHelper.hasStartupAutoSync(this)) {
+			Log.d("chris", "Starting AutoSync on application start-up");
+			EventFilter filter = PreferenceHelper.getSearchParams(this);
+			new EventReaderAsyncTask(this, "Synchronizing...").execute(filter);
+		} 
 	}
 
 	private void createTemporaryLayout() {
@@ -46,34 +55,26 @@ public class MainView extends Activity {
 				(new AsyncTask<Void, Void, Boolean>() {
 					// Progress dialog
 					private ProgressDialog dialog = new ProgressDialog(MainView.this);
-					private EventReader reader = null;
 
 					@Override
 					protected void onPreExecute() {
 						dialog.setMessage("Mannagia alla miseria, il reader sta eseguendo! ASPETTA!!!");
-						try {
-							reader = EventReader.instance(MainView.this);
-						} catch (Exception e) {
-							reader = null;
-						}
-						if (reader.isExecuting())
+						if (EventReader.isExecuting())
 							dialog.show();
 					}
 
 					@Override
 					protected Boolean doInBackground(Void... params) {
-						if (reader == null)
-							return false;
-						if (!reader.isExecuting())
+						if (!EventReader.isExecuting())
 							return true;
 						Log.d("chris", "EventReader is running. Waiting...");
-						long i = 1;
-						while (reader.isExecuting()) {
+						//long i = 0;
+						while (EventReader.isExecuting()) {
 							if (!dialog.isShowing()) // Give up if ProgressDialog was cancelled
 								return false;
-							try { Thread.sleep(1000); } catch (InterruptedException e) {}
-							Log.d("chris", "Wait cycle " + i);
-							i++;
+							// Wait 100ms before polling 
+							try { Thread.sleep(100); } catch (InterruptedException e) {}
+							//i++;
 							// chris TODO: implement some MAX looping logic: if waiting too much do something!
 						}
 						return true;
@@ -81,14 +82,12 @@ public class MainView extends Activity {
 
 					@Override
 					protected void onPostExecute(final Boolean success) {
-						Log.d("chris", "Vediamo success = " + success);
 						// If ProgrssDialog is not shown, give up 
 						if (dialog.isShowing())
 							dialog.dismiss();
 						if (!success)
 							return;
 						// Perform actual actions for on click: start the list activity!
-						Log.d("chris", "EXECUTE PASSED!!!!!");
 						Intent intent = new Intent(MainView.this, com.retis.faitango.EventsList.class);
 						MainView.this.startActivity(intent);
 					}
@@ -115,7 +114,7 @@ public class MainView extends Activity {
 			public void onClick(View v) {
 				Log.d("chris", "Synchronized CLICKED!");
 				EventFilter filter = PreferenceHelper.getSearchParams(v.getContext());
-				new EventReaderAsyncTask(v.getContext()).execute(filter);
+				new EventReaderAsyncTask(v.getContext(), null).execute(filter);
 			}
 		});
 

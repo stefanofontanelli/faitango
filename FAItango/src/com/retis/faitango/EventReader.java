@@ -38,11 +38,15 @@ public class EventReader {
 	//       manually set to HTTP and JSON
 	private final String evFetcherType = "http";
 	private final String evParserType = "json";
-	private boolean isRunning = false; 
+	private static boolean isRunning = false; 
 	private static final String TAG = "EventReader";
-	private static EventReader singletone = null;
 
-	private EventReader(Context c) throws Exception {
+	/** Create the EventReader
+	 * 
+	 * @param c			The Context of the application
+	 * @throws Exception
+	 */
+	public EventReader(Context c) throws Exception {
 		context = c;
 		// Create the proper DataEventFetcher
 		evFetcher = DataEventFetcher.Factory.create(evFetcherType, context);
@@ -60,22 +64,14 @@ public class EventReader {
 		dbHelper = new DbHelper(c);
 		// Initialize null filter
 	}
-	
-	public static EventReader instance(Context c) throws Exception {
-		if (singletone == null)
-			singletone = new EventReader(c);
-		return singletone;
-	}
-	
-	public boolean isExecuting() {
-		synchronized (context.getApplicationContext()) {
+
+	public synchronized static boolean isExecuting() {
 			return isRunning;
-		}
 	}
 
 	public void execute(EventFilter filter) {
 		synchronized (context.getApplicationContext()) {
-			Log.d(TAG, "proviamo: " + Thread.currentThread().getName());
+			Log.d(TAG, "Executing in thread=" + Thread.currentThread().getName());
 			if (isRunning) {
 				Log.d(TAG, "Already executing! EXITING!");
 				return;
