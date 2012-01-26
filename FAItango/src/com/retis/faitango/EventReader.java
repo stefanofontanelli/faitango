@@ -1,41 +1,48 @@
 package com.retis.faitango;
 
-import java.util.ArrayList;
+import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-/** Local (Event) DB updater
+/** Local (Event) DB updater <br><br>
  * 
- * The EventReader service fetches the data event from the remote repository
+ * The EventReader fetches the data event from the remote repository
  * and fills the local event database.
- * The service is meant to be activated in two possible ways:
- * - by the EventReaderAlarm: to perform automatic synchronization
- * - by the TODO:SearchActivity: to perform manual event search
- * The EventFilter object (parcelable), used to set an event fetch filter, 
- * is encoded as an extras in the activation Intent.     
- * 
- * The fetching mechanism is delegated to the DataEventFetcher class (subject to the abstract factory pattern).
- * The fetched data are parsed through the DataEventParser class (subject to abstract factory pattern).
+ * The class is meant to be used in two circumstances: to perform automatic synchronization;
+ * to perform manual event search.
+ * <br>
+ * The class can be used either by a background service ({@link EventReaderService}) 
+ * or by an AsyncTask ({@link EventReaderAsyncTask}).
+ * In the first case the class operations are wrapped in a service which is 
+ * activated by the EventReaderAlarm (see {@link EventReaderService} and {@link EventReaderAlarm}).
+ * In the second case the class is wrapped by an AsyncTask which is meant to be 
+ * executed by an Activity.
+ * <br><br>
+ * The {@link EventFilter} object (parcelable) is used to set a filter on the event fetching operation.
+ * <br><br>
+ * The fetching mechanism is delegated to the {@link DataEventFetcher} class (subject to the abstract factory pattern).
+ * The fetched data are parsed through the {@link DataEventParser} class (subject to abstract factory pattern).
  * Data are stored in the DB through the DBHelper class using an always-replace policy.
  * 
  * @author Christian Nastasi
  */
 public class EventReader {
-	
+
 	private Context context;
 	private DataEventFetcher evFetcher;
 	private DataEventParser evParser;
 	private DbHelper dbHelper;
 	// NOTE: as for now, the DataEvent fetcher and parser type are 
-	//       manually set respectively to HTTP and JSON
+	//       manually set to HTTP and JSON
 	private final String evFetcherType = "http";
 	private final String evParserType = "json";
+	private boolean isRunning = false; 
 	private static final String TAG = "EventReader";
-	
-	public EventReader(Context c) throws Exception {
+	private static EventReader singletone = null;
+
+	private EventReader(Context c) throws Exception {
 		context = c;
 		// Create the proper DataEventFetcher
 		evFetcher = DataEventFetcher.Factory.create(evFetcherType, context);
@@ -54,36 +61,59 @@ public class EventReader {
 		// Initialize null filter
 	}
 	
-	public synchronized void execute(EventFilter filter) {
+	public static EventReader instance(Context c) throws Exception {
+		if (singletone == null)
+			singletone = new EventReader(c);
+		return singletone;
+	}
+	
+	public boolean isExecuting() {
+		synchronized (context.getApplicationContext()) {
+			return isRunning;
+		}
+	}
+
+	public void execute(EventFilter filter) {
+		synchronized (context.getApplicationContext()) {
+			Log.d(TAG, "proviamo: " + Thread.currentThread().getName());
+			if (isRunning) {
+				Log.d(TAG, "Already executing! EXITING!");
+				return;
+			} 
+			isRunning = true;
+		}
 		// TODO: there should be some extra in the Intent defining if the either
 		//       eventListReadingTask or eventDetailReadingTask has to be executed!
 		// Get the EventFilter from the input Intent
-		
-		/*
-    	// chris: FIXME: REMOVE THIS, JUST FOR TESTING!!!!
-    	try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		// chris TODO: delete obsolete DB entries
+		// Maybe...
+		// dbHelper.getWritableDatabase().delete(table, whereClause, whereArgs);
+		// ... or maybe not!
+		// Fetch data
+		String data = evFetcher.fetchEventList(filter);
+		if (data == null) {
+			Log.e(TAG, "DataEventFetcher failure: got null data");
+			synchronized (context.getApplicationContext()) {
+				isRunning = false;
+			}
+			return;
 		}
-		*/
+		// Parse data
+		evParser.parseEventList(data);
+		// Fill DB with parsed data
+		dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
+
+		///*
+    	// chris: FIXME: REMOVE THIS, JUST FOR TESTING!!!!
+    	try { Log.d(TAG, "TEST-WAIT 10 secs"); Thread.sleep(10000);} catch (InterruptedException e) {}	
+		// */
+
+		Log.d(TAG, "All process is done!");
 		
-       	// chris TODO: delete obsolete DB entries
-    	// Maybe...
-    	// dbHelper.getWritableDatabase().delete(table, whereClause, whereArgs);
-    	// ... or maybe not!
-    	// Fetch data
-    	String data = evFetcher.fetchEventList(filter);
-    	if (data == null) {
-            Log.e(TAG, "DataEventFetcher failure: got null data");
-            return;
-    	}
-    	// Parse data
-    	evParser.parseEventList(data);
-    	// Fill DB with parsed data
-    	dbFillEventList(dbHelper.getWritableDatabase(), evParser.getEvents());
-    	Log.d(TAG, "All process is done!");
+		synchronized (context.getApplicationContext()) {
+			isRunning = false;
+		}
 	}
 
 	/*
@@ -103,15 +133,15 @@ public class EventReader {
         	evParser.parseEventDetail(data);
         	// chris TODO: insert in the DB (another table?) the event detail
         	//dbFillEventDetail(dbHelper.getWritableDatabase(), evParser.getEvents());
-        	
+
         	Log.d(THREAD_DETAIL_TAG, "All process is done!");
             // Done with our work...  stop the service!
             EventReader.this.stopSelf(); 
         }
 	};
-	*/
-	
-	private void dbFillEventList(SQLiteDatabase db, ArrayList<DataEvent> events) {
+	 */
+
+	private void dbFillEventList(SQLiteDatabase db, List<DataEvent> events) {
 		ContentValues values = new ContentValues();
 		for (DataEvent ev : events) {
 			values.clear();
@@ -122,8 +152,7 @@ public class EventReader {
 			values.put(DbHelper.C_TYPE, context.getResources().getString(ev.type.resId));
 			values.put(DbHelper.C_NAME, ev.text);
 			long r;
-			// chris TODO: after discussing with Stefano it's likely that the conflict resolution
-			//             mechanism to be used could simply be CONFLICT_REPLACE, to force update!
+			// NOTE: the SQLiteDatabase.CONFLICT_REPLACE forces the database to be refreshed with new data
 			r = db.insertWithOnConflict(DbHelper.TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 			if (r < 0)
 				Log.w(TAG, "Error while inserting row");

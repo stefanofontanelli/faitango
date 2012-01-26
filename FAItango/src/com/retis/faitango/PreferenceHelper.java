@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 
 
 public final class PreferenceHelper {
-	
+
 	private static final String keyRemoteServer = "remoteHTTPServer";
 	private static final String keyAutoSyncType = "autoSyncType";
 	private static final String keyPeriodicAutoSyncPeriod = "periodicAutoSyncPeriods";
@@ -19,34 +19,34 @@ public final class PreferenceHelper {
 	public static String getRemoteServer(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keyRemoteServer))
-			//; //TODO: throw some exception!
+		//; //TODO: throw some exception!
 		return prefs.getString(keyRemoteServer, "");
 	}
-	
+
 	public static boolean hasPeriodicAutoSync(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keyAutoSyncType))
-			//; //TODO: throw some exception!
+		//; //TODO: throw some exception!
 		if (prefs.getString(keyAutoSyncType, "").contentEquals("2"))
 			return true;
 		return false;
 	}
-	
+
 	public static long getPeriodicAutoSyncPeriod(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keyPeriodicAutoSyncPeriod))
-			//; //TODO: throw some exception!
+		//; //TODO: throw some exception!
 		return Long.decode(prefs.getString(keyPeriodicAutoSyncPeriod, "0"));
 	}
-	
+
 	public static EventFilter getSearchParams(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		//if (!prefs.contains(keySearchParamsCountry))
-			//; //TODO: throw some exception!
+		//; //TODO: throw some exception!
 		String country = prefs.getString(keySearchParamsCountry, "");
 		String region = prefs.getString(keySearchParamsRegion, "");
 		String area = prefs.getString(keySearchParamsArea, "");
-		
+
 		EventFilter filter = new EventFilter();
 		if (!country.isEmpty())
 			filter.country = country;

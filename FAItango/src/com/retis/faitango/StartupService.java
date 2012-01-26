@@ -9,11 +9,6 @@ public class StartupService extends Service {
 
 	private static final String TAG = "StartupService";
 	
-	@Override
-	public void onCreate() {
-		// TODO: something?
-	}
-	
 	@Override 
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		
@@ -21,16 +16,16 @@ public class StartupService extends Service {
 		// chris FIXME: REMOVE THIS CODE WHEN TEST IS DONE!
 		this.deleteDatabase(DbHelper.DB_NAME);
 		
-		// chris TODO: when we install the application for the first time, 
-		//             all preferences should be set to a default value!
-		
 		// Access the (default) preference file (also used by the ConfigurationView)
 		if (PreferenceHelper.hasPeriodicAutoSync(this)) {
         	Log.d(TAG, "AutoSync active: configure and start EventReaderAlarm");
-        	EventReaderAlarm alarm = new EventReaderAlarm(this);
+        	EventFilter filter = PreferenceHelper.getSearchParams(getApplicationContext());
+        	long period =  PreferenceHelper.getPeriodicAutoSyncPeriod(getApplicationContext());
+        	period = period * 1000;
+        	EventReaderAlarm alarm = EventReaderAlarm.instance(getApplicationContext());
+        	alarm.update(filter, period, period);
         	alarm.start();
         }
-
 		return START_STICKY;
 	}
 	

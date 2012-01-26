@@ -5,9 +5,20 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+/** Service-wrapper for EventReader<br><br>
+ *
+ * The service wraps the {@link EventReader} operations. 
+ * This is meant to be executed for background automatic synchronization.
+ * The service should be started through the {@link EventReaderAlarm} class. 
+ * <br>
+ * The {@link EventFilter} object (parcelable), used to set an event fetch filter, 
+ * is encoded as an extras in the activation Intent.     
+ * 
+ * @author Christian Nastasi
+ */
 public class EventReaderService extends Service {
 
-	private static boolean serviceRunning = false;
+	private Intent intent;
 	private static final String TAG = "EventReaderService";
 	
 	@Override
@@ -17,33 +28,23 @@ public class EventReaderService extends Service {
 	}
 	
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		// LOCK service: if there is an already existing instance, abort the new one. 
-		synchronized(this) {
-			if (serviceRunning) {
-				Log.d(TAG, "The reading service is already running. Stopping this instance.");
+	public int onStartCommand(Intent i, int flags, int startId) {
+		intent = i;
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					EventReader reader = EventReader.instance(EventReaderService.this);
+					// Execute actual service code
+					Log.d(TAG, "Exetuting EventReader from SERVICE");
+					reader.execute((EventFilter) intent.getParcelableExtra("EventFilter"));
+				} catch (Exception e) {
+					Log.e(TAG, "onStartCommand(): EventReader exception: " + e.getMessage());
+					// TODO: shall we do some error notification (in the GUI)?
+				}
 				stopSelf();
-				return START_STICKY;
 			}
-			serviceRunning = true;
-		}
-		EventReader reader = null;
-		try {
-			reader = new EventReader(this);
-		} catch (Exception e) {
-			Log.e(TAG, "onStartCommand() failure: the object was not properly created by onCreate()");
-			stopSelf();
-			//e.printStackTrace();
-			// TODO: shall we do some error notification (in the GUI)?
-			return START_STICKY;
-		}
-		// Execute actual service code
-		reader.execute((EventFilter) intent.getParcelableExtra("EventFilter"));
-		// UNLOCK service
-		synchronized(this) {
-			serviceRunning = false;
-		}
-		stopSelf();
+		}).start();
+		//stopSelf();
 		return START_STICKY;
 	}
 }

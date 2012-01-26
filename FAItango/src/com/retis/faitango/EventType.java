@@ -3,8 +3,16 @@ package com.retis.faitango;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/** Event-type enumeration <br><br> 
+ * 
+ * This enumeration describes the available event types.
+ * Each entry holds a resource ID to a valid event-type string defined in the <code>string.xml</code> file.
+ * The enumeration is also parcelable.
+ * 
+ * @author Christian Nastasi
+ */
 public enum EventType implements Parcelable {
-	
+
 	CONCERT(R.string.eventTypeCONCERT),
 	PARTY(R.string.eventTypePARTY),
 	FESTIVAL(R.string.eventTypeFESTIVAL),
@@ -43,15 +51,15 @@ public enum EventType implements Parcelable {
 	public void writeToParcel(Parcel out, int flags) {
 		out.writeInt(ordinal());
 	}
-	
+
 	public static final Parcelable.Creator<EventType> CREATOR = 
 			new Parcelable.Creator<EventType>() {
-				public EventType createFromParcel(Parcel in) {
-					return EventType.values()[in.readInt()];
-				}
+		public EventType createFromParcel(Parcel in) {
+			return EventType.values()[in.readInt()];
+		}
 
-				public EventType[] newArray(int size) {
-					return new EventType[size];
-				}
-			};
+		public EventType[] newArray(int size) {
+			return new EventType[size];
+		}
+	};
 }

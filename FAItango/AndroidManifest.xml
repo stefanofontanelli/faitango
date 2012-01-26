@@ -4,7 +4,7 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="10" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
 
@@ -32,7 +32,7 @@
             android:label="@string/app_name"
             android:name=".ConfigurationView" >
         </activity>
-        <service android:name=".EventReader"/>
+        <service android:name=".EventReaderService"/>
         <service android:name=".StartupService"/>
         <receiver android:name=".StartupBroadcastReceiver"
                   android:enabled="true" 

@@ -3,85 +3,74 @@ package com.retis.faitango;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.retis.faitango.DataEvent;
 
-// Base class for the parser of the social event data
+/** DataEvent parser base class <br><br>
+ * 
+ * This is a base class for DataEvent parsing.
+ * 
+ * Events should be written by the derived classes in the protected member {@link #events}.
+ * The abstract methods {@link #parseEventList(String)} and {@link #parseEventDetail(String)} have to
+ * be implemented in the derived classes to parse the brief and detailed information about the event.
+ * 
+ * @author Christian Nastasi
+ */
 public abstract class DataEventParser {
 
-	/* Factory (inner) class to create DataEventParser objects
+	/** Factory (inner) class to create DataEventParser objects <br><br>
 	 * 
 	 * We used a factory method pattern with static registration.
 	 * The java reflection mechanism has been used to register the 
 	 * Product's constructor. 
 	 * Static initialization is exploited to register Product's constructors
-	 * to the factory registry (which is an hash map). 
-	 *  */
+	 * to the factory registry. 
+	 */
 	public static class Factory {
 
-		/* Local Registry for Factory Method Pattern */
-		private static final HashMap<String, Constructor<? extends DataEventParser>> registry = 
+		/** Local Registry for Factory Method Pattern */
+		private static final Map<String, Constructor<? extends DataEventParser>> registry = 
 				new HashMap<String, Constructor<? extends DataEventParser>>();
-		
+
 		private static final String TAG = "DataEventParser.Factory";
-		
-		/* Registration function, to be called by the Product classes */
-		public static void register(String id, Class<? extends DataEventParser> parser) {
+
+		/** Factory registration method <br><br>
+		 * 
+		 * Registration method to be called by the concrete product classes to register 
+		 * their constructor to the factory.
+		 * 
+		 * @param id			Identifier associated to the concrete product class
+		 * @param fetcher		The constructor of a derived class of DataEventFetcher
+		 * @throws Exception 
+		 */
+		public static void register(String id, Class<? extends DataEventParser> fetcher) throws Exception {
 			if (registry.containsKey(id)) 
-				return;//chris TODO: generate error: exception? return boolean?
-			try {
-				registry.put(id, parser.getConstructor(Context.class));
-			} catch (Exception e) {}
-			/* 
-			 * chris TODO: handle specific exceptions?
-			 *
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
+				throw new Exception("Class constructor already registered in the factory registry with name = " + registry.get(id).getName());
+			registry.put(id, fetcher.getConstructor(Context.class));
 		}
-		
-		/* Factory creator methods: access the registry and uses the proper
-		 * registered constructor. */
-		public static DataEventParser create(String id, Context context) {
+
+		/** Factory creator <br><br>
+		 * 
+		 * Method of the abstract factory to create abstract products. 
+		 * This access the registry and uses the proper registered constructor to create the concrete class.
+		 * 
+		 * @param id		Identifier associated to the concrete product class
+		 * @param context	Context argument to be passed to the product constructor
+		 * @return			A DataEventParser object of the type associated with the identifier
+		 * @throws Exception 
+		 */
+		public static DataEventParser create(String id, Context context) throws Exception {
 			if (!registry.containsKey(id)) 
-				return null;//chris TODO: generate error: exception? return boolean?
-			DataEventParser parser = null;
-			try {
-				parser = registry.get(id).newInstance(context);
-			} catch (Exception e) {
-				Log.e(TAG, "Creation faiulure: ");
-				e.printStackTrace();
-				return null;
-			}
-			/* 
-			 * chris TODO: handle specific exceptions?
-			 *
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				
-			}
-			*/
+				throw new Exception("No class constructor registered for the given id = " + id);
+			DataEventParser parser = registry.get(id).newInstance(context);
 			return parser;
 		}
-		
+
 		/* Force static initialization of all the concrete Product classes. 
 		 * This will cause the 'static' statements of such classes to be called,
 		 * and in these statements the registration of the concrete constructors 
@@ -90,23 +79,34 @@ public abstract class DataEventParser {
 			try {
 				Class.forName("com.retis.faitango.DataEventParserJSON");
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
+				Log.e(TAG, "ClassNotFoundException while executing the static initialization block that loads the concrete products:" +  e.getMessage());
 				e.printStackTrace();
 			}
 		}
 	}
-	
-	protected ArrayList<DataEvent> events = new ArrayList<DataEvent>();
+
+	protected List<DataEvent> events = new ArrayList<DataEvent>();
 	protected Context appContext;
-	
+
 	protected DataEventParser(Context context) {
 		appContext = context;
 	}
-	
-	public ArrayList<DataEvent> getEvents() {return events;}
 
-	
-	protected EventType getFromString(String s) {
+	public List<DataEvent> getEvents() {
+		return events;
+	}
+
+	/** Get EventType from String <br><br>
+	 * 
+	 * The method attempt to returns an EventType matching the input description String according
+	 * to the definition in the <code>string.xml</code> file.
+	 * The input <code>s</code> in ignore-case compared against each even-type strings defined in the <code>string.xml</code>.
+	 * If a match occurs the relative EventType is returned, otherwise null is returned.
+	 *  
+	 * @param s	Event-type string
+	 * @return	The EventType matching the input string, otherwise null.
+	 */
+	protected EventType getEventTypeFromString(String s) {
 		EventType allTypes[] = EventType.values();
 		for (EventType t : allTypes) {
 			if (appContext.getResources().getString(t.resId).equalsIgnoreCase(s))
@@ -114,7 +114,7 @@ public abstract class DataEventParser {
 		}
 		return null;
 	}
-	
-	abstract public void parseEventList(String input);
-	abstract public void parseEventDetail(String input);
+
+	public abstract void parseEventList(String input);
+	public abstract void parseEventDetail(String input);
 }

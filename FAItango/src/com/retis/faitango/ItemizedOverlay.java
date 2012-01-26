@@ -1,12 +1,8 @@
 package com.retis.faitango;
+
 import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.drawable.Drawable;
-
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
-
 
 public class ItemizedOverlay extends com.google.android.maps.ItemizedOverlay {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
@@ -30,5 +26,4 @@ public class ItemizedOverlay extends com.google.android.maps.ItemizedOverlay {
 	    mOverlays.add(overlay);
 	    populate();
 	}
-
 }
