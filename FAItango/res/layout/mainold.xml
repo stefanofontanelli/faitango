@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/buttonOpenList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="List" />
+
+            <Button
+                android:id="@+id/buttonOpenConfig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configuration" />
+
+            <Button
+                android:id="@+id/buttonSynchronize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sync" />
+
+            <Button
+                android:id="@+id/buttonCleanDB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CleanDB" />
+
+        </TableRow>
+
+    </TableLayout>

@@ -16,27 +16,22 @@ import android.util.Log;
  * 
  * @author Christian Nastasi
  */
+
+import android.app.Activity;
+
 public class EventReaderAsyncTask extends AsyncTask<EventFilter, Void, Boolean> {
 
-	private ProgressDialog dialog;
-	private Context activityContext;
+	private Activity ctx;
 	private EventReader reader;
-	private String waitMessage;
 	private static final String TAG = "EventReaderAsyncTask";
 
-	public EventReaderAsyncTask(Context contextOfActivity, String displayedWaitMessage) {
-		activityContext = contextOfActivity;
-		if (displayedWaitMessage != null)
-			waitMessage = displayedWaitMessage;
-		else
-			waitMessage = "Perfavore, spetta un attimo! CRIBBIO";
-		dialog = new ProgressDialog(activityContext);
+	public EventReaderAsyncTask(Activity ctx) {
+		this.ctx = ctx;
 		try {
-			reader = new EventReader(activityContext);
+			reader = new EventReader(ctx);
 		} catch (Exception e) {
 			reader = null;
-			Log.e(TAG, "Error while creating the EventReader: " + e.getMessage());
-			e.printStackTrace();
+			Log.e(TAG, "Error while creating the EventReader: ", e);
 		}
 	}
 
@@ -45,28 +40,29 @@ public class EventReaderAsyncTask extends AsyncTask<EventFilter, Void, Boolean> 
 		if (reader == null) {
 			Log.e(TAG, "EventReader is null. Exiting without parsing (check EventReaderAsyncTask constructor)");
 			return false;
+		} else if (EventReader.isExecuting()) {
+			// Do nothing whene EventReader executing.
+			Log.d(TAG, "EventReader executing ...");
+			return false;
 		}
-		if (EventReader.isExecuting())
-			Log.d(TAG, "EventReader already exetuing (probably in Service). Waiting");
+		Log.d(TAG, "Executing EventReader ...");
+		reader.execute(args[0]);	
+		/*
 		while (EventReader.isExecuting()) {
 			try { Thread.sleep(100); } catch (InterruptedException e) {}
 			// chris TODO: implement some MAX looping logic: if waiting too much do something!
 		}
-		Log.d(TAG, "Exetuting EventReader from ASYNCTASK");
-		reader.execute(args[0]);
+		*/
 		return true;
 	}
 
 	@Override
 	protected void onPreExecute() {
-		dialog.setMessage(waitMessage);
-		dialog.show();
+		ctx.showDialog(MainView.DIALOG_SYNCHRONIZING);
 	}
 
 	@Override
 	protected void onPostExecute(final Boolean success) {
-		if (dialog.isShowing()) {
-			dialog.dismiss();
-		}
+		ctx.dismissDialog(MainView.DIALOG_SYNCHRONIZING);
 	}
 }

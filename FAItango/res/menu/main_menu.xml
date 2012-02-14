@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/main_menu_search"
+          android:icon="@drawable/ic_menu_search"
+          android:title="@string/mainMenuSearch"/>
+    <item android:id="@+id/main_menu_sync"
+          android:icon="@drawable/ic_menu_sync"
+          android:title="@string/mainMenuSync"/>
+    <item android:id="@+id/main_menu_setting"
+          android:icon="@drawable/ic_menu_preferences"
+          android:title="@string/mainMenuSetting"/>
+    <item android:id="@+id/main_menu_help"
+          android:icon="@drawable/ic_menu_help"
+          android:title="@string/mainMenuHelp"/>
+</menu>

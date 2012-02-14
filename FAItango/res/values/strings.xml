@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="eventsTitle">Lista Eventi</string>
     <string name="app_name">FAItango</string>
+    <string name="mainTextViewText">Events Filter:</string>
+    <string name="mainSpinnerPrompt">View events of &#8230;</string>
+    <string name="mainMenuSearch">Search</string>
+    <string name="mainMenuSync">Synchronize</string>
+    <string name="mainMenuSetting">Settings</string>
+    <string name="mainMenuHelp">Help</string>
+    <string name="eventsTitle">Lista Eventi</string>
     
     <string name="prefCategoryConnection">Connection</string>
     <string name="prefCategorySync">Automatic Synchronization</string>
@@ -16,71 +21,22 @@
     <string name="prefTitleAutoSync">Auto Sync</string>
     <string name="prefSummaryAutoSync">Automatic synchronization</string>
     <string name="prefDialogAutoSync">Set auto sync policy</string>    
-    <string-array name="prefEntriesAutoSync">
-        <item>Never</item>
-        <item>On Start-Up</item>
-        <item>Background</item>
-    </string-array>        
-    <string-array name="prefEntryValuesAutoSync">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
     
 	<string name="prefTitlePeriodicAutoSyncPeriods">Update Period</string>
 	<string name="prefSummaryPeriodicAutoSyncPeriods">Select update period</string>
 	<string name="prefDialogTitlePeriodicAutoSyncPeriods">Update Periods</string>
-    <string-array name="prefEntriesPeriodicAutoSyncPeriods">
-        <item>On Boot</item>
-        <item>5 min</item>
-        <item>15 min</item>
-        <item>1 h</item>
-    </string-array>
-    <string-array name="prefEntryValuesPeriodicAutoSyncPeriods">
-        <!-- Values in minutes -->
-        <item>0</item>
-        <item>5</item>
-        <item>15</item>
-        <item>60</item>
-    </string-array>
     
     <string name="prefTitleSearchCountry">Country</string>
     <string name="prefSummarySearchCountry">Search by country</string>
     <string name="prefDialogTitleSearchCountry">Country</string>    
-    <string-array name="prefEntriesSearchCountry">
-        <item>Italia</item>
-        <item>Francia</item>
-        <item>Germania</item>
-    </string-array>
-    <string-array name="prefEntryValuesSearchCountry">
-        <item>118</item>
-        <item>67</item>
-        <item>71</item>
-    </string-array>
-    
     
     <string name="prefTitleSearchRegion">Region</string>
     <string name="prefSummarySearchRegion"></string>
-    <string name="prefDialogTitleSearchRegion"></string>    
-    <string-array name="prefEntriesSearchRegion">
-        <item></item>
-        <item>Toscana</item>
-        <item>Emilia-Romagna</item>
-    </string-array>
+    <string name="prefDialogTitleSearchRegion"></string>
     
     <string name="prefTitleSearchProvince">Province</string>
     <string name="prefSummarySearchProvince"></string>
     <string name="prefDialogTitleSearchProvince"></string>    
-    <string-array name="prefEntriesSearchProvince">
-        <item>Tutte le province</item>
-        <item>Pisa</item>
-        <item>Firenze</item>
-    </string-array>
-    <string-array name="prefEntryValuesSearchProvince">
-        <item></item>
-        <item>PI</item>
-        <item>FI</item>
-    </string-array>
     
     <!-- Event Type Strings -->
     <string name="eventTypeCONCERT">Concerto</string>
