@@ -12,6 +12,21 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
         <uses-library android:name="com.google.android.maps" />
+        <provider
+            android:name=".CountryProvider"
+            android:authorities="com.retis.provider.faitango" />
+        <provider
+            android:name=".RegionProvider"
+            android:authorities="com.retis.provider.faitango" />
+        <provider
+            android:name=".ProvinceProvider"
+            android:authorities="com.retis.provider.faitango" />
+        <provider
+            android:name=".EventProvider"
+            android:authorities="com.retis.provider.faitango" />
+        <provider
+            android:name=".EventDetailProvider"
+            android:authorities="com.retis.provider.faitango" />
         <activity
             android:label="@string/app_name"
             android:name=".MainView" >
@@ -22,7 +37,13 @@
         </activity>        
         <activity
             android:label="@string/app_name"
-            android:name=".EventsList" >         
+            android:name=".EventsList" >
+            <!--
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>    
+             -->  
         </activity>
         <activity
             android:label="@string/app_name"
@@ -32,6 +53,7 @@
             android:label="@string/app_name"
             android:name=".ConfigurationView" >
         </activity>
+        <service android:name=".EventReaderIntentService"/>
         <service android:name=".EventReaderService"/>
         <service android:name=".StartupService"/>
         <receiver android:name=".StartupBroadcastReceiver"
