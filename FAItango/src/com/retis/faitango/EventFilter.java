@@ -3,6 +3,9 @@ package com.retis.faitango;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.retis.faitango.parser.EventType;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 

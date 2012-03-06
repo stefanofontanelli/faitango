@@ -3,60 +3,52 @@
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/prefCategoryConnection">
+    <PreferenceCategory android:title="@string/settingConnectionCategory">
     	<EditTextPreference
         	android:key="remoteHTTPServer" 
-            android:title="@string/prefTitleRemoteServer"
-            android:summary="@string/prefSummaryRemoteServer"
-            android:defaultValue="@string/prefDefaultRemoteServer"
-            android:dialogTitle="@string/prefDialogTitleRemoteServer"/>
+            android:title="@string/settingTitleRemoteServer"
+            android:summary="@string/settingSummaryRemoteServer"
+            android:defaultValue="@string/settingDefaultRemoteServer"
+            android:dialogTitle="@string/settingDialogTitleRemoteServer"/>
 	</PreferenceCategory>
-	
-	<PreferenceCategory android:title="@string/prefCategorySync">
+	<PreferenceCategory android:title="@string/settingSyncCategory">
 		<ListPreference
-       		android:key="autoSyncType"
-            android:title="@string/prefTitleAutoSync"
-        	android:summary="@string/prefSummaryAutoSync"
-        	android:entries="@array/prefEntriesAutoSync"
-			android:entryValues="@array/prefEntryValuesAutoSync"
+       		android:key="syncType"
+            android:title="@string/settingSyncTypeTitle"
+        	android:summary="@string/settingSyncTypeSummary"
+        	android:entries="@array/settingSyncType"
+			android:entryValues="@array/settingSyncTypeValues"
 			android:defaultValue="0"
-			android:dialogTitle="@string/prefTitleAutoSync" />
+			android:dialogTitle="@string/settingSyncTypeDialogTitle" />
 		 <ListPreference
-			android:key="periodicAutoSyncPeriods"
-			android:title="@string/prefTitlePeriodicAutoSyncPeriods"
-			android:summary="@string/prefSummaryPeriodicAutoSyncPeriods"
-			android:entries="@array/prefEntriesPeriodicAutoSyncPeriods"
-			android:entryValues="@array/prefEntryValuesPeriodicAutoSyncPeriods"
+			android:key="syncPeriod"
+			android:title="@string/settingSyncPeriodTitle"
+			android:summary="@string/settingSyncPeriodSummary"
+			android:entries="@array/settingSyncPeriod"
+			android:entryValues="@array/settingSyncPeriodValues"
 			android:defaultValue="60"
-			android:dialogTitle="@string/prefDialogTitlePeriodicAutoSyncPeriods"
-			android:dependency="autoSyncType" />
+			android:dialogTitle="@string/settingSyncPeriodDialogTitle"
+			android:dependency="syncType" />
 	</PreferenceCategory>
-	
-	<PreferenceCategory android:title="@string/prefCategorySearchParams">
-		<ListPreference
-       		android:key="autoSyncSearchCountry"
-            android:title="@string/prefTitleSearchCountry"
-        	android:summary="@string/prefSummarySearchCountry"
-        	android:entries="@array/prefEntriesSearchCountry"
-			android:entryValues="@array/prefEntryValuesSearchCountry"
-			android:defaultValue="118"
-			android:dialogTitle="@string/prefDialogTitleSearchCountry" />
-		<ListPreference
-       		android:key="autoSyncSearchRegion"
-            android:title="@string/prefTitleSearchRegion"
-        	android:summary="@string/prefSummarySearchRegion"
-        	android:entries="@array/prefEntriesSearchRegion"
-			android:entryValues="@array/prefEntriesSearchRegion"
-			android:defaultValue="Toscana"
-			android:dialogTitle="@string/prefDialogTitleSearchRegion" />
-		<ListPreference
-       		android:key="autoSyncSearchProvince"
-            android:title="@string/prefTitleSearchProvince"
-        	android:summary="@string/prefSummarySearchProvince"
-        	android:entries="@array/prefEntriesSearchProvince"
-			android:entryValues="@array/prefEntryValuesSearchProvince"
-			android:defaultValue="PI"
-			android:dialogTitle="@string/prefDialogTitleSearchProvince" />
+	<PreferenceCategory android:title="@string/settingSearchCategory">
+		<com.retis.faitango.preference.CountryList
+       		android:key="country"
+            android:title="@string/settingCountryTitle"
+        	android:summary="@string/settingCountrySummary"
+			android:dialogTitle="@string/settingCountryDialogTitle"
+			android:defaultValue="118" />
+		<com.retis.faitango.preference.RegionList
+       		android:key="region"
+            android:title="@string/settingRegionTitle"
+        	android:summary="@string/settingRegionSummary"
+			android:dialogTitle="@string/settingRegionDialogTitle"
+			android:defaultValue="Toscana" />
+		<com.retis.faitango.preference.ProvinceList
+       		android:key="province"
+            android:title="@string/settingProvinceTitle"
+        	android:summary="@string/settingProvinceSummary"
+			android:dialogTitle="@string/settingProvinceDialogTitle"
+			android:defaultValue="PI" />
 	</PreferenceCategory>		
 	                
 </PreferenceScreen>

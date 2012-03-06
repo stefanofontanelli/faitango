@@ -2,6 +2,8 @@ package com.retis.faitango;
 
 import java.util.Calendar;
 
+import com.retis.faitango.parser.EventType;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;

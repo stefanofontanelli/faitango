@@ -1,5 +1,7 @@
 package com.retis.faitango;
 
+import com.retis.faitango.parser.EventReader;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;

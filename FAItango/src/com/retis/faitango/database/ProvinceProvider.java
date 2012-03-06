@@ -15,7 +15,7 @@ import android.text.TextUtils;
 public class ProvinceProvider extends ContentProvider {
 	
 	private static final String TAG = "ProvinceProvider";
-	private static final String baseDomain = "com.retis.provider.faitango";
+	private static final String baseDomain = "com.retis.provider.faitango.provinces";
 	private static final String URI = "content://" + baseDomain + "/provinces";
 	public static final Uri CONTENT_URI = Uri.parse(URI);
 	private static final int PROVINCES = 1;

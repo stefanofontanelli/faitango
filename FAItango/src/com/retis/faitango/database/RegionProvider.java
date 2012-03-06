@@ -15,7 +15,7 @@ import android.text.TextUtils;
 public class RegionProvider extends ContentProvider {
 	
 	private static final String TAG = "RegionProvider";
-	private static final String baseDomain = "com.retis.provider.faitango";
+	private static final String baseDomain = "com.retis.provider.faitango.regions";
 	private static final String URI = "content://" + baseDomain + "/regions";
 	public static final Uri CONTENT_URI = Uri.parse(URI);
 	private static final int REGIONS = 1;

@@ -1,5 +1,7 @@
 package com.retis.faitango;
 
+import com.retis.faitango.parser.EventReader;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,7 +16,7 @@ import android.util.Log;
  * <br>
  * The {@link EventFilter} is passed as executing argument to this class.
  * 
- * @author Christian Nastasi
+ * @author Christian Nastasi.
  */
 
 import android.app.Activity;

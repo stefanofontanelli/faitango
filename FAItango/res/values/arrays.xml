@@ -6,51 +6,38 @@
         <item>This Week</item>
         <item>Next Week</item>
     </string-array>
-    <string-array name="prefEntriesAutoSync">
+    <string-array name="settingSyncType">
         <item>Never</item>
-        <item>On Start-Up</item>
-        <item>Background</item>
-    </string-array>        
-    <string-array name="prefEntryValuesAutoSync">
+        <item>Once at startup</item>
+        <item>Periodically</item>
+    </string-array>
+    <string-array name="settingSyncTypeValues">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
-    <string-array name="prefEntriesPeriodicAutoSyncPeriods">
-        <item>On Boot</item>
-        <item>5 min</item>
-        <item>15 min</item>
-        <item>1 h</item>
+    <string-array name="settingSyncPeriod">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
     </string-array>
-    <string-array name="prefEntryValuesPeriodicAutoSyncPeriods">
-        <item>0</item>
-        <item>5</item>
+    <string-array name="settingSyncPeriodValues">
         <item>15</item>
+        <item>30</item>
         <item>60</item>
+        <item>720</item>
+        <item>1440</item>
     </string-array>
-    <string-array name="prefEntriesSearchCountry">
-        <item>Italia</item>
-        <item>Francia</item>
-        <item>Germania</item>
-    </string-array>
-    <string-array name="prefEntryValuesSearchCountry">
-        <item>118</item>
-        <item>67</item>
-        <item>71</item>
-    </string-array>
-        <string-array name="prefEntriesSearchRegion">
-        <item></item>
-        <item>Toscana</item>
-        <item>Emilia-Romagna</item>
-    </string-array>
-        <string-array name="prefEntriesSearchProvince">
-        <item>Tutte le province</item>
-        <item>Pisa</item>
-        <item>Firenze</item>
-    </string-array>
-    <string-array name="prefEntryValuesSearchProvince">
-        <item></item>
-        <item>PI</item>
-        <item>FI</item>
+    <string-array name="eventTypes">
+        <item>Concerto</item>
+        <item>Festa</item>
+        <item>Festival</item>
+        <item>Maratona</item>
+        <item>Milonga</item>
+        <item>Spettacolo</item>
+        <item>Stage</item>
+        <item>Vacanza/Viaggio</item>
     </string-array>
 </resources>

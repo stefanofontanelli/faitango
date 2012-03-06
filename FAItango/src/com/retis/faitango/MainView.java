@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -23,9 +24,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 
-public class MainView extends Activity {
+public class MainView extends Activity implements OnItemSelectedListener {
 
 	static final int DIALOG_ASK_SYNC = 0;
 	static final int DIALOG_SYNCHRONIZING = 1;
@@ -52,7 +54,7 @@ public class MainView extends Activity {
         		android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new MainSpinnerItemSelectedListener());
+        spinner.setOnItemSelectedListener(this);
         /*
          * Check for Startup Auto Synch. 
          */
@@ -129,7 +131,7 @@ public class MainView extends Activity {
                 doSync();
                 return true;
             case R.id.main_menu_setting:
-				Intent intent = new Intent(this, com.retis.faitango.ConfigurationView.class);
+				Intent intent = new Intent(this, GlobalPreferenceActivity.class);
 				this.startActivity(intent);
                 return true;
             case R.id.main_menu_help:
@@ -162,91 +164,13 @@ public class MainView extends Activity {
 		new EventReaderAsyncTask(this).execute(filter);
     }
     
-	private void createTemporaryLayout() {
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        Toast.makeText(parent.getContext(), "The planet is " +
+            parent.getItemAtPosition(pos).toString() + " - " + view.getResources().getResourceName(R.array.mainSpinnerItems),
+            Toast.LENGTH_LONG).show();
+      }
 
-		// List Button
-		Button buttonList = (Button) findViewById(R.id.buttonOpenList);
-		buttonList.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Log.d("chris", "Open List CLICKED!");
-
-				// Creating an in-line inner AsyncTask to wait on possible EventReader operations 
-				(new AsyncTask<Void, Void, Boolean>() {
-					// Progress dialog
-					private ProgressDialog dialog = new ProgressDialog(MainView.this);
-
-					@Override
-					protected void onPreExecute() {
-						dialog.setMessage("Mannagia alla miseria, il reader sta eseguendo! ASPETTA!!!");
-						if (EventReader.isExecuting())
-							dialog.show();
-					}
-
-					@Override
-					protected Boolean doInBackground(Void... params) {
-						if (!EventReader.isExecuting())
-							return true;
-						Log.d("chris", "EventReader is running. Waiting...");
-						//long i = 0;
-						while (EventReader.isExecuting()) {
-							if (!dialog.isShowing()) // Give up if ProgressDialog was cancelled
-								return false;
-							// Wait 100ms before polling 
-							try { Thread.sleep(100); } catch (InterruptedException e) {}
-							//i++;
-							// chris TODO: implement some MAX looping logic: if waiting too much do something!
-						}
-						return true;
-					}
-
-					@Override
-					protected void onPostExecute(final Boolean success) {
-						// If ProgrssDialog is not shown, give up 
-						if (dialog.isShowing())
-							dialog.dismiss();
-						if (!success)
-							return;
-						// Perform actual actions for on click: start the list activity!
-						Intent intent = new Intent(MainView.this, com.retis.faitango.EventsList.class);
-						MainView.this.startActivity(intent);
-					}
-				}).execute();
-			}
-		});
-
-
-		// Config Button
-		Button buttonConfig = (Button) findViewById(R.id.buttonOpenConfig);
-		buttonConfig.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Log.d("chris", "Open config CLICKED!");
-				// Perform action on click
-				Context c = v.getContext();
-				Intent intent = new Intent(c, com.retis.faitango.ConfigurationView.class);
-				c.startActivity(intent);
-			}
-		});
-
-		// Sync Button
-		/*
-		Button buttonSync = (Button) findViewById(R.id.buttonSynchronize);
-		buttonSync.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Log.d("chris", "Synchronized CLICKED!");
-				EventFilter filter = PreferenceHelper.getSearchParams(v.getContext());
-				new EventReaderAsyncTask(v.getContext()).execute(filter);
-			}
-		});*/
-
-		// CleanDB Button
-		Button buttonCleanDB = (Button) findViewById(R.id.buttonCleanDB);
-		buttonCleanDB.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Log.d("chris", "CleanDB CLICKED!");
-				Context c = v.getContext();
-				c.deleteDatabase(DbHelper.DB_NAME);
-				Toast.makeText(c, "Internal DB just Cleaned", Toast.LENGTH_LONG).show();
-			}
-		});
-	}
+      public void onNothingSelected(AdapterView<?> parent) {
+        // Do nothing.
+      }
 }
