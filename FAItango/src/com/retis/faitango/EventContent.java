@@ -11,14 +11,17 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import com.retis.faitango.database.EventDetailProvider;
+import com.retis.faitango.database.EventDetailTable;
+import com.retis.faitango.database.EventTable;
 import com.facebook.android.*;
 import com.facebook.android.Facebook.*;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -31,8 +34,6 @@ import android.widget.Toast;
 
 public class EventContent extends MapActivity {
 	private static String TAG = "EventContent";
-	private DbHelper dbHelper;
-	private SQLiteDatabase db;
 	private Cursor cursor;
 	private String eventID, title, description, city;
 	private Date beginTime;
@@ -47,6 +48,7 @@ public class EventContent extends MapActivity {
 	private double lon = 10.424866;
 	private Facebook facebook = new Facebook("151539328293835");
 	private SharedPreferences mPrefs;
+	private ContentResolver cr;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +59,8 @@ public class EventContent extends MapActivity {
 		eventID = extras.getString("id");
 		Log.d(TAG, "onCreate(): event ID = " + eventID);
 
-		dbHelper = new DbHelper(this);
-		db = dbHelper.getReadableDatabase();
-
+		cr = getContentResolver();
+		
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 
@@ -121,7 +122,6 @@ public class EventContent extends MapActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		db.close();
 	}
 
 	@Override
@@ -129,34 +129,34 @@ public class EventContent extends MapActivity {
 		super.onResume();
 
 		facebook.extendAccessTokenIfNeeded(this, null);
-		cursor = db.query(DbHelper.TABLE, null, DbHelper.C_ID + "=" + eventID,
-				null, null, null, null);
+		String where = EventDetailTable._ID + "=" + eventID;
+		cursor = cr.query(EventDetailProvider.CONTENT_URI, null, where, null, EventTable.DATE + " ASC");
 		startManagingCursor(cursor);
 		Log.d(TAG, Integer.toString(cursor.getCount()));
 		Log.d(TAG, Integer.toString(cursor.getColumnCount()));
-		Log.d(TAG, cursor.getColumnName(cursor.getColumnIndex(DbHelper.C_TYPE)));
+		Log.d(TAG, cursor.getColumnName(cursor.getColumnIndex(EventDetailTable.TYPE)));
 		cursor.moveToFirst();
 
 		if (cursor.getCount() > 0) {
 			textView = (TextView) findViewById(R.id.textDetEventType);
-			title = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_TYPE));
+			title = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.TYPE));
 			textView.setText(title);
 
 			textView = (TextView) findViewById(R.id.textDetCity);
-			city = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_CITY));
+			city = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.CITY));
 			textView.setText(city);
 
 			textView = (TextView) findViewById(R.id.textDetDate);
-			beginTime = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DbHelper.C_DATE)));
+			beginTime = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(EventDetailTable.DATE)));
 			String s = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN).format(beginTime); 
 			textView.setText(s);
 
 			textView = (TextView) findViewById(R.id.textDetEventName);
-			description = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_NAME));
+			description = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.DESCRIPTION));
 			textView.setText(description);
 
 			textView = (TextView) findViewById(R.id.textDetTime);
-			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.C_TIME)));
+			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.TIME)));
 
 			try {
 				List<Address> foundAddress = geocoder.getFromLocationName(city, 1);

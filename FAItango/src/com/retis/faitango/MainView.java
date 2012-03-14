@@ -1,15 +1,17 @@
 package com.retis.faitango;
 
+import com.retis.faitango.database.EventProvider;
+import com.retis.faitango.database.EventTable;
+import com.retis.faitango.preference.PreferenceHelper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,10 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
@@ -32,17 +32,19 @@ public class MainView extends Activity implements OnItemSelectedListener {
 	static final int DIALOG_ASK_SYNC = 0;
 	static final int DIALOG_SYNCHRONIZING = 1;
 	private static final String TAG = "MainView";
-	DbHelper dbHelper;
-	SQLiteDatabase db;
-	ExpandableListView eventsList;
-	Cursor cursor;
-	EventsListener listener;
-	ExpandableListAdapter listAdapter;
+	private ExpandableListView eventsList;
+	private Cursor cursor;
+	private EventsListener listener;
+	private ExpandableListAdapter listAdapter;
+	private ContentResolver cr;
+	private IntentFilter filter;
+	private ReadingReceiver receiver;
 	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "MainView onCreate.");
         setContentView(R.layout.main);
         /*
          * Fill the Spinner object.
@@ -56,29 +58,37 @@ public class MainView extends Activity implements OnItemSelectedListener {
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         /*
-         * Check for Startup Auto Synch. 
+         * Check preference: Synchronization at Startup. 
          */
-		if (PreferenceHelper.hasStartupAutoSync(this)) {
+		if (PreferenceHelper.isSyncAtStartup(this)) {
 			showDialog(DIALOG_ASK_SYNC);
 		}
         /*
          * Fill the ListView object.
          */
 		eventsList = (ExpandableListView) findViewById(R.id.mainEventsList);
-		dbHelper = new DbHelper(this);
-		db = dbHelper.getReadableDatabase();
+		// Create and register the broadcast receiver.
+		filter = new IntentFilter(ReadingService.SYNC_COMPLETED);
+		receiver = new ReadingReceiver();
+		cr = getContentResolver();
     }
     
 	@Override
 	protected void onResume() {
 		super.onResume();
+		registerReceiver(receiver, filter);
 		updateEventsList();
 	}
     
+	@Override protected void onPause() {
+		super.onPause();
+		unregisterReceiver(receiver);
+	}
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		db.close();
+		unregisterReceiver(receiver);
 	}
     
     protected Dialog onCreateDialog(int id) {
@@ -91,7 +101,7 @@ public class MainView extends Activity implements OnItemSelectedListener {
         	builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
 	                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
-	                doSync();
+	                //doSync();
 	           }
         	});
         	builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -128,10 +138,11 @@ public class MainView extends Activity implements OnItemSelectedListener {
             	Toast.makeText(this, "Search!", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.main_menu_sync:
-                doSync();
+            	Log.d(TAG, "Starting ReadingService ...");
+            	doSync();
                 return true;
             case R.id.main_menu_setting:
-				Intent intent = new Intent(this, GlobalPreferenceActivity.class);
+				Intent intent = new Intent(this, SettingActivity.class);
 				this.startActivity(intent);
                 return true;
             case R.id.main_menu_help:
@@ -143,25 +154,27 @@ public class MainView extends Activity implements OnItemSelectedListener {
     }
     
     public void updateEventsList() {
-		cursor = db.query(DbHelper.TABLE,
-				 null,
-				 null,
-				 null,
-				 DbHelper.C_DATE,
-				 null,
-				 DbHelper.C_DATE + " ASC");
+		String where = null;
+				/*EventTable.DATE + 
+					   " = '" +
+					   groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)) +
+					   "'";*/
+		cursor = cr.query(EventProvider.CONTENT_URI, null, null, null, null); //EventTable.DATE + " ASC"
+		Log.d(TAG, "updateEventsList cursor: " + cursor);
 		startManagingCursor(cursor);
 		// Create the adapter
-		listener = new EventsListener(this);
-		listAdapter = new EventsTreeAdapter(cursor, this, db);
-		eventsList.setAdapter(listAdapter);
-		eventsList.setOnChildClickListener(listener);
+		if (cursor != null) {
+			listener = new EventsListener(this);
+			listAdapter = new EventsTreeAdapter(cursor, this);
+			eventsList.setAdapter(listAdapter);
+			eventsList.setOnChildClickListener(listener);
+		}
     }
     
     private void doSync() {
     	Log.d(TAG, "Starting task to synchronize data ...");
-		EventFilter filter = PreferenceHelper.getSearchParams(this);
-		new EventReaderAsyncTask(this).execute(filter);
+    	Intent msgIntent = new Intent(this, ReadingService.class);
+    	startService(msgIntent);
     }
     
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {

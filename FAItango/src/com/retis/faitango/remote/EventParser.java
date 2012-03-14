@@ -76,7 +76,7 @@ public abstract class EventParser {
 		 * will be done. */
 		static {
 			try {
-				Class.forName("com.retis.faitango.DataEventParserJSON");
+				Class.forName("com.retis.faitango.remote.JSONEventParser");
 			} catch (ClassNotFoundException e) {
 				Log.e(TAG, "ClassNotFoundException while executing the static initialization block that loads the concrete products:" +  e.getMessage());
 				e.printStackTrace();

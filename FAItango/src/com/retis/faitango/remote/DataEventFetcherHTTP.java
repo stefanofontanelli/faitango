@@ -43,20 +43,20 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 	public DataEventFetcherHTTP(Context context) throws Exception {
 		super(context); // Initializes appContext
 
-		uriPathEventList = appContext.getResources().getString(R.string.httpUriPathEventList); 
-		uriPathEventDetail = appContext.getResources().getString(R.string.httpUriPathEventDetail);
-		uriHost = PreferenceHelper.getRemoteServer(appContext);
+		uriPathEventList = context.getResources().getString(R.string.httpUriPathEventList);
+		uriPathEventDetail = context.getResources().getString(R.string.httpUriPathEventDetail);
+		uriHost = PreferenceHelper.getRemoteServer(context);
 		if (uriHost.length() == 0)
 			throw new Exception(TAG + ": Remote HTTP server not specified"); 
 	}
 
 	@Override
 	public String fetchEventList(EventFilter filter) {
+		Log.d(TAG, "Fetch events list using: " + filter);
 		createHttpClient();
 		createQueryEventList(filter);
 		String response = performHttpGet(uriPathEventList, uriQueryEventList);
-		// chris TODO: do some check on this response?
-
+		Log.d(TAG, "Response: " + response);
 		return response;
 	}
 
@@ -65,7 +65,6 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 		createHttpClient();
 		createQueryEventDetail(eventId);
 		String response = performHttpGet(uriPathEventDetail, uriQueryEventDetail);
-		// chris TODO: do some check on this response?
 		return response;
 	}
 

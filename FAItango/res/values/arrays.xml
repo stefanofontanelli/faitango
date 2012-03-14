@@ -5,6 +5,8 @@
         <item>Tomorrow</item>
         <item>This Week</item>
         <item>Next Week</item>
+        <item>This Month</item>
+        <item>Next Month</item>
     </string-array>
     <string-array name="settingSyncType">
         <item>Never</item>
@@ -24,20 +26,26 @@
         <item>24 hours</item>
     </string-array>
     <string-array name="settingSyncPeriodValues">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>720</item>
-        <item>1440</item>
+        <item>900000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+        <item>43200000</item>
+        <item>86400000</item>
     </string-array>
-    <string-array name="eventTypes">
-        <item>Concerto</item>
-        <item>Festa</item>
-        <item>Festival</item>
-        <item>Maratona</item>
-        <item>Milonga</item>
-        <item>Spettacolo</item>
-        <item>Stage</item>
-        <item>Vacanza/Viaggio</item>
+    <string-array name="settingEventSearchPeriod">
+        <item>1 day</item>
+        <item>7 days</item>
+        <item>15 days</item>
+        <item>1 month</item>
+        <item>6 months</item>
+        <item>12 months</item>
+    </string-array>
+    <string-array name="settingEventSearchPeriodValues">
+        <item>1</item>
+        <item>7</item>
+        <item>15</item>
+        <item>31</item>
+        <item>186</item>
+        <item>372</item>
     </string-array>
 </resources>

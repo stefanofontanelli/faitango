@@ -43,11 +43,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			   											  " {8} TEXT NOT NULL," +
 			   											  " {9} INTEGER NOT NULL," +
 			   											  " {10} TEXT NOT NULL," +
-			   											  " {11} TEXT NOT NULL," +
-			   											  " {12} TEXT NOT NULL" +
+			   											  " {11} TEXT NOT NULL" +
 			   											  ");";
 	private static final String DROP_TABLE_SQL = "DROP TABLE IF EXISTS {0}";
-	private static final int SCHEMA_VERSION = 2;
+	private static final int SCHEMA_VERSION = 3;
 	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, SCHEMA_VERSION);
@@ -91,7 +90,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 										EventDetailTable.EVENT,
 										EventDetailTable.LINK,
 										EventDetailTable.CREATED,
-										EventDetailTable.AF,
 										EventDetailTable.EMAIL,
 										EventDetailTable.DESCRIPTION));
 		

@@ -11,11 +11,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class EventDetailProvider extends ContentProvider {
 	
 	private static final String TAG = "EventDetailProvider";
-	private static final String baseDomain = "com.retis.provider.faitango";
+	private static final String baseDomain = "com.retis.provider.faitango.eventdetails";
 	private static final String URI = "content://" + baseDomain + "/eventdetails";
 	public static final Uri CONTENT_URI = Uri.parse(URI);
 	private static final int EVENTDETAILS = 1;
@@ -77,6 +78,7 @@ public class EventDetailProvider extends ContentProvider {
 		if (rowID > 0) {
 			Uri uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
 			getContext().getContentResolver().notifyChange(uri, null);
+			Log.d(TAG, "Added the row: " + rowID + ", values: " + _initialValues);
 			return uri;
 		}
 		throw new SQLException("Failed to insert row into " + _uri);
@@ -96,7 +98,7 @@ public class EventDetailProvider extends ContentProvider {
 			break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
-		}
+		}		
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
@@ -107,11 +109,13 @@ public class EventDetailProvider extends ContentProvider {
 		switch (uriMatcher.match(uri)) {
 			case EVENTDETAILS:
 				count = db.update(EventDetailTable.TABLE_NAME, values, where, whereArgs);
+				Log.d(TAG, "Update values: " + values);
 			break;
 			case EVENTDETAIL_ID:
 				String segment = uri.getPathSegments().get(1);
 				count = db.update(EventDetailTable.TABLE_NAME, values, EventDetailTable._ID
 						+ "=" + segment + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+				Log.d(TAG, "Update values: " + values + " in row: " + segment);
 			break;
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);

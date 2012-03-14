@@ -64,7 +64,7 @@ public abstract class DataEventFetcher {
 		 * will be done. */
 		static {
 			try {
-				Class.forName("com.retis.faitango.DataEventFetcherHTTP");
+				Class.forName("com.retis.faitango.remote.DataEventFetcherHTTP");
 			} catch (ClassNotFoundException e) {
 				Log.e(TAG, "ClassNotFoundException while executing the static initialization block that loads the concrete products:" +  e.getMessage());
 				e.printStackTrace();

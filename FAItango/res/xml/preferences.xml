@@ -49,6 +49,50 @@
         	android:summary="@string/settingProvinceSummary"
 			android:dialogTitle="@string/settingProvinceDialogTitle"
 			android:defaultValue="PI" />
-	</PreferenceCategory>		
-	                
+		<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+     		android:title="@string/settingEventsTypeListTitle"
+     		android:key="eventsTypeList"
+     		android:summary="@string/settingEventsTypeListSummary">
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypeCONCERT"
+		        android:title="@string/eventTypeCONCERT" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypePARTY"
+		        android:title="@string/eventTypePARTY" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypeFESTIVAL"
+		        android:title="@string/eventTypeFESTIVAL" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypeMARATHON"
+		        android:title="@string/eventTypeMARATHON" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypeMILONGA"
+		        android:title="@string/eventTypeMILONGA" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypeSHOW"
+		        android:title="@string/eventTypeSHOW" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypeSTAGE"
+		        android:title="@string/eventTypeSTAGE" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="@string/eventTypeVACATION"
+		        android:title="@string/eventTypeVACATION" 
+		        android:defaultValue="true" />
+    	</PreferenceScreen>
+    	<ListPreference
+			android:key="eventSearchPeriod"
+			android:title="@string/settingEventSearchPeriodTitle"
+			android:summary="@string/settingEventSearchPeriodSummary"
+			android:entries="@array/settingEventSearchPeriod"
+			android:entryValues="@array/settingEventSearchPeriodValues"
+			android:defaultValue="1"
+			android:dialogTitle="@string/settingEventSearchPeriodDialogTitle"/>
+	</PreferenceCategory>
 </PreferenceScreen>

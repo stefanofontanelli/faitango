@@ -1,5 +1,6 @@
 package com.retis.faitango.remote;
 
+import com.retis.faitango.AlarmHelper;
 import com.retis.faitango.database.EventDetailProvider;
 import com.retis.faitango.database.EventDetailTable;
 import com.retis.faitango.database.EventProvider;
@@ -20,7 +21,7 @@ import android.util.Log;
  * The class can be used either by a background service ({@link EventReaderService}) 
  * or by an AsyncTask ({@link EventReaderAsyncTask}).
  * In the first case the class operations are wrapped in a service which is 
- * activated by the EventReaderAlarm (see {@link EventReaderService} and {@link EventReaderAlarm}).
+ * activated by the EventReaderAlarm (see {@link EventReaderService} and {@link AlarmHelper}).
  * In the second case the class is wrapped by an AsyncTask which is meant to be 
  * executed by an Activity.
  * <br><br>
@@ -85,11 +86,13 @@ public class EventReader {
 			}
 			return;
 		}
+		Log.d(TAG, "Received data: " + data);
 		// Parse EVENTS
 		evParser.parseEventList(data);
 		// Insert EVENTS.
 		ContentValues event = new ContentValues();
 		ContentValues detail = new ContentValues();
+		Log.d(TAG, "Received events: " + evParser.getEvents());
 		for (DataEvent ev : evParser.getEvents()) {
 			event.clear();
 			detail.clear();
@@ -126,9 +129,10 @@ public class EventReader {
 	}
 	
 	public void handleEvent(ContentValues event) {
+		Log.d(TAG, "Handle event: " + event);
 		try {
 			ContentResolver cr = context.getContentResolver();
-			String where = EventTable._ID + " = " + event.getAsString("id");
+			String where = EventTable._ID + " = " + event.getAsString("_id");
 			Cursor c = cr.query(EventProvider.CONTENT_URI, null, where, null, null);
 			if (c.getCount() == 0) {
 				cr.insert(EventProvider.CONTENT_URI, event);
@@ -136,16 +140,17 @@ public class EventReader {
 				do {
 					event.put(EventTable._ID,
 							  c.getLong(c.getColumnIndex(EventTable._ID)));
-					where = EventTable._ID + " < " + event.getAsString("id");
+					where = EventTable._ID + " = " + event.getAsString("_id");
 					cr.update(EventProvider.CONTENT_URI, event, where, null);
 				} while (c.moveToNext());
 			}
 		} catch (Exception e) {
-			Log.d(TAG, "The event " + event.getAsString("id") + " was NOT inserted.");
+			Log.d(TAG, "The event " + event + " was NOT inserted/updated.");
 		}
 	}
 	
 	public void handleEventDetail(ContentValues eventDetail) {
+		Log.d(TAG, "Handle event detail: " + eventDetail);
 		try {
 			ContentResolver cr = context.getContentResolver();
 			String where = EventDetailTable._ID + " = " + eventDetail.getAsString("event");
@@ -156,12 +161,12 @@ public class EventReader {
 				do {
 					eventDetail.put(EventDetailTable._ID,
 							  		c.getLong(c.getColumnIndex(EventDetailTable._ID)));
-					where = EventDetailTable._ID + " < " + eventDetail.getAsString("id");
+					where = EventDetailTable._ID + " = " + eventDetail.getAsString("id");
 					cr.update(EventProvider.CONTENT_URI, eventDetail, where, null);
 				} while (c.moveToNext());
 			}
 		} catch (Exception e) {
-			Log.d(TAG, "The event detail " + eventDetail.getAsString("id") + " was NOT inserted.");
+			Log.d(TAG, "The event detail " + eventDetail + " was NOT inserted/updated.");
 		}
 	}
 }

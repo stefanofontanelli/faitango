@@ -28,7 +28,7 @@
         </activity>
          <activity
             android:label="@string/app_name"
-            android:name=".GlobalPreferenceActivity" >
+            android:name=".SettingActivity" >
         </activity>
         <provider
             android:name="com.retis.faitango.database.CountryProvider"
@@ -43,18 +43,12 @@
             android:name="com.retis.faitango.database.EventProvider"
             android:authorities="com.retis.provider.faitango.events" />
         <provider
-            android:name="com.retis.faitango.database.EventDetailProvider"
+            android:name=".database.EventDetailProvider"
             android:authorities="com.retis.provider.faitango.eventdetails" />
-        <service android:name=".EventReaderIntentService"/>
-        <service android:name=".EventReaderService"/>
-        <service android:name=".StartupService"/>
-        <receiver android:name=".StartupBroadcastReceiver"
+        <service android:name=".ReadingService" />
+        <receiver android:name=".ReadingReceiver"
                   android:enabled="true" 
-                  android:exported="true" 
-                  android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-       		<intent-filter>
-				<action android:name ="android.intent.action.BOOT_COMPLETED"/>
-       		</intent-filter>
+                  android:exported="true">
        	</receiver>
     </application>
 

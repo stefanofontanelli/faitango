@@ -5,27 +5,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
-
-import com.retis.faitango.DbHelper;
+import com.retis.faitango.database.EventProvider;
+import com.retis.faitango.database.EventTable;
 
 public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 
 	@SuppressWarnings("unused")
 	private final String TAG = "EventsTreeAdapter";
-	private static final String[] FROM = 
-		{ DbHelper.C_CITY, DbHelper.C_DATE,	DbHelper.C_TYPE, DbHelper.C_NAME, DbHelper.C_TIME };
-	private static final int[] TO = 
-		{ R.id.textCity, R.id.textDate, R.id.textEventType,	R.id.textEventName, R.id.textTime };
-	private SQLiteDatabase db;
+	private static final String[] FROM = {
+		EventTable.CITY, EventTable.DATE, EventTable.TYPE, EventTable.NAME, EventTable.TIME
+	};
+	private static final int[] TO = {
+		R.id.textCity, R.id.textDate, R.id.textEventType,	R.id.textEventName, R.id.textTime
+	};
 	private Context context;
 	// map used to associate an ID to a child position inside a parent group expanded list entry
 	public static HashMap<Integer, Integer> childMap = new HashMap<Integer, Integer>();
@@ -33,16 +36,15 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 	private Map<Integer, String> listMap = new HashMap<Integer, String>();
 
 
-	public EventsTreeAdapter(Cursor cursor, Context c, SQLiteDatabase dataBase) {
+	public EventsTreeAdapter(Cursor cursor, Context c) {
 		super(c, cursor, android.R.layout.simple_expandable_list_item_1,
-				new String[] {DbHelper.C_DATE}, new int[] {android.R.id.text1},
+				new String[] {EventTable.DATE}, new int[] {android.R.id.text1},
 				R.layout.eventrow, FROM, TO);
-		db = dataBase;
 		context = c;
 		cursor.moveToFirst();
 		while(cursor.isAfterLast() == false) {
 			SimpleDateFormat sdf = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN); 
-			String s = sdf.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DbHelper.C_DATE))));
+			String s = sdf.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(EventTable.DATE))));
 			listMap.put(cursor.getPosition(), s);
 			cursor.moveToNext();
 		}
@@ -53,7 +55,7 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 	protected void bindChildView(View view, Context context, Cursor cursor,	boolean isLastChild) {
 		super.bindChildView(view, context, cursor, isLastChild);
 		SimpleDateFormat sdf = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN); 
-		String s = sdf.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DbHelper.C_DATE))));
+		String s = sdf.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(EventTable.DATE))));
 		TextView tv = (TextView) view.findViewById(R.id.textDate);
 		tv.setText(s);
 	}
@@ -84,15 +86,18 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 		// Since this function is called every time the user expands a group, 
 		// we must be sure that the map is cleared and then filled again with actual IDs
 		EventsTreeAdapter.childMap.clear();
-		cursor = db.query(DbHelper.TABLE, null,
-				DbHelper.C_DATE + " = '" +
-						groupCursor.getLong(groupCursor.getColumnIndexOrThrow(DbHelper.C_DATE)) + "'",
-						null, null, null, null);
+		ContentResolver cr = context.getContentResolver();
+		String where = EventTable.DATE + 
+					   " = '" +
+					   groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)) +
+					   "'";
+		cursor = cr.query(EventProvider.CONTENT_URI, null, where, null, null);
 		cursor.moveToFirst();
 		while(cursor.isAfterLast() == false) {
 			//we associate an event ID with the position of a child
 			//in an expandable list hierarchy
-			EventsTreeAdapter.childMap.put(cursor.getPosition(), cursor.getInt(cursor.getColumnIndex(DbHelper.C_ID)));
+			EventsTreeAdapter.childMap.put(cursor.getPosition(),
+										   cursor.getInt(cursor.getColumnIndex(EventTable._ID)));
 			cursor.moveToNext();
 		}
 		cursor.moveToFirst();
