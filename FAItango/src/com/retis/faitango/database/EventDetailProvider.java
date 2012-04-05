@@ -57,8 +57,10 @@ public class EventDetailProvider extends ContentProvider {
 		switch (uriMatcher.match(uri)) {
 			case EVENTDETAIL_ID:
 				qb.appendWhere(EventDetailTable._ID + "=" + uri.getPathSegments().get(1));
+				Log.d("EventDetailProvider", EventDetailTable._ID + "=" + uri.getPathSegments().get(1));
 				break;
 			default:
+				Log.d("EventDetailProvider", "default");
 				break;
 		}
 		String orderBy;
@@ -67,6 +69,7 @@ public class EventDetailProvider extends ContentProvider {
 		} else {
 			orderBy = sort;
 		}
+		Log.d("EventDetailProvider", selection);
 		Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;

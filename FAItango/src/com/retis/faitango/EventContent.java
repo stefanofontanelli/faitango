@@ -26,6 +26,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -129,8 +131,9 @@ public class EventContent extends MapActivity {
 		super.onResume();
 
 		facebook.extendAccessTokenIfNeeded(this, null);
-		String where = EventDetailTable._ID + "=" + eventID;
-		cursor = cr.query(EventDetailProvider.CONTENT_URI, null, where, null, EventTable.DATE + " ASC");
+		String where = EventDetailTable.EVENT + "=" + eventID;
+		Log.d(TAG, where);
+		cursor = cr.query(EventDetailProvider.CONTENT_URI, null, where, null, null);
 		startManagingCursor(cursor);
 		Log.d(TAG, Integer.toString(cursor.getCount()));
 		Log.d(TAG, Integer.toString(cursor.getColumnCount()));
@@ -153,7 +156,8 @@ public class EventContent extends MapActivity {
 
 			textView = (TextView) findViewById(R.id.textDetEventName);
 			description = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.DESCRIPTION));
-			textView.setText(description);
+			textView.setText(Html.fromHtml(description));
+			textView.setMovementMethod(LinkMovementMethod.getInstance());
 
 			textView = (TextView) findViewById(R.id.textDetTime);
 			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.TIME)));
