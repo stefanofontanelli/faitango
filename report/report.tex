@@ -1,0 +1,185 @@
+% ---------------------------------------------------------------------------- %
+%  Description: Project Report of the FAI-TANGO Android App                    %
+%                                                                              %
+%  Author(s): chris                                                            %
+%  Date: 31 March 2012 20.40                                                   %
+% ---------------------------------------------------------------------------- %
+
+\documentclass[10pt, twoside]{article}
+
+% ----------------------------------------- %
+% Including Packages                        %
+% ----------------------------------------- %
+\usepackage{fullpage} % To use 1 inch margins
+%\usepackage{latex8}
+%\usepackage{ieeetran}
+\usepackage{color}
+\usepackage{times}
+\usepackage{url}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{graphicx}
+%\usepackage{../../Styles/algorithm}
+%\usepackage{../../Styles/algorithmic}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{theorem}
+\usepackage{multirow}
+\usepackage{epsf}
+\usepackage{psfrag}
+\usepackage{latexsym}
+\usepackage{lscape}
+
+% ----------------------------------------- %
+% New commands and environments             %
+% ----------------------------------------- %
+\newcommand{\todo}[1]{{\color{red}{TODO: \textbf{\footnotesize{#1}}}}}
+
+\newcommand{\app}{FAI-TANGO }
+
+\renewcommand{\labelenumi}{\arabic{enumi}}
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}}
+
+% ----------------------------------------- %
+% Body (Title, author, abstract, sections)  %
+% ----------------------------------------- %
+%\graphicspath{{../figures/}}
+%\DeclareGraphicsExtensions{.jpg}
+%\DeclareGraphicsExtensions{.eps}
+%\pagestyle{empty}
+\title{\app Android App}
+\author{Juri Lelli, Stefano Fontanelli, Christian Nastasi} 
+
+\begin{document}
+\maketitle
+%\thispagestyle{empty}
+% ----------------------------------------- %
+% Abstract of the document                  %
+% ----------------------------------------- %
+%\begin{abstract} There is no abstract.  \end{abstract}
+
+% ----------------------------------------- %
+% Add document sections                     %
+% ----------------------------------------- %
+\small
+\todo{Things to be made:
+\begin{enumerate} 
+\item Find a name for the App. I'm currently using \app
+\end{enumerate} 
+}
+Topics:
+\begin{itemize} 
+    \item Introduction: about the app
+    \item Requirements of the app
+    \item General Architecture:
+    \begin{itemize} 
+        \item Local DB to store event information
+        \item Module for information retrieval
+        \item Module for information presentation
+        \item Integration with Android: maps, calendar, facebook
+    \end{itemize} 
+    \item SW architecture: (basically the java packages) 
+    \begin{itemize} 
+        \item DB module
+        \item GUI module
+        \item Synch module 
+        \item Preferences 
+    \end{itemize} 
+    \item DB module: DB helper, Content provider
+    \item GUI module: main Activity, event detail activity
+    \item Synch module: retrieval (EventFetcher and EventParser), ReaderService!
+    \item Preferences
+\end{itemize} 
+\normalsize
+
+
+\section{Application description}
+\todo{Say something about: why we did this app?}
+
+The \app application allows to retrieve and present information about
+tango events registered at the \emph{FAItango} association 
+(``Federazione delle Associazioni Italiane di Tango Argentino'').
+Such information are available through the FAItango official web site,
+but cannot be easily accessible on mobile handsets because of the lack of
+a proper mobile version of the web site. 
+Moreover, visualization through the web interface normally requires continuous
+access to the internet.
+
+The proposed application ... bla bla bla.
+
+\subsection*{Requirements}
+\begin{enumerate}
+    \item The tango event information is classified 
+          in \emph{brief} and \emph{detailed}.
+    \item Event whose starting date is previous than current date 
+          (handset time) are considered as \emph{past}.
+    \item The application shall retrieve the event information from the 
+          FAItango database.
+    \begin{enumerate}
+        \item Brief and detailed information are accessible through 
+              HTTP requests.
+        \item Brief information are encoded in JSON standard.
+        \item Detailed information are encoded in \todo{what?}.
+        \item Brief and detailed information might be accessed and encoded using
+              different mechanisms.
+    \end{enumerate}
+    \item The application shall present the event information on the handset.
+    \begin{enumerate}
+        \item The brief information shall be summarized in a sorted list.
+        \begin{enumerate}
+            \item The list is sorted by event date, closest to current date 
+                  first
+            \item Past events shall be excluded.
+        \end{enumerate}
+        \item The detailed information shall be presented upon selection of
+              the event from the brief list.
+    \end{enumerate}
+    \item The application shall allow off-line visualization of the event 
+          information.
+    \begin{enumerate}
+        \item The application shall store brief and detailed information 
+              on the handset.
+        \item Past events information should be removed.
+    \end{enumerate}
+    \item Information retrieval shall take place according to two possible 
+          paradigms: \emph{synchronization} and \emph{search}.
+    \item Synchronization
+    \begin{enumerate}
+        \item Synchronization shall accept search parameters to limit
+              event information to be retrieved:
+        \begin{enumerate}
+            \item What info?...
+        \end{enumerate}
+        \item Synchronization shall be performed in one of the following mode:
+              periodically, on-startup, manually.
+        \begin{enumerate}
+            \item Periodic synchronization shall occur according 
+                  to predefined time interval (TBD: ....)
+            \item Periodic synchronization shall occur even if the application
+                  is not executing.
+            \item On-startup synchronization shall occur when the application is
+                  started.
+            \item Manual synchronization shall occur on explicit request of the
+                  user.
+        \end{enumerate}
+    \end{enumerate}
+    \item Search
+    \begin{enumerate}
+        \item Describe...
+    \end{enumerate}
+    \item The application shall be integrated with: calendar, maps, facebook.
+    \item The application shall provide off-line content to other possible
+          application.
+\end{enumerate}
+
+\section{Architecture}
+The architecture proposed to comply with the application requirements
+is depicted in Figure~\ref{FIGURA}. 
+
+TODO: mettere figura!
+
+
+TODO: start describing...
+
+\end{document}
