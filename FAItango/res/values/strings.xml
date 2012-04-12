@@ -29,7 +29,6 @@
     <string name="settingRegionSummary">The default region used to filter events.</string>
     <string name="settingRegionDialogTitle">Choose a region</string>
     <string name="settingProvinceTitle">Province</string>
-    <string name="settingProvinceSummary">The default province used to filter events.</string>
     <string name="settingProvinceDialogTitle">Choose a province</string>
     <string name="settingProvinceSummary">The default province used to filter events.</string>
     <string name="settingEventsTypeListTitle">Type of events</string>
