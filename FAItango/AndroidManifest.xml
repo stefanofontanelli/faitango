@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.retis.faitango"
     android:versionCode="1"
-    android:versionName="1.0" >
-    <uses-sdk android:minSdkVersion="10" />
+    android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="10"/>
     <permission android:name="com.retis.faitango.permission.EVENT_PROVIDER_READ"/>
     <permission android:name="com.retis.faitango.permission.EVENT_PROVIDER_WRITE"/>
     <permission android:name="com.retis.faitango.permission.EVENT_DETAIL_PROVIDER_READ"/>

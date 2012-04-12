@@ -45,7 +45,10 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 		while(cursor.isAfterLast() == false) {
 			SimpleDateFormat sdf = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN); 
 			String s = sdf.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(EventTable.DATE))));
-			listMap.put(cursor.getPosition(), s);
+			if (!listMap.containsValue(s)) {
+				Log.d(TAG, "Add " + s + "to listMap at pos " + cursor.getPosition());
+				listMap.put(cursor.getPosition(), s);
+			}
 			cursor.moveToNext();
 		}
 		cursor.moveToFirst();

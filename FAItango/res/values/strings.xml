@@ -6,7 +6,7 @@
     <string name="mainMenuSearch">Search</string>
     <string name="mainMenuSync">Synchronize</string>
     <string name="mainMenuSetting">Settings</string>
-    <string name="mainMenuHelp">Help</string>
+    <string name="mainMenuReset">Reset Data</string>
     <string name="eventsTitle">Events List</string>
     <!-- Preferences -->
     <string name="settingConnectionCategory">Connection</string>

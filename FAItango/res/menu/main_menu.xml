@@ -9,7 +9,7 @@
     <item android:id="@+id/main_menu_setting"
           android:icon="@drawable/ic_menu_preferences"
           android:title="@string/mainMenuSetting"/>
-    <item android:id="@+id/main_menu_help"
-          android:icon="@drawable/ic_menu_help"
-          android:title="@string/mainMenuHelp"/>
+    <item android:id="@+id/main_menu_reset"
+          android:icon="@drawable/ic_menu_reset"
+          android:title="@string/mainMenuReset"/>
 </menu>

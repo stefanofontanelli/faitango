@@ -1,5 +1,6 @@
 package com.retis.faitango;
 
+import com.retis.faitango.database.EventDetailProvider;
 import com.retis.faitango.database.EventProvider;
 import com.retis.faitango.database.EventTable;
 import com.retis.faitango.preference.PreferenceHelper;
@@ -39,6 +40,7 @@ public class MainView extends Activity implements OnItemSelectedListener {
 	private ContentResolver cr;
 	private IntentFilter filter;
 	private ReadingReceiver receiver;
+	private boolean synchronizing;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -101,7 +103,8 @@ public class MainView extends Activity implements OnItemSelectedListener {
         	builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
 	                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
-	                //doSync();
+	                synchronizing = true;
+	                doSync();
 	           }
         	});
         	builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -145,8 +148,9 @@ public class MainView extends Activity implements OnItemSelectedListener {
 				Intent intent = new Intent(this, SettingActivity.class);
 				this.startActivity(intent);
                 return true;
-            case R.id.main_menu_help:
-            	Toast.makeText(this, "Help Me!", Toast.LENGTH_LONG).show();
+            case R.id.main_menu_reset:
+            	cr.delete(EventProvider.CONTENT_URI, null, null);
+            	cr.delete(EventDetailProvider.CONTENT_URI, null, null);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -154,12 +158,17 @@ public class MainView extends Activity implements OnItemSelectedListener {
     }
     
     public void updateEventsList() {
+    	if (synchronizing) {
+    		dismissDialog(DIALOG_SYNCHRONIZING);
+    	}
+    	String[] mProjection =
+    	{
+   		    "DISTINCT " + EventTable.DATE,
+   		    EventTable.DATE + " AS _id"
+    	};
 		String where = null;
-				/*EventTable.DATE + 
-					   " = '" +
-					   groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)) +
-					   "'";*/
-		cursor = cr.query(EventProvider.CONTENT_URI, null, null, null, null); //EventTable.DATE + " ASC"
+		String order = EventTable.DATE + " ASC";
+		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, where, null, order);
 		Log.d(TAG, "updateEventsList cursor: " + cursor);
 		startManagingCursor(cursor);
 		// Create the adapter

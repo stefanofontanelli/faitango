@@ -24,8 +24,8 @@ public class EventDetailProvider extends ContentProvider {
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(baseDomain, "events", EVENTDETAILS);
-		uriMatcher.addURI(baseDomain, "events/#", EVENTDETAIL_ID);
+		uriMatcher.addURI(baseDomain, "eventdetails", EVENTDETAILS);
+		uriMatcher.addURI(baseDomain, "eventdetails/#", EVENTDETAIL_ID);
 	}
 	private SQLiteDatabase db;
 	private DatabaseHelper dbHelper;

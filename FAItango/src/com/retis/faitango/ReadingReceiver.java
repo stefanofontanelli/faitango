@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.app.Activity;
 
 public class ReadingReceiver extends BroadcastReceiver {
 
@@ -13,7 +14,6 @@ public class ReadingReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG, "Intent received: " + intent.getAction());
-		// Do stuff
-		// UPDATE ACTIVITY
+		((MainView) context).updateEventsList();
 	}
 }
