@@ -28,7 +28,7 @@ public class RegionList extends ListPreference {
     public void load(Context context, String country) {
     	ContentResolver cr = context.getContentResolver();
     	String where = null;
-    	if (country != null || country != "") {
+    	if (country != null && country != "") {
     		where = RegionTable.COUNTRY + "=" + country;
     	}
         regions = cr.query(RegionProvider.CONTENT_URI, null, where, null, null);

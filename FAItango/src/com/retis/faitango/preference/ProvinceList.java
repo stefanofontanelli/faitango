@@ -28,7 +28,8 @@ public class ProvinceList extends ListPreference {
     public void load(Context context, String region) {
     	ContentResolver cr = context.getContentResolver();
     	String where = null;
-    	if (region != null || region != "") {
+    	if (region != null && region != "") {
+    		Log.d(TAG, "Where: " + where);
     		where = ProvinceTable.REGION + "='" + region +"'";
     	}
         provinces = cr.query(ProvinceProvider.CONTENT_URI, null, where, null, null);

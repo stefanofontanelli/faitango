@@ -34,9 +34,9 @@
     <string name="settingProvinceSummary">The default province used to filter events.</string>
     <string name="settingEventsTypeListTitle">Type of events</string>
     <string name="settingEventsTypeListSummary">Choose what are the kind of events to search</string> 
-    <string name="settingEventSearchPeriodTitle">Time Period</string>
-	<string name="settingEventSearchPeriodSummary">Set the time period of search for the events.</string>
-	<string name="settingEventSearchPeriodDialogTitle">Choose a time period</string>
+    <string name="settingEventSearchPeriodTitle">Events Time Interval</string>
+	<string name="settingEventSearchPeriodSummary">Set the time interval of events for searches.</string>
+	<string name="settingEventSearchPeriodDialogTitle">Choose a time interval</string>
     <!-- Event Type Strings -->
     <string name="eventTypeCONCERT">Concerto</string>
     <string name="eventTypePARTY">Festa</string>

@@ -4,8 +4,28 @@
     android:versionCode="1"
     android:versionName="1.0" >
     <uses-sdk android:minSdkVersion="10" />
+    <permission android:name="com.retis.faitango.permission.EVENT_PROVIDER_READ"/>
+    <permission android:name="com.retis.faitango.permission.EVENT_PROVIDER_WRITE"/>
+    <permission android:name="com.retis.faitango.permission.EVENT_DETAIL_PROVIDER_READ"/>
+    <permission android:name="com.retis.faitango.permission.EVENT_DETAIL_PROVIDER_WRITE"/>
+    <permission android:name="com.retis.faitango.permission.COUNTRY_PROVIDER_READ"/>
+    <permission android:name="com.retis.faitango.permission.COUNTRY_PROVIDER_WRITE"/>
+    <permission android:name="com.retis.faitango.permission.REGION_PROVIDER_READ"/>
+    <permission android:name="com.retis.faitango.permission.REGION_PROVIDER_WRITE"/>
+    <permission android:name="com.retis.faitango.permission.PROVINCE_PROVIDER_READ"/>
+    <permission android:name="com.retis.faitango.permission.PROVINCE_PROVIDER_WRITE"/> 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="com.retis.faitango.permission.EVENT_PROVIDER_READ"/>
+    <uses-permission android:name="com.retis.faitango.permission.EVENT_PROVIDER_WRITE"/>
+    <uses-permission android:name="com.retis.faitango.permission.EVENT_DETAIL_PROVIDER_READ"/>
+    <uses-permission android:name="com.retis.faitango.permission.EVENT_DETAIL_PROVIDER_WRITE"/>
+    <uses-permission android:name="com.retis.faitango.permission.COUNTRY_PROVIDER_READ"/>
+    <uses-permission android:name="com.retis.faitango.permission.COUNTRY_PROVIDER_WRITE"/>
+    <uses-permission android:name="com.retis.faitango.permission.REGION_PROVIDER_READ"/>
+    <uses-permission android:name="com.retis.faitango.permission.REGION_PROVIDER_WRITE"/>
+    <uses-permission android:name="com.retis.faitango.permission.PROVINCE_PROVIDER_READ"/>
+    <uses-permission android:name="com.retis.faitango.permission.PROVINCE_PROVIDER_WRITE"/> 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
@@ -32,19 +52,29 @@
         </activity>
         <provider
             android:name="com.retis.faitango.database.CountryProvider"
-            android:authorities="com.retis.provider.faitango.countries" />
+            android:authorities="com.retis.provider.faitango.countries"
+            android:readPermission="com.retis.faitango.permission.COUNTRY_PROVIDER_READ" 
+            android:writePermission="com.retis.faitango.permission.COUNTRY_PROVIDER_WRITE"  />
         <provider
             android:name="com.retis.faitango.database.RegionProvider"
-            android:authorities="com.retis.provider.faitango.regions" />
+            android:authorities="com.retis.provider.faitango.regions"
+            android:readPermission="com.retis.faitango.permission.REGION_PROVIDER_READ" 
+            android:writePermission="com.retis.faitango.permission.REGION_PROVIDER_WRITE"  />
         <provider
             android:name="com.retis.faitango.database.ProvinceProvider"
-            android:authorities="com.retis.provider.faitango.provinces" />
+            android:authorities="com.retis.provider.faitango.provinces"
+            android:readPermission="com.retis.faitango.permission.PROVINCE_PROVIDER_READ" 
+            android:writePermission="com.retis.faitango.permission.PROVINCE_PROVIDER_WRITE"  />
         <provider
             android:name="com.retis.faitango.database.EventProvider"
-            android:authorities="com.retis.provider.faitango.events" />
+            android:authorities="com.retis.provider.faitango.events"
+            android:readPermission="com.retis.faitango.permission.EVENT_PROVIDER_READ" 
+            android:writePermission="com.retis.faitango.permission.EVENT_PROVIDER_WRITE"  />
         <provider
             android:name=".database.EventDetailProvider"
-            android:authorities="com.retis.provider.faitango.eventdetails" />
+            android:authorities="com.retis.provider.faitango.eventdetails"
+            android:readPermission="com.retis.faitango.permission.EVENT_DETAIL_PROVIDER_READ" 
+            android:writePermission="com.retis.faitango.permission.EVENT_DETAIL_PROVIDER_WRITE"  />
         <service android:name=".ReadingService" />
         <receiver android:name=".ReadingReceiver"
                   android:enabled="true" 

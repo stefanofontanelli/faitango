@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-/** Update activity on events reading completed.
- * 
- * @author Christian Nastasi
- */
 public class ReadingReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "ReadingReceiver";
@@ -18,5 +14,6 @@ public class ReadingReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG, "Intent received: " + intent.getAction());
 		// Do stuff
+		// UPDATE ACTIVITY
 	}
 }
