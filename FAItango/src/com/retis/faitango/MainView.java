@@ -28,7 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 
-public class MainView extends Activity implements OnItemSelectedListener {
+public class MainView extends Activity {
 
 	static final int DIALOG_ASK_SYNC = 0;
 	static final int DIALOG_SYNCHRONIZING = 1;
@@ -48,17 +48,6 @@ public class MainView extends Activity implements OnItemSelectedListener {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "MainView onCreate.");
         setContentView(R.layout.main);
-        /*
-         * Fill the Spinner object.
-         */
-        Spinner spinner = (Spinner) findViewById(R.id.mainSpinner);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(
-                this,
-        		R.array.mainSpinnerItems,
-        		android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
         /*
          * Check preference: Synchronization at Startup. 
          */
@@ -83,14 +72,17 @@ public class MainView extends Activity implements OnItemSelectedListener {
 	}
     
 	@Override protected void onPause() {
-		super.onPause();
+		Log.d(TAG, "onPause start.");
 		unregisterReceiver(receiver);
+		super.onPause();
+		Log.d(TAG, "onPause end.");
 	}
 	
 	@Override
 	protected void onDestroy() {
+		Log.d(TAG, "onDestroy start.");
 		super.onDestroy();
-		unregisterReceiver(receiver);
+		Log.d(TAG, "onDestroy end.");
 	}
     
     protected Dialog onCreateDialog(int id) {
@@ -161,6 +153,7 @@ public class MainView extends Activity implements OnItemSelectedListener {
     	if (synchronizing) {
     		dismissDialog(DIALOG_SYNCHRONIZING);
     	}
+    	cr = getContentResolver();
     	String[] mProjection =
     	{
    		    "DISTINCT " + EventTable.DATE,
@@ -185,14 +178,4 @@ public class MainView extends Activity implements OnItemSelectedListener {
     	Intent msgIntent = new Intent(this, ReadingService.class);
     	startService(msgIntent);
     }
-    
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        Toast.makeText(parent.getContext(), "The planet is " +
-            parent.getItemAtPosition(pos).toString() + " - " + view.getResources().getResourceName(R.array.mainSpinnerItems),
-            Toast.LENGTH_LONG).show();
-      }
-
-      public void onNothingSelected(AdapterView<?> parent) {
-        // Do nothing.
-      }
 }

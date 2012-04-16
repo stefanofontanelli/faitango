@@ -32,9 +32,11 @@ public class RegionList extends ListPreference {
     		where = RegionTable.COUNTRY + "=" + country;
     	}
         regions = cr.query(RegionProvider.CONTENT_URI, null, where, null, null);
-        entries = new String[regions.getCount()];
-        entryValues = new String[regions.getCount()];
-        int i = 0;
+        entries = new String[regions.getCount() + 1];
+        entryValues = new String[regions.getCount() + 1];
+        entries[0] = "All regions";
+        entryValues[0] = "";
+        int i = 1;
         if (regions.moveToFirst()) {
         	do {
         		entries[i] = regions.getString(regions.getColumnIndex(RegionTable.NAME));

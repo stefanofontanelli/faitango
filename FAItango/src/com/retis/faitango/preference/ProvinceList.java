@@ -33,9 +33,11 @@ public class ProvinceList extends ListPreference {
     		where = ProvinceTable.REGION + "='" + region +"'";
     	}
         provinces = cr.query(ProvinceProvider.CONTENT_URI, null, where, null, null);
-        entries = new String[provinces.getCount()];
-        entryValues = new String[provinces.getCount()];
-        int i = 0;
+        entries = new String[provinces.getCount() + 1];
+        entryValues = new String[provinces.getCount() + 1];
+        entries[0] = "All provinces";
+        entryValues[0] = "";
+        int i = 1;
         if (provinces.moveToFirst()) {
         	do {
         		entries[i] = provinces.getString(provinces.getColumnIndex(ProvinceTable.NAME));

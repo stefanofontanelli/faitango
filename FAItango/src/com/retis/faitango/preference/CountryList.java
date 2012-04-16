@@ -20,9 +20,13 @@ public class CountryList extends ListPreference {
         super(context, attrs);
         ContentResolver cr = context.getContentResolver();
         countries = cr.query(CountryProvider.CONTENT_URI, null, null, null, null);
-        entries = new String[countries.getCount()];
-        entryValues = new String[countries.getCount()];
-        int i = 0;
+        entries = new String[countries.getCount() + 1];
+        entryValues = new String[countries.getCount() + 1];
+        
+        entries[0] = "All countries";
+        entryValues[0] = "";
+        
+        int i = 1;
         if (countries.moveToFirst()) {
         	do {
         		entries[i] = countries.getString(countries.getColumnIndex(CountryTable.NAME));

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FAItango</string>
-    <string name="mainTextViewText">Events Filter:</string>
+    <string name="mainTextViewText">Events:</string>
     <string name="mainSpinnerPrompt">View events of &#8230;</string>
     <string name="mainMenuSearch">Search</string>
     <string name="mainMenuSync">Synchronize</string>

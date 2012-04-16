@@ -50,6 +50,7 @@ public class ReadingService extends IntentService {
 											   "FAITango events has been updated",
 											   "Open FAITango to see them!",
 											   contentIntent);
+		readingNotification.flags |= Notification.FLAG_AUTO_CANCEL;
 		broadcastIntent = new Intent(SYNC_COMPLETED);
 		alarmHelper = AlarmHelper.instance(this);
 	}

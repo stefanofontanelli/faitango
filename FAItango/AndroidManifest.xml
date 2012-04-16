@@ -13,7 +13,8 @@
     <permission android:name="com.retis.faitango.permission.REGION_PROVIDER_READ"/>
     <permission android:name="com.retis.faitango.permission.REGION_PROVIDER_WRITE"/>
     <permission android:name="com.retis.faitango.permission.PROVINCE_PROVIDER_READ"/>
-    <permission android:name="com.retis.faitango.permission.PROVINCE_PROVIDER_WRITE"/> 
+    <permission android:name="com.retis.faitango.permission.PROVINCE_PROVIDER_WRITE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -82,6 +83,11 @@
                   android:enabled="true" 
                   android:exported="true">
        	</receiver>
+       	<receiver android:name=".StartupAlarmReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
     </application>
 
 </manifest>
