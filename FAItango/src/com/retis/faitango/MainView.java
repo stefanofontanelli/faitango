@@ -282,8 +282,6 @@ public class MainView extends Activity {
     	Intent intent = null;
         switch (item.getItemId()) {
             case R.id.main_menu_search:
-            	//intent = new Intent(this, SearchView.class);
-				//startActivity(intent);
             	showDialog(SEARCH_DIALOG);
                 return true;
             case R.id.main_menu_sync:

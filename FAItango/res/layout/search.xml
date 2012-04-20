@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView 
+    android:id="@+id/dialog_layout_root" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/searchLayout"
+	    android:orientation="vertical"
+	    android:padding="10dip"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:background="#ffffff">
+
+	    <TextView
+	        android:id="@+id/searchCountrySpinnerTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="20dp"
+	        android:layout_marginTop="0dip"
+	        android:layout_marginBottom="5dip"
+	        android:text="@string/searchCountrySpinnerTextViewText"
+	        android:textColor="#000000"
+	    />
+	    <Spinner 
+	        android:id="@+id/searchCountrySpinner"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:drawSelectorOnTop="true"
+	        android:prompt="@string/searchCountrySpinnerText"
+	    />
+	
+	    <TextView
+	        android:id="@+id/searchRegionSpinnerTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="20dp"
+	        android:layout_marginTop="5dip"
+	        android:layout_marginBottom="5dip"
+	        android:text="@string/searchRegionSpinnerTextViewText"
+	        android:textColor="#000000"
+	    />
+	    <Spinner 
+	        android:id="@+id/searchRegionSpinner"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:drawSelectorOnTop="true"
+	        android:prompt="@string/searchRegionSpinnerText"
+	    />
+	    
+	    <TextView
+	        android:id="@+id/searchProvinceSpinnerTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="20dp"
+	        android:layout_marginTop="5dip"
+	        android:layout_marginBottom="5dip"
+	        android:text="@string/searchProvinceSpinnerTextViewText"
+	        android:textColor="#000000"
+	    />
+	    <Spinner 
+	        android:id="@+id/searchProvinceSpinner"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:drawSelectorOnTop="true"
+	        android:prompt="@string/searchProvinceSpinnerText"
+	    />
+	    
+	    <TextView
+	        android:id="@+id/searchFromDateTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="20dp"
+	        android:layout_marginTop="5dip"
+	        android:layout_marginBottom="5dip"
+	        android:text="@string/searchFromDateTextViewText"
+	        android:textColor="#000000"
+	    />
+	    
+		<DatePicker
+	    	android:id="@+id/searchFromDatePicker"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content" />
+	    
+		<TextView
+	        android:id="@+id/searchToDateTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="20dp"
+	        android:layout_marginTop="5dip"
+	        android:layout_marginBottom="5dip"
+	        android:text="@string/searchToDateTextViewText"
+	        android:textColor="#000000"
+	    />
+		
+		<DatePicker
+	    	android:id="@+id/searchToDatePicker"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content" />
+		
+	    <TextView
+	        android:id="@+id/searchTypeTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="20dp"
+	        android:layout_marginTop="5dip"
+	        android:layout_marginBottom="5dip"
+	        android:text="@string/searchTypeTextViewText"
+	        android:textColor="#000000"
+	    />
+	
+	    <CheckBox
+	        android:id="@+id/CONCERT"
+	 		android:text="@string/eventTypeCONCERT"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+	        
+		<CheckBox
+	        android:id="@+id/PARTY"
+	 		android:text="@string/eventTypePARTY"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+	    
+	    <CheckBox
+	        android:id="@+id/FESTIVAL"
+	 		android:text="@string/eventTypeFESTIVAL"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+	    
+	    <CheckBox
+	        android:id="@+id/MARATHON"
+	 		android:text="@string/eventTypeMARATHON"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+	
+		<CheckBox
+	        android:id="@+id/MILONGA"
+	 		android:text="@string/eventTypeMILONGA"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+		
+		<CheckBox
+	        android:id="@+id/SHOW"
+	 		android:text="@string/eventTypeSHOW"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+		
+		<CheckBox
+	        android:id="@+id/STAGE"
+	 		android:text="@string/eventTypeSTAGE"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+		
+		<CheckBox 
+		    android:id="@+id/VACATION"
+	 		android:text="@string/eventTypeVACATION"
+	 		android:layout_width="wrap_content"
+	 		android:layout_height="wrap_content"
+	 		android:textColor="#000000"
+	 	/>
+		
+	</LinearLayout>
+	
+</ScrollView>
