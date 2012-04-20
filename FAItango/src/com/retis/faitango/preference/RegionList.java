@@ -1,5 +1,6 @@
 package com.retis.faitango.preference;
 
+import com.retis.faitango.MainView;
 import com.retis.faitango.database.RegionProvider;
 import com.retis.faitango.database.RegionTable;
 import android.content.ContentResolver;
@@ -34,7 +35,7 @@ public class RegionList extends ListPreference {
         regions = cr.query(RegionProvider.CONTENT_URI, null, where, null, null);
         entries = new String[regions.getCount() + 1];
         entryValues = new String[regions.getCount() + 1];
-        entries[0] = "All regions";
+        entries[0] = MainView.ALL_REGIONS_LABEL;
         entryValues[0] = "";
         int i = 1;
         if (regions.moveToFirst()) {

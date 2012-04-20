@@ -53,13 +53,28 @@ public final class PreferenceHelper {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		EventFilter filter = new EventFilter();
 		filter.country = prefs.getString(country, "");
+		if (filter.country.equals("")) {
+			filter.country = null;
+		}
+		Log.d(TAG, "Preferred country:" + filter.country);
 		filter.region = prefs.getString(region, "");
+		if (filter.region.equals("")) {
+			filter.region = null;
+		}
+		Log.d(TAG, "Preferred region:" + filter.region);
 		filter.province = prefs.getString(province, "");
+		if (filter.province.equals("")) {
+			filter.province = null;
+		}
+		Log.d(TAG, "Preferred province:" + filter.province);
 		// Add all event types to the filter
-		for (EventType t : EventType.values())
-			if (Boolean.parseBoolean(prefs.getString(t.name(), "false"))) {
+		for (EventType t : EventType.values()) {
+			if (prefs.getBoolean(t.name(), false)) {
 				filter.types.add(t);
+			} else {
+				Log.d(TAG, "Type " + t.name() + " not selected in " + prefs);
 			}
+		}
 		Calendar now = Calendar.getInstance();
 		filter.dateFrom = now.getTime();
 		now.add(Calendar.DAY_OF_MONTH,

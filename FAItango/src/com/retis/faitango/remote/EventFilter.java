@@ -4,9 +4,21 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.retis.faitango.MainView;
+import com.retis.faitango.database.CountryProvider;
+import com.retis.faitango.database.CountryTable;
+import com.retis.faitango.database.EventTable;
+import com.retis.faitango.database.ProvinceProvider;
+import com.retis.faitango.database.ProvinceTable;
+import com.retis.faitango.database.RegionProvider;
+import com.retis.faitango.database.RegionTable;
 
+
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /** Search parameter container <br><br>
  * 
@@ -19,6 +31,7 @@ import android.os.Parcelable;
  */
 public class EventFilter implements Parcelable {
 
+	private static final String TAG = "EventFilter";
 	public Set<EventType> types;
 	public Date dateFrom;
 	public Date dateTo;
@@ -117,5 +130,128 @@ public class EventFilter implements Parcelable {
 		region = in.readString();
 		province = in.readString();
 		title = in.readString();
+	}
+	
+	public String getWhereClause(ContentResolver cr) {
+		Log.d(TAG, "getWhereClause ...");
+		
+		String where = null;
+		
+		if (province != null && !province.equals("") && !province.equals(MainView.ALL_PROVINCES_LABEL)) {
+			where = getWhereForProvince(cr, province);
+		} else if (region != null && !region.equals("") && !region.equals(MainView.ALL_REGIONS_LABEL)) {
+			where = getWhereForRegion(cr, region);
+    	} else if (country != null && !country.equals("") && !country.equals(MainView.ALL_COUNTRIES_LABEL)) {
+    		where = getWhereForCountry(cr, country);
+    	}
+		/*
+		if (dateFrom != null) {
+			if (where == null) {
+				where = "";
+			}
+			if (!where.equals("")) {
+				where += " AND ";
+			}
+			where += EventTable.DATE + " >= " + dateFrom.getTime() + " ";
+		}*/
+		/*
+		if (dateTo != null) {
+			if (where == null) {
+				where = "";
+			}
+			if (!where.equals("")) {
+				where += " AND ";
+			}
+			where += EventTable.DATE + " <= " + dateTo.getTime() + " ";
+		}
+		*/
+		Log.d(TAG, "where: " + where);
+		return where;
+	}
+	
+	protected String getWhereForProvince(ContentResolver cr, String name) {
+		
+		String where = null;
+		Cursor cursor = cr.query(ProvinceProvider.CONTENT_URI,
+		 		  				 null,
+		 		  				 ProvinceTable.NAME + "='" + name + "' ",
+		 		  				 null,
+		 		  				 null);
+        if (cursor.moveToFirst()) {
+        	do {
+        		if (where == null) {
+        			where = "";
+        		}
+        		if (!where.equals("")) {
+        			where += " OR ";
+        		}
+        		where += EventTable.CITY +
+        				 " LIKE '" + 
+        				 cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE)) +
+        				 "%' ";
+        	} while(cursor.moveToNext());
+        }
+		
+		return where;
+	}
+	
+	protected String getWhereForRegion(ContentResolver cr, String name) {
+		
+		String where = null;
+		Cursor cursor = cr.query(ProvinceProvider.CONTENT_URI,
+		 		  				 null,
+		 		  				 ProvinceTable.REGION + "='" + name + "' ",
+		 		  				 null,
+		 		  				 null);
+        if (cursor.moveToFirst()) {
+        	do {
+        		if (where == null) {
+        			where = "";
+        		}
+        		if (!where.equals("")) {
+        			where += " OR ";
+        		}
+        		where += EventTable.CITY +
+        				 " LIKE '" + 
+        				 cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE)) +
+        				 "%' ";
+        	} while(cursor.moveToNext());
+        }
+		
+		return where;
+	}
+	
+	public String getWhereForCountry(ContentResolver cr, String name) {
+		
+		String where = null;
+		Cursor cursor = cr.query(CountryProvider.CONTENT_URI,
+		  		  				 null,
+		  		  				 CountryTable.NAME + "='" + name + "' ",
+		  		  				 null,
+		  		  				 null);
+	    if (cursor.moveToFirst()) {
+	      	do {
+	      		Cursor r = cr.query(RegionProvider.CONTENT_URI,
+		 		  		  			null,
+		 		  		  			RegionTable.COUNTRY +
+		 		  		  				"='" + 
+		 		  		  				cursor.getString(cursor.getColumnIndex(CountryTable._ID)) +
+		 		  		  				"' ",
+		 		  		  			null,
+		 		  		  			null);
+	      		if (r.moveToFirst()) {
+	            	do {
+	            		if (where == null) {
+	            			where = "";
+	            		}
+	            		if (!where.equals("")) {
+	            			where += " OR ";
+	            		}
+	            		where += getWhereForRegion(cr, r.getString(r.getColumnIndex(RegionTable.NAME)));
+	            	} while(r.moveToNext());
+	            }
+        	} while(cursor.moveToNext());
+        }
+		return where;
 	}
 }

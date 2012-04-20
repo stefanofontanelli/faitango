@@ -7,7 +7,20 @@
     <string name="mainMenuSync">Synchronize</string>
     <string name="mainMenuSetting">Settings</string>
     <string name="mainMenuReset">Reset Data</string>
+    <string name="mainMenuAll">All Events</string>
     <string name="eventsTitle">Events List</string>
+    <!-- Search -->
+    <string name="searchTextViewText">Filter Events by</string>
+    <string name="searchCountrySpinnerTextViewText">Country:</string>
+    <string name="searchCountrySpinnerText">Select a country</string>
+    <string name="searchRegionSpinnerTextViewText">Region:</string>
+    <string name="searchRegionSpinnerText">Select a region</string>
+    <string name="searchProvinceSpinnerTextViewText">Province:</string>
+    <string name="searchProvinceSpinnerText">Select a province</string>
+    <string name="searchFromDateTextViewText">From date:</string>
+    <string name="searchToDateTextViewText">To date:</string>
+    <string name="searchTypeTextViewText">Types:</string>
+    <string name="searchButtonText">Search!</string>
     <!-- Preferences -->
     <string name="settingConnectionCategory">Connection</string>
     <string name="settingTitleRemoteServer">Server</string>

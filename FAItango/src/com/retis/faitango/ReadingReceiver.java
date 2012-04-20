@@ -14,6 +14,7 @@ public class ReadingReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG, "Intent received: " + intent.getAction());
-		((MainView) context).updateEventsList();
+		MainView v = (MainView) context;
+		v.updateEventsList();
 	}
 }

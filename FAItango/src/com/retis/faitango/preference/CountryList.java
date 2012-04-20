@@ -1,5 +1,6 @@
 package com.retis.faitango.preference;
 
+import com.retis.faitango.MainView;
 import com.retis.faitango.database.CountryProvider;
 import com.retis.faitango.database.CountryTable;
 import android.content.ContentResolver;
@@ -23,7 +24,7 @@ public class CountryList extends ListPreference {
         entries = new String[countries.getCount() + 1];
         entryValues = new String[countries.getCount() + 1];
         
-        entries[0] = "All countries";
+        entries[0] = MainView.ALL_COUNTRIES_LABEL;
         entryValues[0] = "";
         
         int i = 1;

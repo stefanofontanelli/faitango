@@ -1,5 +1,6 @@
 package com.retis.faitango.preference;
 
+import com.retis.faitango.MainView;
 import com.retis.faitango.database.ProvinceProvider;
 import com.retis.faitango.database.ProvinceTable;
 import android.content.ContentResolver;
@@ -35,7 +36,7 @@ public class ProvinceList extends ListPreference {
         provinces = cr.query(ProvinceProvider.CONTENT_URI, null, where, null, null);
         entries = new String[provinces.getCount() + 1];
         entryValues = new String[provinces.getCount() + 1];
-        entries[0] = "All provinces";
+        entries[0] = MainView.ALL_PROVINCES_LABEL;
         entryValues[0] = "";
         int i = 1;
         if (provinces.moveToFirst()) {

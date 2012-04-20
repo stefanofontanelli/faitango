@@ -54,35 +54,35 @@
      		android:key="eventsTypeList"
      		android:summary="@string/settingEventsTypeListSummary">
     		<CheckBoxPreference 
-		        android:key="@string/eventTypeCONCERT"
+		        android:key="CONCERT"
 		        android:title="@string/eventTypeCONCERT" 
 		        android:defaultValue="true" />
     		<CheckBoxPreference 
-		        android:key="@string/eventTypePARTY"
-		        android:title="@string/eventTypePARTY" 
-		        android:defaultValue="true" />
-    		<CheckBoxPreference 
-		        android:key="@string/eventTypeFESTIVAL"
+		        android:key="FESTIVAL"
 		        android:title="@string/eventTypeFESTIVAL" 
 		        android:defaultValue="true" />
     		<CheckBoxPreference 
-		        android:key="@string/eventTypeMARATHON"
+		        android:key="MARATHON"
 		        android:title="@string/eventTypeMARATHON" 
 		        android:defaultValue="true" />
     		<CheckBoxPreference 
-		        android:key="@string/eventTypeMILONGA"
+		        android:key="MILONGA"
 		        android:title="@string/eventTypeMILONGA" 
 		        android:defaultValue="true" />
     		<CheckBoxPreference 
-		        android:key="@string/eventTypeSHOW"
+		        android:key="PARTY"
+		        android:title="@string/eventTypePARTY" 
+		        android:defaultValue="true" />
+    		<CheckBoxPreference 
+		        android:key="SHOW"
 		        android:title="@string/eventTypeSHOW" 
 		        android:defaultValue="true" />
     		<CheckBoxPreference 
-		        android:key="@string/eventTypeSTAGE"
+		        android:key="STAGE"
 		        android:title="@string/eventTypeSTAGE" 
 		        android:defaultValue="true" />
     		<CheckBoxPreference 
-		        android:key="@string/eventTypeVACATION"
+		        android:key="VACATION"
 		        android:title="@string/eventTypeVACATION" 
 		        android:defaultValue="true" />
     	</PreferenceScreen>
