@@ -144,7 +144,6 @@ public class EventFilter implements Parcelable {
     	} else if (country != null && !country.equals("") && !country.equals(MainView.ALL_COUNTRIES_LABEL)) {
     		where = getWhereForCountry(cr, country);
     	}
-		/*
 		if (dateFrom != null) {
 			if (where == null) {
 				where = "";
@@ -153,8 +152,7 @@ public class EventFilter implements Parcelable {
 				where += " AND ";
 			}
 			where += EventTable.DATE + " >= " + dateFrom.getTime() + " ";
-		}*/
-		/*
+		}
 		if (dateTo != null) {
 			if (where == null) {
 				where = "";
@@ -164,7 +162,6 @@ public class EventFilter implements Parcelable {
 			}
 			where += EventTable.DATE + " <= " + dateTo.getTime() + " ";
 		}
-		*/
 		Log.d(TAG, "where: " + where);
 		return where;
 	}

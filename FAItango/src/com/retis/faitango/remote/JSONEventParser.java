@@ -22,7 +22,7 @@ public class JSONEventParser extends EventParser {
 		} 
 	}
 	
-	private static final String TAG = "DataEventParserJSON";
+	private static final String TAG = "JSONEventParser";
 	
 	public JSONEventParser(Context context) {
 		super(context);
@@ -41,9 +41,11 @@ public class JSONEventParser extends EventParser {
                 // ugly.. but web site JSON doesn't have a proper date field :-/
                 String[] datetmp = obj.getString("dt").split(" ");
                 String[] dateFields = datetmp[1].split("/");
-                ev.date = (new GregorianCalendar(Integer.parseInt(dateFields[2]), 
-                		Integer.parseInt(dateFields[1]) - (12 - Calendar.DECEMBER), 
-                		Integer.parseInt(dateFields[0]))).getTime();
+                Calendar date = Calendar.getInstance();
+                date.set(Integer.parseInt(dateFields[2]), 
+     				     Integer.parseInt(dateFields[1]) - 1, 
+     				     Integer.parseInt(dateFields[0]));
+                ev.date = date.getTime();
 				ev.city = obj.getString("citta");
 				ev.type = getEventTypeFromString(obj.getString("type"));
 				events.add(ev);
@@ -66,9 +68,11 @@ public class JSONEventParser extends EventParser {
                 // ugly.. but web site JSON doesn't have a proper date field :-/
                 String[] datetmp = obj.getString("dt").split(" ");
                 String[] dateFields = datetmp[1].split("/");
-                ev.date = (new GregorianCalendar(Integer.parseInt(dateFields[2]), 
-                		Integer.parseInt(dateFields[1]) - (12 - Calendar.DECEMBER), 
-                		Integer.parseInt(dateFields[0]))).getTime();
+                Calendar date = Calendar.getInstance();
+                date.set(Integer.parseInt(dateFields[2]), 
+     				     Integer.parseInt(dateFields[1]) - 1, 
+     				     Integer.parseInt(dateFields[0]));
+                ev.date = date.getTime();
                 datetmp = obj.getString("dt_ins").split(" ");
                 dateFields = datetmp[1].split("/");
                 ev.created = (new GregorianCalendar(Integer.parseInt(dateFields[2]), 

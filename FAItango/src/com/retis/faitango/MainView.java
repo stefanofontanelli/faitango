@@ -281,6 +281,10 @@ public class MainView extends Activity {
         // Handle item selection
     	Intent intent = null;
         switch (item.getItemId()) {
+        	case R.id.main_menu_all:
+	        	eventsListFilters = new EventFilter();
+	        	updateEventsList();
+	            return true;
             case R.id.main_menu_search:
             	showDialog(SEARCH_DIALOG);
                 return true;

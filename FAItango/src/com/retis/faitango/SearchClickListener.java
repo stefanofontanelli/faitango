@@ -42,13 +42,13 @@ public class SearchClickListener implements OnClickListener {
         f.dateFrom = new Date();
         f.dateFrom.setDate(from.getDayOfMonth());
         f.dateFrom.setMonth(from.getMonth());
-        f.dateFrom.setYear(from.getYear());
+        f.dateFrom.setYear(from.getYear() - 1900);
         Log.d(TAG, "From: " + f.dateFrom.toString());
     	DatePicker to = (DatePicker) view.findViewById(R.id.searchToDatePicker);
     	f.dateTo = new Date();
         f.dateTo.setDate(to.getDayOfMonth());
         f.dateTo.setMonth(to.getMonth());
-        f.dateTo.setYear(to.getYear());
+        f.dateTo.setYear(to.getYear() - 1900);
         Log.d(TAG, "To: " + f.dateTo.toString());
     	for (EventType t : EventType.values()) {
         	int rid = context.getResources().getIdentifier(t.name(), "id", context.getPackageName());

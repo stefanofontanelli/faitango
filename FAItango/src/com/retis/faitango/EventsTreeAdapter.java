@@ -42,9 +42,12 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 				R.layout.eventrow, FROM, TO);
 		context = c;
 		cursor.moveToFirst();
+		long date;
 		while(cursor.isAfterLast() == false) {
-			SimpleDateFormat sdf = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN); 
-			String s = sdf.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(EventTable.DATE))));
+			SimpleDateFormat sdf = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN);
+			date = cursor.getLong(cursor.getColumnIndexOrThrow(EventTable.DATE));
+			Log.d(TAG, "The date inside database is: " + date);
+			String s = sdf.format(new Date(date));
 			if (!listMap.containsValue(s)) {
 				Log.d(TAG, "Add " + s + "to listMap at pos " + cursor.getPosition());
 				listMap.put(cursor.getPosition(), s);
