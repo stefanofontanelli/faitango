@@ -42,12 +42,14 @@ public class JSONEventParser extends EventParser {
                 String[] datetmp = obj.getString("dt").split(" ");
                 String[] dateFields = datetmp[1].split("/");
                 Calendar date = Calendar.getInstance();
+                date.clear();
                 date.set(Integer.parseInt(dateFields[2]), 
      				     Integer.parseInt(dateFields[1]) - 1, 
      				     Integer.parseInt(dateFields[0]));
                 ev.date = date.getTime();
 				ev.city = obj.getString("citta");
 				ev.type = getEventTypeFromString(obj.getString("type"));
+				Log.d(TAG, "Parsed Event: @" + ev.date + " Date: " + ev.date.getTime());
 				events.add(ev);
 			}
 		} catch (JSONException e) {
@@ -69,15 +71,18 @@ public class JSONEventParser extends EventParser {
                 String[] datetmp = obj.getString("dt").split(" ");
                 String[] dateFields = datetmp[1].split("/");
                 Calendar date = Calendar.getInstance();
+                date.clear();
                 date.set(Integer.parseInt(dateFields[2]), 
      				     Integer.parseInt(dateFields[1]) - 1, 
      				     Integer.parseInt(dateFields[0]));
                 ev.date = date.getTime();
                 datetmp = obj.getString("dt_ins").split(" ");
                 dateFields = datetmp[1].split("/");
-                ev.created = (new GregorianCalendar(Integer.parseInt(dateFields[2]), 
-                			  Integer.parseInt(dateFields[1]) - (12 - Calendar.DECEMBER), 
-                			  Integer.parseInt(dateFields[0]))).getTime();
+                date.clear();
+                date.set(Integer.parseInt(dateFields[2]), 
+    				     Integer.parseInt(dateFields[1]) - 1, 
+    				     Integer.parseInt(dateFields[0]));
+                ev.created = date.getTime();
 				ev.city = obj.getString("citta");
 				ev.type = getEventTypeFromString(obj.getString("type"));
 				ev.email = obj.getString("email");

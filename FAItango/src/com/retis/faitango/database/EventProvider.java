@@ -54,6 +54,7 @@ public class EventProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sort) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(EventTable.TABLE_NAME);
+		qb.setDistinct(true);
 		switch (uriMatcher.match(uri)) {
 			case EVENT_ID:
 				qb.appendWhere(EventTable._ID + "=" + uri.getPathSegments().get(1));
@@ -67,7 +68,7 @@ public class EventProvider extends ContentProvider {
 		} else {
 			orderBy = sort;
 		}
-		Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+		Cursor c = qb.query(db, projection, selection, selectionArgs, "_id", null, orderBy);
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
 	}

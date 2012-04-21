@@ -81,7 +81,7 @@ public class EventDetailProvider extends ContentProvider {
 		if (rowID > 0) {
 			Uri uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
 			getContext().getContentResolver().notifyChange(uri, null);
-			Log.d(TAG, "Added the row: " + rowID + ", values: " + _initialValues);
+			Log.d(TAG, "Added the row: " + rowID);// + ", values: " + _initialValues);
 			return uri;
 		}
 		throw new SQLException("Failed to insert row into " + _uri);

@@ -162,6 +162,21 @@ public class EventFilter implements Parcelable {
 			}
 			where += EventTable.DATE + " <= " + dateTo.getTime() + " ";
 		}
+		int i = 0;
+		if (!types.isEmpty()) {
+			if (where == null) {
+				where = "";
+			}
+			where += " AND (";
+			for (EventType t : types) {
+				i++;
+				where += "lower(" + EventTable.TYPE + ") LIKE '%" + t.name().toLowerCase() + "%' ";
+				if (i < types.size()) {
+					where += "OR ";
+				}
+			}
+			where += ") ";
+		}
 		Log.d(TAG, "where: " + where);
 		return where;
 	}

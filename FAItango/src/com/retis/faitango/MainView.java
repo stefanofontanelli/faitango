@@ -312,8 +312,8 @@ public class MainView extends Activity {
     	cr = getContentResolver();
     	String[] mProjection =
     	{
-   		    "DISTINCT " + EventTable.DATE,
-   		    EventTable.DATE + " AS _id"
+    		EventTable.DATE + " AS _id",
+   		    EventTable.DATE
     	};
     	String where = null;
     	if (eventsListFilters != null) {

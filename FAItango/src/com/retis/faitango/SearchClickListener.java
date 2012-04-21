@@ -1,5 +1,6 @@
 package com.retis.faitango;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import com.retis.faitango.remote.EventFilter;
@@ -39,16 +40,19 @@ public class SearchClickListener implements OnClickListener {
         f.province = provinceSpinner.getSelectedItem().toString();
         Log.d(TAG, "Province: " + f.province);
         DatePicker from = (DatePicker) view.findViewById(R.id.searchFromDatePicker);
-        f.dateFrom = new Date();
-        f.dateFrom.setDate(from.getDayOfMonth());
-        f.dateFrom.setMonth(from.getMonth());
-        f.dateFrom.setYear(from.getYear() - 1900);
+        Calendar date = Calendar.getInstance();
+        date.clear();
+        date.set(from.getYear(), 
+        		 from.getMonth(), 
+				 from.getDayOfMonth());
+        f.dateFrom = date.getTime();
         Log.d(TAG, "From: " + f.dateFrom.toString());
     	DatePicker to = (DatePicker) view.findViewById(R.id.searchToDatePicker);
-    	f.dateTo = new Date();
-        f.dateTo.setDate(to.getDayOfMonth());
-        f.dateTo.setMonth(to.getMonth());
-        f.dateTo.setYear(to.getYear() - 1900);
+    	date.clear();
+        date.set(to.getYear(), 
+        		 to.getMonth(), 
+				 to.getDayOfMonth(), 23, 59, 59);
+        f.dateTo = date.getTime();
         Log.d(TAG, "To: " + f.dateTo.toString());
     	for (EventType t : EventType.values()) {
         	int rid = context.getResources().getIdentifier(t.name(), "id", context.getPackageName());
