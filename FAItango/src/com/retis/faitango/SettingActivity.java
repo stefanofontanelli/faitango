@@ -3,11 +3,13 @@ package com.retis.faitango;
 import com.retis.faitango.R;
 import com.retis.faitango.preference.CountryList;
 import com.retis.faitango.preference.CountryListChangeListener;
+import com.retis.faitango.preference.PreferenceHelper;
 import com.retis.faitango.preference.ProvinceList;
 import com.retis.faitango.preference.RegionList;
 import com.retis.faitango.preference.RegionListChangeListener;
 import com.retis.faitango.preference.SyncPeriodChangeListener;
 import com.retis.faitango.preference.SyncTypeChangeListener;
+import com.retis.faitango.remote.EventFilter;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -46,5 +48,8 @@ public class SettingActivity extends PreferenceActivity {
 		country.setOnPreferenceChangeListener(countryListener);
 		regionListener = new RegionListChangeListener(this.getApplicationContext(), province);
 		region.setOnPreferenceChangeListener(regionListener);
+		EventFilter f = PreferenceHelper.getSearchParams(this);
+		region.load(this.getApplicationContext(), f.country);
+		province.load(this.getApplicationContext(), f.region);
 	} 
 }
