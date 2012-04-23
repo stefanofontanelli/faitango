@@ -172,9 +172,11 @@ public class MainView extends Activity {
     	DatePicker from = (DatePicker) view.findViewById(R.id.searchFromDatePicker);
     	DatePicker to = (DatePicker) view.findViewById(R.id.searchToDatePicker);
         // Set first spinner with countries. Others spinners will be configured accordingly.
-        setCountrySpinner(countrySpinner, searchPrefs.country);
         countrySpinner.setOnItemSelectedListener(new CountrySpinnerChangeListener(this, regionSpinner));
         regionSpinner.setOnItemSelectedListener(new RegionSpinnerChangeListener(this, provinceSpinner));
+        setProvinceSpinner(provinceSpinner, searchPrefs.region, "");
+        setRegionSpinner(regionSpinner, searchPrefs.country, "");
+        setCountrySpinner(countrySpinner, searchPrefs.country);
         
         from.updateDate(searchPrefs.dateFrom.getYear() + 1900,
         				searchPrefs.dateFrom.getMonth(),

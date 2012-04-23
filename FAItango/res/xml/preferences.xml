@@ -35,20 +35,17 @@
        		android:key="country"
             android:title="@string/settingCountryTitle"
         	android:summary="@string/settingCountrySummary"
-			android:dialogTitle="@string/settingCountryDialogTitle"
-			android:defaultValue="118" />
+			android:dialogTitle="@string/settingCountryDialogTitle"/>
 		<com.retis.faitango.preference.RegionList
        		android:key="region"
             android:title="@string/settingRegionTitle"
         	android:summary="@string/settingRegionSummary"
-			android:dialogTitle="@string/settingRegionDialogTitle"
-			android:defaultValue="Toscana" />
+			android:dialogTitle="@string/settingRegionDialogTitle"/>
 		<com.retis.faitango.preference.ProvinceList
        		android:key="province"
             android:title="@string/settingProvinceTitle"
         	android:summary="@string/settingProvinceSummary"
-			android:dialogTitle="@string/settingProvinceDialogTitle"
-			android:defaultValue="PI" />
+			android:dialogTitle="@string/settingProvinceDialogTitle"/>
 		<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
      		android:title="@string/settingEventsTypeListTitle"
      		android:key="eventsTypeList"

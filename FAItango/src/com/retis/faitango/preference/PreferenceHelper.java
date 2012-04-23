@@ -21,6 +21,7 @@ public final class PreferenceHelper {
 	private static final String region = "region";
 	private static final String province = "province";
 	private static final String eventSearchPeriod = "eventSearchPeriod";
+	public static final String eventSearchPeriodChanged = "eventSearchPeriodChanged";
 
 	public static String getRemoteServer(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
@@ -50,6 +51,7 @@ public final class PreferenceHelper {
 	}
 
 	public static EventFilter getSearchParams(Context c) {
+		Log.d(TAG, "Context: " + c.getApplicationContext());
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		EventFilter filter = new EventFilter();
 		filter.country = prefs.getString(country, "");
@@ -81,5 +83,45 @@ public final class PreferenceHelper {
 				Integer.parseInt(prefs.getString(eventSearchPeriod, "1")));
 		filter.dateTo = now.getTime();
 		return filter;
+	}
+	
+	public static void setSearchParams(Context c, EventFilter filter) {
+		Log.d(TAG, "Context: " + c.getApplicationContext());
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+		SharedPreferences.Editor editor = prefs.edit();
+		
+		editor.putString(country, filter.country);
+		Log.d(TAG, "Updated preferred country: " + filter.country);
+		editor.putString(region, filter.region);
+		Log.d(TAG, "Updated preferred region: " + filter.region);
+		editor.putString(province, filter.province);
+		Log.d(TAG, "Updated preferred province: " + filter.province);
+		
+		for (EventType t : EventType.values()) {
+			if (filter.types.contains(t)) {
+				editor.putBoolean(t.name(), true);
+				Log.d(TAG, "Updated preferred event type: " + t.name() + " -> TRUE");
+			} else {
+				editor.putBoolean(t.name(), false);
+				Log.d(TAG, "Updated preferred event type: " + t.name() + " -> FALSE");
+			}
+		}
+		long period = (filter.dateTo.getTime() - filter.dateFrom.getTime()) / (24 * 60 * 60 * 1000);
+		if (period <= 1) {
+			period = 1;
+		} else if (period <= 7) {
+			period = 7;
+		} else if (period <= 15) {
+			period = 15;
+		} else if (period <= 31) {
+			period = 31;
+		} else if (period <= 186) {
+			period = 186;
+		} else { //if (period <= 372) {
+			period = 372;
+		}
+		editor.putString(eventSearchPeriod, "" + period);
+		editor.commit();
 	}
 }

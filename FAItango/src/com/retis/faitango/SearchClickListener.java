@@ -3,11 +3,21 @@ package com.retis.faitango;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.retis.faitango.database.CountryProvider;
+import com.retis.faitango.database.CountryTable;
+import com.retis.faitango.database.EventTable;
+import com.retis.faitango.database.ProvinceProvider;
+import com.retis.faitango.database.ProvinceTable;
+import com.retis.faitango.database.RegionProvider;
+import com.retis.faitango.database.RegionTable;
+import com.retis.faitango.preference.PreferenceHelper;
 import com.retis.faitango.remote.EventFilter;
 import com.retis.faitango.remote.EventType;
 
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -31,13 +41,13 @@ public class SearchClickListener implements OnClickListener {
 		Log.d(TAG, "onClick: setting MainView search filters...");
 		EventFilter f = new EventFilter();
 		Spinner countrySpinner = (Spinner) view.findViewById(R.id.searchCountrySpinner);
-		f.country = countrySpinner.getSelectedItem().toString();
+		f.country = getCountryId(countrySpinner.getSelectedItem().toString());
 		Log.d(TAG, "Country: " + f.country);
         Spinner regionSpinner = (Spinner) view.findViewById(R.id.searchRegionSpinner);
-        f.region = regionSpinner.getSelectedItem().toString();
+        f.region = getRegionName(regionSpinner.getSelectedItem().toString());
         Log.d(TAG, "Region: " + f.region);
         Spinner provinceSpinner = (Spinner) view.findViewById(R.id.searchProvinceSpinner);
-        f.province = provinceSpinner.getSelectedItem().toString();
+        f.province = getProvinceCode(provinceSpinner.getSelectedItem().toString());
         Log.d(TAG, "Province: " + f.province);
         DatePicker from = (DatePicker) view.findViewById(R.id.searchFromDatePicker);
         Calendar date = Calendar.getInstance();
@@ -63,8 +73,48 @@ public class SearchClickListener implements OnClickListener {
         	}
         }
     	context.setSearchFilters(f);
+    	PreferenceHelper.setSearchParams(context, f);
 		context.updateEventsList();
         dialog.cancel();
-   }
+	}
+
+	protected String getCountryId(String name) {
+		ContentResolver cr = context.getContentResolver();
+		Cursor cursor = cr.query(CountryProvider.CONTENT_URI,
+				  				 null,
+				  				 CountryTable.NAME + "='" + name + "' ",
+				  				 null,
+				  				 null);
+		if (cursor.moveToFirst()) {
+			do {
+				return cursor.getString(cursor.getColumnIndex(CountryTable._ID));
+			} while(cursor.moveToNext());
+		}
+		
+		return "";
+	}
+	
+	protected String getRegionName(String name) {
+		if (name.equals(MainView.ALL_REGIONS_LABEL)) {
+			return "";
+		}
+		return name;
+	}
+
+	protected String getProvinceCode(String name) {
+		ContentResolver cr = context.getContentResolver();
+		Cursor cursor = cr.query(ProvinceProvider.CONTENT_URI,
+  				 				 null,
+  				 				 ProvinceTable.NAME + "='" + name + "' ",
+  				 				 null,
+  				 				 null);
+		if (cursor.moveToFirst()) {
+			do {
+				return cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE));
+			} while(cursor.moveToNext());
+		}
+		
+		return "";
+	}
 	
 }

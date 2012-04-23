@@ -32,7 +32,7 @@ public class CountryList extends ListPreference {
         	do {
         		entries[i] = countries.getString(countries.getColumnIndex(CountryTable.NAME));
         		entryValues[i] = countries.getString(countries.getColumnIndex(CountryTable._ID));
-        		Log.d(TAG, entries[i] + " = " + entryValues[i]);
+        		//Log.d(TAG, entries[i] + " = " + entryValues[i]);
         		i++;
         	} while(countries.moveToNext());
         }

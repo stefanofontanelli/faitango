@@ -42,7 +42,7 @@ public class RegionList extends ListPreference {
         	do {
         		entries[i] = regions.getString(regions.getColumnIndex(RegionTable.NAME));
         		entryValues[i] = regions.getString(regions.getColumnIndex(RegionTable.NAME));
-        		Log.d(TAG, entries[i] + " = " + entryValues[i]);
+        		//Log.d(TAG, entries[i] + " = " + entryValues[i]);
         		i++;
         	} while(regions.moveToNext());
         }

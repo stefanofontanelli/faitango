@@ -27,8 +27,8 @@ public class RegionListChangeListener implements OnPreferenceChangeListener {
 		CharSequence[] entryValues = list.getEntryValues();
 		String entry = (String) entries[i];
 		String entryValue = (String) entryValues[i];
-		Log.d(TAG, entry);
-		Log.d(TAG, entryValue);
+		//Log.d(TAG, entry);
+		//Log.d(TAG, entryValue);
 		province.load(context, entryValue);
 		return true;
 	}

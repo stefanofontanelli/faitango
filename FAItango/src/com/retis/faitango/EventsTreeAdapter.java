@@ -79,7 +79,7 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 
 		text.setLayoutParams(params);
 		text.setText(str);
-		text.setTextSize(32.0f);
+		text.setTextSize(24.0f);
 		linear.addView(text);
 
 		return linear;

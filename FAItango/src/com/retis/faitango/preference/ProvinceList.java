@@ -43,7 +43,7 @@ public class ProvinceList extends ListPreference {
         	do {
         		entries[i] = provinces.getString(provinces.getColumnIndex(ProvinceTable.NAME));
         		entryValues[i] = provinces.getString(provinces.getColumnIndex(ProvinceTable.CODE));
-        		Log.d(TAG, entries[i] + " = " + entryValues[i]);
+        		//Log.d(TAG, entries[i] + " = " + entryValues[i]);
         		i++;
         	} while(provinces.moveToNext());
         }

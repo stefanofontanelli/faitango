@@ -138,7 +138,7 @@ public class EventFilter implements Parcelable {
 		String where = null;
 		
 		if (province != null && !province.equals("") && !province.equals(MainView.ALL_PROVINCES_LABEL)) {
-			where = getWhereForProvince(cr, province);
+			where = getWhereForProvince(province);
 		} else if (region != null && !region.equals("") && !region.equals(MainView.ALL_REGIONS_LABEL)) {
 			where = getWhereForRegion(cr, region);
     	} else if (country != null && !country.equals("") && !country.equals(MainView.ALL_COUNTRIES_LABEL)) {
@@ -181,30 +181,8 @@ public class EventFilter implements Parcelable {
 		return where;
 	}
 	
-	protected String getWhereForProvince(ContentResolver cr, String name) {
-		
-		String where = null;
-		Cursor cursor = cr.query(ProvinceProvider.CONTENT_URI,
-		 		  				 null,
-		 		  				 ProvinceTable.NAME + "='" + name + "' ",
-		 		  				 null,
-		 		  				 null);
-        if (cursor.moveToFirst()) {
-        	do {
-        		if (where == null) {
-        			where = "";
-        		}
-        		if (!where.equals("")) {
-        			where += " OR ";
-        		}
-        		where += EventTable.CITY +
-        				 " LIKE '" + 
-        				 cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE)) +
-        				 "%' ";
-        	} while(cursor.moveToNext());
-        }
-		
-		return where;
+	protected String getWhereForProvince(String code) {
+		return EventTable.CITY + " LIKE '" + code + "%' ";
 	}
 	
 	protected String getWhereForRegion(ContentResolver cr, String name) {
@@ -223,46 +201,31 @@ public class EventFilter implements Parcelable {
         		if (!where.equals("")) {
         			where += " OR ";
         		}
-        		where += EventTable.CITY +
-        				 " LIKE '" + 
-        				 cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE)) +
-        				 "%' ";
+        		where += getWhereForProvince(cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE)));
         	} while(cursor.moveToNext());
         }
 		
 		return where;
 	}
 	
-	public String getWhereForCountry(ContentResolver cr, String name) {
+	public String getWhereForCountry(ContentResolver cr, String id) {
 		
 		String where = null;
-		Cursor cursor = cr.query(CountryProvider.CONTENT_URI,
-		  		  				 null,
-		  		  				 CountryTable.NAME + "='" + name + "' ",
-		  		  				 null,
-		  		  				 null);
-	    if (cursor.moveToFirst()) {
-	      	do {
-	      		Cursor r = cr.query(RegionProvider.CONTENT_URI,
-		 		  		  			null,
-		 		  		  			RegionTable.COUNTRY +
-		 		  		  				"='" + 
-		 		  		  				cursor.getString(cursor.getColumnIndex(CountryTable._ID)) +
-		 		  		  				"' ",
-		 		  		  			null,
-		 		  		  			null);
-	      		if (r.moveToFirst()) {
-	            	do {
-	            		if (where == null) {
-	            			where = "";
-	            		}
-	            		if (!where.equals("")) {
-	            			where += " OR ";
-	            		}
-	            		where += getWhereForRegion(cr, r.getString(r.getColumnIndex(RegionTable.NAME)));
-	            	} while(r.moveToNext());
-	            }
-        	} while(cursor.moveToNext());
+  		Cursor r = cr.query(RegionProvider.CONTENT_URI,
+ 		  		  			null,
+ 		  		  			RegionTable.COUNTRY + "='" + id + "' ",
+ 		  		  			null,
+ 		  		  			null);
+  		if (r.moveToFirst()) {
+        	do {
+        		if (where == null) {
+        			where = "";
+        		}
+        		if (!where.equals("")) {
+        			where += " OR ";
+        		}
+        		where += getWhereForRegion(cr, r.getString(r.getColumnIndex(RegionTable.NAME)));
+        	} while(r.moveToNext());
         }
 		return where;
 	}
