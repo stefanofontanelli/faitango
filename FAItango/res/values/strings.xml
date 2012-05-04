@@ -62,5 +62,7 @@
     <string name="httpUriPathEventList">/eventi/eventilistaJSON.asp</string>
     <string name="httpUriPathEventDetail">/eventi/eventidettJSON.asp</string>
     <string name="calButton">Add remainder</string>
-    <string name="facebookButton">Share on Facebook</string>
+    <string name="shareButton">Share this</string>
+    <string name="shareJoin">Join me at this %s</string>
+    <string name="shareWhat">I will go to dance in %1$s on %2$s. \nMore info at %3$s.</string>   
 </resources>

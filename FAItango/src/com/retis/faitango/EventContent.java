@@ -13,14 +13,11 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.retis.faitango.database.EventDetailProvider;
 import com.retis.faitango.database.EventDetailTable;
-import com.retis.faitango.database.EventTable;
-import com.facebook.android.*;
-import com.facebook.android.Facebook.*;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -32,12 +29,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class EventContent extends MapActivity {
 	private static String TAG = "EventContent";
 	private Cursor cursor;
-	private String eventID, title, description, city;
+	private String eventID, title, description, city, link, time;
 	private Date beginTime;
 	private TextView textView;
 	private MapView mapView;
@@ -48,14 +44,16 @@ public class EventContent extends MapActivity {
 	private MapController mapController;
 	private double lat = 43.718326;
 	private double lon = 10.424866;
-	private Facebook facebook = new Facebook("151539328293835");
-	private SharedPreferences mPrefs;
 	private ContentResolver cr;
+	private Context myContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.eventcont);
+		
+		myContext = this.getApplicationContext();
+		
 		// Retrieve the event ID and use it later (onResume) to query the DB for event info
 		Bundle extras = getIntent().getExtras();
 		eventID = extras.getString("id");
@@ -93,30 +91,19 @@ public class EventContent extends MapActivity {
 			}
 		});
 
-		final Button faceButton = (Button) findViewById(R.id.facebookButton);
-		faceButton.setOnClickListener(new View.OnClickListener() {
+		final Button shareButton = (Button) findViewById(R.id.shareButton);
+		shareButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.d(TAG, "facebook button pressed!");
+				Log.d(TAG, "share button pressed!");
 
-				facebookAuth();
-
-				//post on user's wall.
-				/*
-				 * FIXME this should be correct (according to the
-				 * documentation).. anyway, the post dialog is
-				 * correctly displayed, and the posting works..
-				 * no luck with params :-|
-				 */
-
-				Bundle params = new Bundle();
-				params.putString("message", "messaggio");
-				params.putString("name", "nome");
-				params.putString("caption", "caption");
-				//params.putString("link", "http://www.londatiga.net");
-				params.putString("description", "Dexter, seven years old dachshund who loves to catch cats, eat carrot and krupuk");
-				//params.putString("picture", "http://twitpic.com/show/thumb/6hqd44");
-
-				facebook.dialog(EventContent.this, "feed", params, new UpdateStatusListener());
+				String subj = myContext.getResources().getString(R.string.shareJoin, title);
+				String text = myContext.getResources().getString(R.string.shareWhat, city, time, link);
+				
+				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+				sharingIntent.setType("text/plain");
+				sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+				sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subj);
+				startActivity(Intent.createChooser(sharingIntent, "Share using"));
 			}
 		});
 	}
@@ -130,7 +117,6 @@ public class EventContent extends MapActivity {
 	protected void onResume() {
 		super.onResume();
 
-		facebook.extendAccessTokenIfNeeded(this, null);
 		String where = EventDetailTable.EVENT + "=" + eventID;
 		Log.d(TAG, where);
 		cursor = cr.query(EventDetailProvider.CONTENT_URI, null, where, null, null);
@@ -151,8 +137,8 @@ public class EventContent extends MapActivity {
 
 			textView = (TextView) findViewById(R.id.textDetDate);
 			beginTime = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(EventDetailTable.DATE)));
-			String s = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN).format(beginTime); 
-			textView.setText(s);
+			time = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN).format(beginTime); 
+			textView.setText(time);
 
 			textView = (TextView) findViewById(R.id.textDetEventName);
 			description = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.DESCRIPTION));
@@ -161,6 +147,8 @@ public class EventContent extends MapActivity {
 
 			textView = (TextView) findViewById(R.id.textDetTime);
 			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.TIME)));
+			
+			link = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.LINK));
 
 			try {
 				List<Address> foundAddress = geocoder.getFromLocationName(city, 1);
@@ -179,10 +167,8 @@ public class EventContent extends MapActivity {
 					lon = x.getLongitude();
 				}
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -198,88 +184,6 @@ public class EventContent extends MapActivity {
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		facebook.authorizeCallback(requestCode, resultCode, data);
-	}
-
-	private void facebookAuth() {
-		// Get existing access_token if any
-		mPrefs = getPreferences(MODE_PRIVATE);
-		String access_token = mPrefs.getString("access_token", null);
-		long expires = mPrefs.getLong("access_expires", 0);
-		if(access_token != null) {
-			facebook.setAccessToken(access_token);
-		}
-		if(expires != 0) {
-			facebook.setAccessExpires(expires);
-		}
-
-		// Only call authorize if the access_token has expired.
-		if(!facebook.isSessionValid()) {
-			/*
-			 * The user can post events on Facebook wall
-			 * Let's authorize him after he opens a detailed
-			 * event view
-			 */
-			facebook.authorize(this, new DialogListener() {
-				@Override
-				public void onComplete(Bundle values) {
-					SharedPreferences.Editor editor = mPrefs.edit();
-					editor.putString("access_token", facebook.getAccessToken());
-					editor.putLong("access_expires", facebook.getAccessExpires());
-					editor.commit();
-				}
-
-				@Override
-				public void onFacebookError(FacebookError error) {}
-
-				@Override
-				public void onError(DialogError e) {}
-
-				@Override
-				public void onCancel() {}
-			});
-		}
-	}
-
-	// Callback for the feed dialog which updates the profile status
-	public class UpdateStatusListener implements DialogListener {
-		@Override
-		public void onComplete(Bundle values) {
-			final String postId = values.getString("post_id");
-			if (postId != null) {
-				Toast toast = Toast.makeText(getApplicationContext(), "Update Status executed",
-						Toast.LENGTH_SHORT);
-				toast.show();
-			} else {
-				Toast toast = Toast.makeText(getApplicationContext(), "No wall post made",
-						Toast.LENGTH_SHORT);
-				toast.show();
-			}
-		}
-
-		@Override
-		public void onFacebookError(FacebookError error) {
-			Toast.makeText(getApplicationContext(), "Facebook Error: " + error.getMessage(),
-					Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onCancel() {
-			Toast toast = Toast.makeText(getApplicationContext(), "Update status cancelled",
-					Toast.LENGTH_SHORT);
-			toast.show();
-		}
-
-		@Override
-		public void onError(DialogError e) {
-			// TODO Auto-generated method stub
-		}
 	}
 }

@@ -66,10 +66,10 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/calButton" />
 		    <Button
-		        android:id="@+id/facebookButton"
+		        android:id="@+id/shareButton"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="@string/facebookButton" />
+		        android:text="@string/shareButton" />
 		    </TableRow>
 		    </TableLayout>    
 	</LinearLayout>
