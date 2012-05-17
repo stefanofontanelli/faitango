@@ -52,6 +52,7 @@ public class MainView extends Activity {
 	static final int DIALOG_ASK_SYNC = 0;
 	static final int DIALOG_SYNCHRONIZING = 1;
 	static final int SEARCH_DIALOG = 2;
+	static final int DIALOG_NO_RESULT = 3;
 	public static final String ALL_COUNTRIES_LABEL = "All countries";
 	public static final String ALL_REGIONS_LABEL = "All regions";
 	public static final String ALL_PROVINCES_LABEL = "All provinces";
@@ -157,6 +158,25 @@ public class MainView extends Activity {
         case SEARCH_DIALOG:
         	// Build the Dialog needed to specify search criterions.
             return createSearchDialog();
+            
+        case DIALOG_NO_RESULT:
+    		// Build the AlertDialog to confirm or cancel synchronizing. 
+        	builder = new AlertDialog.Builder(this);
+        	builder.setMessage("No result found. Do you want synchronize data?");
+        	builder.setCancelable(false);
+        	builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
+	                synchronizing = true;
+	                doSync();
+	           }
+        	});
+        	builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        		public void onClick(DialogInterface dialog, int id) {
+        			dialog.cancel();
+        		}
+        	});
+        	return builder.create();
             
         default:
             return null;
@@ -318,6 +338,9 @@ public class MainView extends Activity {
             case R.id.main_menu_reset:
             	cr.delete(EventProvider.CONTENT_URI, null, null);
             	cr.delete(EventDetailProvider.CONTENT_URI, null, null);
+            	Toast.makeText(getApplicationContext(),
+            				   "All events has been deleted.",
+            				   Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -333,6 +356,7 @@ public class MainView extends Activity {
     	} else {
     		eventsListText.setText("Found Events");
     	}
+    	
     	String[] mProjection =
     	{
     		EventTable.DATE + " AS _id",
@@ -342,13 +366,15 @@ public class MainView extends Activity {
     	if (eventsListFilters != null) {
     		where = eventsListFilters.getWhereClause(cr);
     	}
-    	//String where = PreferenceHelper.getSearchParams(this).getWhereClause(cr);
 		String order = EventTable.DATE + " ASC";
 		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, where, null, order);
 		startManagingCursor(cursor);
 		// Create the adapter
 		if (cursor != null) {
 			Log.d(TAG, "Results: " + cursor.getCount());
+			if (cursor.getCount() <= 0) {
+				showDialog(DIALOG_NO_RESULT);
+			}
 			listAdapter.updateSearchFilter(eventsListFilters);
 			listAdapter.changeCursor(cursor);
 			listAdapter.notifyDataSetChanged();
