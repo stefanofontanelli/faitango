@@ -79,7 +79,7 @@ public class EventProvider extends ContentProvider {
 		if (rowID > 0) {
 			Log.d(TAG, "Added the row: " + rowID + ", values: " + _initialValues);
 			Uri uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
-			//getContext().getContentResolver().notifyChange(uri, null);
+			getContext().getContentResolver().notifyChange(uri, null);
 			return uri;
 		}
 		throw new SQLException("Failed to insert row into " + _uri);
@@ -121,7 +121,7 @@ public class EventProvider extends ContentProvider {
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-		//getContext().getContentResolver().notifyChange(uri, null);
+		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
 }

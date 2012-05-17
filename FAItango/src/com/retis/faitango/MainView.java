@@ -58,11 +58,12 @@ public class MainView extends Activity {
 	private ExpandableListView eventsList;
 	private Cursor cursor;
 	private EventsListener listener;
-	private SimpleCursorTreeAdapter listAdapter;
+	private EventsTreeAdapter listAdapter;
 	private ContentResolver cr;
 	private IntentFilter filter;
 	private ReadingReceiver receiver;
 	private boolean synchronizing;
+	private EventFilter eventsListFilters;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -92,7 +93,8 @@ public class MainView extends Activity {
 		String order = EventTable.DATE + " ASC";
 		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, null, null, order);
 		startManagingCursor(cursor);
-		listAdapter = new EventsTreeAdapter(cursor, this);
+		eventsListFilters = new EventFilter();
+		listAdapter = new EventsTreeAdapter(cursor, this, eventsListFilters);
 		eventsList.setAdapter(listAdapter);
 		listener = new EventsListener(this);
 		eventsList.setOnChildClickListener(listener);
@@ -296,6 +298,7 @@ public class MainView extends Activity {
     	Intent intent = null;
         switch (item.getItemId()) {
         	case R.id.main_menu_all:
+        		eventsListFilters = new EventFilter();
 	        	updateEventsList();
 	            return true;
             case R.id.main_menu_search:
@@ -322,18 +325,24 @@ public class MainView extends Activity {
     	if (synchronizing) {
     		dismissDialog(DIALOG_SYNCHRONIZING);
     	}
+    	
     	String[] mProjection =
     	{
     		EventTable.DATE + " AS _id",
    		    EventTable.DATE
     	};
-    	String where = PreferenceHelper.getSearchParams(this).getWhereClause(cr);
+    	String where = null;
+    	if (eventsListFilters != null) {
+    		where = eventsListFilters.getWhereClause(cr);
+    	}
+    	//String where = PreferenceHelper.getSearchParams(this).getWhereClause(cr);
 		String order = EventTable.DATE + " ASC";
 		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, where, null, order);
 		startManagingCursor(cursor);
 		// Create the adapter
 		if (cursor != null) {
 			Log.d(TAG, "Results: " + cursor.getCount());
+			listAdapter.updateSearchFilter(eventsListFilters);
 			listAdapter.changeCursor(cursor);
 			listAdapter.notifyDataSetChanged();
 			Log.d(TAG, "Change cursor and notify changes");
@@ -346,5 +355,13 @@ public class MainView extends Activity {
     	Log.d(TAG, "Starting task to synchronize data ...");
     	Intent msgIntent = new Intent(this, ReadingService.class);
     	startService(msgIntent);
+    }
+    
+    public void setSearchFilters(EventFilter f) {
+    	eventsListFilters = f;
+    }
+    
+    public EventFilter getSearchFilters() {
+    	return eventsListFilters;
     }
 }

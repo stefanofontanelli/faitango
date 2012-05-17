@@ -36,13 +36,15 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 	public static HashMap<Integer, Integer> childMap = new HashMap<Integer, Integer>();
 	// map used to associate the group ID with the date String
 	private Map<Integer, String> listMap = new HashMap<Integer, String>();
+	private EventFilter filter = null;
 
 
-	public EventsTreeAdapter(Cursor cursor, Context c) {
+	public EventsTreeAdapter(Cursor cursor, Context c, EventFilter f) {
 		super(c, cursor, android.R.layout.simple_expandable_list_item_1,
 				new String[] {EventTable.DATE}, new int[] {android.R.id.text1},
 				R.layout.eventrow, FROM, TO);
 		context = c;
+		filter = f;
 		cursor.moveToFirst();
 		long date;
 		while(cursor.isAfterLast() == false) {
@@ -94,10 +96,21 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 		// we must be sure that the map is cleared and then filled again with actual IDs
 		EventsTreeAdapter.childMap.clear();
 		ContentResolver cr = context.getContentResolver();
-		EventFilter f = PreferenceHelper.getSearchParams(context);
-		f.dateFrom.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
-		f.dateTo.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
-		String where = f.getWhereClause(cr);
+		if (filter.dateFrom != null) {
+			filter.dateFrom.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		} else {
+			filter.dateFrom = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		}
+		if (filter.dateTo != null) {
+			filter.dateTo.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		} else {
+			filter.dateTo = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		}
+		String where = filter.getWhereClause(cr);
+		/*EventTable.DATE + 
+				   " = '" +
+				   groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)) +
+				   "'";*/
 		cursor = cr.query(EventProvider.CONTENT_URI, null, where, null, null);
 		cursor.moveToFirst();
 		while(cursor.isAfterLast() == false) {
@@ -111,4 +124,8 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 
 		return cursor;
 	}
+	
+	public void updateSearchFilter(EventFilter f) {
+    	filter = f;
+    }
 }
