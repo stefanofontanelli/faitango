@@ -229,4 +229,12 @@ public class EventFilter implements Parcelable {
         }
 		return where;
 	}
+	
+	public boolean isEmpty() {
+		if (province != null || region != null || country != null || 
+			dateFrom != null || dateTo != null || !types.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
 }

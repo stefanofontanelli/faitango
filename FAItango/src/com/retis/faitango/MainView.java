@@ -40,6 +40,7 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
@@ -56,6 +57,7 @@ public class MainView extends Activity {
 	public static final String ALL_PROVINCES_LABEL = "All provinces";
 	private static final String TAG = "MainView";
 	private ExpandableListView eventsList;
+	private TextView eventsListText;
 	private Cursor cursor;
 	private EventsListener listener;
 	private EventsTreeAdapter listAdapter;
@@ -81,6 +83,7 @@ public class MainView extends Activity {
          * Fill the ListView object.
          */
 		eventsList = (ExpandableListView) findViewById(R.id.mainEventsList);
+		eventsListText = (TextView) findViewById(R.id.mainEventsListText);
 		// Create and register the broadcast receiver.
 		filter = new IntentFilter(ReadingService.SYNC_COMPLETED);
 		receiver = new ReadingReceiver();
@@ -325,7 +328,11 @@ public class MainView extends Activity {
     	if (synchronizing) {
     		dismissDialog(DIALOG_SYNCHRONIZING);
     	}
-    	
+    	if (eventsListFilters.isEmpty()) {
+    		eventsListText.setText("All Events");
+    	} else {
+    		eventsListText.setText("Found Events");
+    	}
     	String[] mProjection =
     	{
     		EventTable.DATE + " AS _id",
