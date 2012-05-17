@@ -39,6 +39,7 @@ import android.widget.DatePicker;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.SimpleCursorTreeAdapter;
 import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
@@ -57,12 +58,11 @@ public class MainView extends Activity {
 	private ExpandableListView eventsList;
 	private Cursor cursor;
 	private EventsListener listener;
-	private ExpandableListAdapter listAdapter;
+	private SimpleCursorTreeAdapter listAdapter;
 	private ContentResolver cr;
 	private IntentFilter filter;
 	private ReadingReceiver receiver;
 	private boolean synchronizing;
-	private EventFilter eventsListFilters;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -84,6 +84,18 @@ public class MainView extends Activity {
 		filter = new IntentFilter(ReadingService.SYNC_COMPLETED);
 		receiver = new ReadingReceiver();
 		cr = getContentResolver();
+		String[] mProjection =
+    	{
+    		EventTable.DATE + " AS _id",
+   		    EventTable.DATE
+    	};
+		String order = EventTable.DATE + " ASC";
+		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, null, null, order);
+		startManagingCursor(cursor);
+		listAdapter = new EventsTreeAdapter(cursor, this);
+		eventsList.setAdapter(listAdapter);
+		listener = new EventsListener(this);
+		eventsList.setOnChildClickListener(listener);
     }
     
 	@Override
@@ -284,7 +296,6 @@ public class MainView extends Activity {
     	Intent intent = null;
         switch (item.getItemId()) {
         	case R.id.main_menu_all:
-	        	eventsListFilters = new EventFilter();
 	        	updateEventsList();
 	            return true;
             case R.id.main_menu_search:
@@ -311,26 +322,23 @@ public class MainView extends Activity {
     	if (synchronizing) {
     		dismissDialog(DIALOG_SYNCHRONIZING);
     	}
-    	cr = getContentResolver();
     	String[] mProjection =
     	{
     		EventTable.DATE + " AS _id",
    		    EventTable.DATE
     	};
-    	String where = null;
-    	if (eventsListFilters != null) {
-    		where = eventsListFilters.getWhereClause(cr);
-    	}
+    	String where = PreferenceHelper.getSearchParams(this).getWhereClause(cr);
 		String order = EventTable.DATE + " ASC";
 		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, where, null, order);
-		Log.d(TAG, "updateEventsList cursor: " + cursor);
 		startManagingCursor(cursor);
 		// Create the adapter
 		if (cursor != null) {
-			listener = new EventsListener(this);
-			listAdapter = new EventsTreeAdapter(cursor, this);
-			eventsList.setAdapter(listAdapter);
-			eventsList.setOnChildClickListener(listener);
+			Log.d(TAG, "Results: " + cursor.getCount());
+			listAdapter.changeCursor(cursor);
+			listAdapter.notifyDataSetChanged();
+			Log.d(TAG, "Change cursor and notify changes");
+		} else {
+			Log.d(TAG, "Cursor is null");
 		}
     }
     
@@ -338,9 +346,5 @@ public class MainView extends Activity {
     	Log.d(TAG, "Starting task to synchronize data ...");
     	Intent msgIntent = new Intent(this, ReadingService.class);
     	startService(msgIntent);
-    }
-    
-    public void setSearchFilters(EventFilter f) {
-    	eventsListFilters = f;
     }
 }

@@ -18,6 +18,8 @@ import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
 import com.retis.faitango.database.EventProvider;
 import com.retis.faitango.database.EventTable;
+import com.retis.faitango.preference.PreferenceHelper;
+import com.retis.faitango.remote.EventFilter;
 
 public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 
@@ -92,10 +94,10 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 		// we must be sure that the map is cleared and then filled again with actual IDs
 		EventsTreeAdapter.childMap.clear();
 		ContentResolver cr = context.getContentResolver();
-		String where = EventTable.DATE + 
-					   " = '" +
-					   groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)) +
-					   "'";
+		EventFilter f = PreferenceHelper.getSearchParams(context);
+		f.dateFrom.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		f.dateTo.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		String where = f.getWhereClause(cr);
 		cursor = cr.query(EventProvider.CONTENT_URI, null, where, null, null);
 		cursor.moveToFirst();
 		while(cursor.isAfterLast() == false) {

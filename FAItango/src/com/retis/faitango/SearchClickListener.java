@@ -1,4 +1,4 @@
-package com.retis.faitango;
+	package com.retis.faitango;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -72,7 +72,7 @@ public class SearchClickListener implements OnClickListener {
         		Log.d(TAG, "Type: " + t.name());
         	}
         }
-    	context.setSearchFilters(f);
+    	//context.setSearchFilters(f);
     	PreferenceHelper.setSearchParams(context, f);
 		context.updateEventsList();
         dialog.cancel();
