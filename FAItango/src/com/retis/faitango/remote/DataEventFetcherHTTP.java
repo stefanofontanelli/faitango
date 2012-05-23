@@ -39,6 +39,7 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 	private String uriQueryEventDetail;
 	private HttpClient httpClient;
 	private static final String TAG = "DataEventFetcherHTTP";
+	private HttpGet request;
 
 	public DataEventFetcherHTTP(Context context) throws Exception {
 		super(context); // Initializes appContext
@@ -46,6 +47,7 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 		uriPathEventList = context.getResources().getString(R.string.httpUriPathEventList);
 		uriPathEventDetail = context.getResources().getString(R.string.httpUriPathEventDetail);
 		uriHost = PreferenceHelper.getRemoteServer(context);
+		request = new HttpGet();
 		if (uriHost.length() == 0)
 			throw new Exception(TAG + ": Remote HTTP server not specified"); 
 	}
@@ -67,12 +69,17 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 		String response = performHttpGet(uriPathEventDetail, uriQueryEventDetail);
 		return response;
 	}
+	
+	@Override
+	public void stopEventFetch() {
+		request.abort();
+	}
 
 	private String performHttpGet(String uriPath, String uriQuery) {
 
 		String responseMessage = null;
 		BufferedReader in = null;
-		HttpGet request = new HttpGet();
+		
 		try {
 			String uri = uriScheme + "://" + uriHost + uriPath + "?" + uriQuery;
 			request.setURI(new URI(uri));
@@ -96,7 +103,8 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.d(TAG, "Receiving IOException: Maybe an abort() on HttpGet has occurred");
+			//request = new HttpGet();
 		} finally {
 			if (in != null) {
 				try {

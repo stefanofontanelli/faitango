@@ -153,6 +153,14 @@ public class MainView extends Activity {
             dialog.setMessage("Downloading. Please wait ...");
             dialog.setCancelable(false);
             dialog.setIndeterminate(true);
+            dialog.setButton("Abort", new DialogInterface.OnClickListener() {
+ 	           public void onClick(DialogInterface dialog, int id) {
+ 	        	  // Requesting the ReadingService to abort the fetching operation
+ 	        	  Intent msgIntent = new Intent(MainView.this, ReadingService.class);
+ 	        	  msgIntent.putExtra("stop", true);
+ 	        	  startService(msgIntent);
+ 	           }
+         	});
             return dialog;
             
         case SEARCH_DIALOG:
@@ -347,14 +355,22 @@ public class MainView extends Activity {
         }
     }
     
+    public void notifyReadingFailure() {
+    	if (synchronizing) {
+    		dismissDialog(DIALOG_SYNCHRONIZING);
+    	}
+    }
+    
     public void updateEventsList() {
     	if (synchronizing) {
     		dismissDialog(DIALOG_SYNCHRONIZING);
     	}
-    	if (eventsListFilters.isEmpty()) {
+    	String where = null;
+    	if (eventsListFilters == null || eventsListFilters.isEmpty()) {
     		eventsListText.setText("All Events");
     	} else {
     		eventsListText.setText("Found Events");
+    		where = eventsListFilters.getWhereClause(cr);
     	}
     	
     	String[] mProjection =
@@ -362,32 +378,29 @@ public class MainView extends Activity {
     		EventTable.DATE + " AS _id",
    		    EventTable.DATE
     	};
-    	String where = null;
-    	if (eventsListFilters != null) {
-    		where = eventsListFilters.getWhereClause(cr);
-    	}
+    	
 		String order = EventTable.DATE + " ASC";
 		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, where, null, order);
+		if (cursor == null) {
+			Log.e(TAG, "Cursor is null");
+			return;
+		}
 		startManagingCursor(cursor);
 		// Create the adapter
-		if (cursor != null) {
-			Log.d(TAG, "Results: " + cursor.getCount());
-			if (cursor.getCount() <= 0) {
-				showDialog(DIALOG_NO_RESULT);
-			}
-			listAdapter.updateSearchFilter(eventsListFilters);
-			listAdapter.changeCursor(cursor);
-			listAdapter.notifyDataSetChanged();
-			Log.d(TAG, "Change cursor and notify changes");
-		} else {
-			Log.d(TAG, "Cursor is null");
+		Log.d(TAG, "Results: " + cursor.getCount());
+		if (cursor.getCount() <= 0) {
+			showDialog(DIALOG_NO_RESULT);
 		}
+		listAdapter.updateSearchFilter(eventsListFilters);
+		listAdapter.changeCursor(cursor);
+		listAdapter.notifyDataSetChanged();
+		Log.d(TAG, "Change cursor and notify changes");
     }
     
     private void doSync() {
     	Log.d(TAG, "Starting task to synchronize data ...");
     	Intent msgIntent = new Intent(this, ReadingService.class);
-    	startService(msgIntent);
+    	startService(msgIntent);    
     }
     
     public void setSearchFilters(EventFilter f) {

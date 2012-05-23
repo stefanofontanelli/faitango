@@ -68,12 +68,16 @@ public class EventReader {
 	public synchronized static boolean isExecuting() {
 			return isRunning;
 	}
+	
+	public void abortExecution() {
+		evFetcher.stopEventFetch();
+	}
 
-	public void execute(EventFilter filter) {
+	public boolean execute(EventFilter filter) {
 		synchronized (this) {
 			if (isRunning) {
 				Log.d(TAG, "Multiple reading are not allowed... NOP!");
-				return;
+				return false;
 			} 
 			isRunning = true;
 		}
@@ -84,9 +88,9 @@ public class EventReader {
 			synchronized (this) {
 				isRunning = false;
 			}
-			return;
+			return false;
 		}
-		Log.d(TAG, "Received data: " + data);
+		// Log.d(TAG, "Received data: " + data);
 		// Parse EVENTS
 		evParser.parseEventList(data);
 		// Insert EVENTS.
@@ -126,6 +130,7 @@ public class EventReader {
 		synchronized (this) {
 			isRunning = false;
 		}
+		return true;
 	}
 	
 	public void handleEvent(ContentValues event) {
@@ -150,7 +155,7 @@ public class EventReader {
 	}
 	
 	public void handleEventDetail(ContentValues eventDetail) {
-		Log.d(TAG, "Handle event detail: " + eventDetail);
+		//Log.d(TAG, "Handle event detail: " + eventDetail);
 		try {
 			ContentResolver cr = context.getContentResolver();
 			String where = EventDetailTable._ID + " = " + eventDetail.getAsString("event");

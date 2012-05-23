@@ -9,6 +9,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 
@@ -24,6 +25,7 @@ public class ReadingService extends IntentService {
 	private AlarmHelper alarmHelper;
 	public static final int NOTIFICATION_ID = 1;
 	public static final String SYNC_COMPLETED = "com.retis.faitango.SYNC_COMPLETED";
+	private boolean abortReceived;
 	
 	public ReadingService() {
 		super("ReadingService");
@@ -33,12 +35,7 @@ public class ReadingService extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG, "onCreate ...");
-		try {
-			reader = new EventReader(getApplicationContext());
-		} catch (Exception e) {
-			reader = null;
-			Log.e(TAG, "Error while creating the EventReader: ", e);
-		}
+		
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NOTIFICATION_ID);
 		readingNotification = new Notification(R.drawable.ic_launcher,
@@ -57,16 +54,39 @@ public class ReadingService extends IntentService {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		alarmHelper.refresh(this);
+		Log.d(TAG, "onStartCommand");
+		Bundle b = intent.getExtras();
+		if (b != null && b.getBoolean("stop")) {
+			if (reader != null)
+					reader.abortExecution();
+			abortReceived = true;
+		} else {
+			try {
+				reader = new EventReader(getApplicationContext());
+			} catch (Exception e) {
+				reader = null;
+				Log.e(TAG, "Error while creating the EventReader: ", e);
+			}
+			abortReceived = false;
+			alarmHelper.refresh(this);
+		}
 	    return super.onStartCommand(intent, flags, startId);
 	}
 	
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "Handling intent ...");
+		if (abortReceived) {
+			stopSelf();
+			return;
+		}
 		if (reader != null) {
-			reader.execute(PreferenceHelper.getSearchParams(this));
-			notificationManager.notify(NOTIFICATION_ID, readingNotification);
+			if (reader.execute(PreferenceHelper.getSearchParams(this))) {
+				notificationManager.notify(NOTIFICATION_ID, readingNotification);
+				broadcastIntent.putExtra("success", true);
+			} else {
+				broadcastIntent.putExtra("success", false);
+			}
 			sendBroadcast(broadcastIntent);
 		} else {
 			Log.d(TAG, "EventReader is null.");

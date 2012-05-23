@@ -80,4 +80,5 @@ public abstract class DataEventFetcher {
 
 	public abstract String fetchEventList(EventFilter filter);
 	public abstract String fetchEventDetail(long id);
+	public abstract void stopEventFetch();
 }
