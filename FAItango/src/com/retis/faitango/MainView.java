@@ -21,7 +21,6 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -353,6 +352,8 @@ public class MainView extends Activity {
                 return true;
             case R.id.main_menu_sync:
             	Log.d(TAG, "Starting ReadingService ...");
+                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
+                synchronizing = true;
             	doSync();
                 return true;
             case R.id.main_menu_setting:
@@ -374,12 +375,14 @@ public class MainView extends Activity {
     public void notifyReadingFailure() {
     	if (synchronizing) {
     		dismissDialog(DIALOG_SYNCHRONIZING);
+    		synchronizing = false;
     	}
     }
     
     public void updateEventsList() {
     	if (synchronizing) {
     		dismissDialog(DIALOG_SYNCHRONIZING);
+    		synchronizing = false;
     	}
     	String where = null;
     	if (eventsListFilters == null || eventsListFilters.isEmpty()) {
