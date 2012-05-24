@@ -1,18 +1,14 @@
 package com.retis.faitango.remote;
 
 import com.retis.faitango.AlarmHelper;
-import com.retis.faitango.MainView;
 import com.retis.faitango.database.EventDetailProvider;
 import com.retis.faitango.database.EventDetailTable;
 import com.retis.faitango.database.EventProvider;
 import com.retis.faitango.database.EventTable;
-
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.util.Log;
 
 /** Local (Event) DB updater <br><br>

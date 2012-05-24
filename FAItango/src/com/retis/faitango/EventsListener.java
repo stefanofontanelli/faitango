@@ -89,12 +89,6 @@ public class EventsListener implements OnChildClickListener {
 		}
 
 		protected Boolean doInBackground(Long... eventId) {
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			return reader.readDetails(eventId[0]);
 		}
 

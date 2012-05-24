@@ -1,7 +1,5 @@
 package com.retis.faitango;
 
-import java.text.SimpleDateFormat;
-
 import com.retis.faitango.database.CountryProvider;
 import com.retis.faitango.database.CountryTable;
 import com.retis.faitango.database.EventDetailProvider;
@@ -20,7 +18,6 @@ import android.app.Dialog;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -32,20 +29,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
-import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
-import android.widget.AdapterView.OnItemSelectedListener;
-
 
 public class MainView extends Activity {
 
@@ -213,7 +203,7 @@ public class MainView extends Activity {
         Spinner countrySpinner = (Spinner) view.findViewById(R.id.searchCountrySpinner);
         Spinner regionSpinner = (Spinner) view.findViewById(R.id.searchRegionSpinner);
         Spinner provinceSpinner = (Spinner) view.findViewById(R.id.searchProvinceSpinner);
-    	LinearLayout layout = (LinearLayout) view.findViewById(R.id.searchLayout);
+    	//LinearLayout layout = (LinearLayout) view.findViewById(R.id.searchLayout);
     	DatePicker from = (DatePicker) view.findViewById(R.id.searchFromDatePicker);
     	DatePicker to = (DatePicker) view.findViewById(R.id.searchToDatePicker);
         // Set first spinner with countries. Others spinners will be configured accordingly.
@@ -256,7 +246,7 @@ public class MainView extends Activity {
         		i++;
         	} while(countryCursor.moveToNext());
         }
-        ArrayAdapter countrySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countries);
+        ArrayAdapter<String> countrySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countries);
         countrySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(countrySpinnerAdapter);
         spinner.setSelection(selected);
@@ -284,7 +274,7 @@ public class MainView extends Activity {
         	} while(regionCursor.moveToNext());
         }
         Log.d(TAG, "Regions: " + regions);
-        ArrayAdapter regionSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, regions);
+        ArrayAdapter<String> regionSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, regions);
         regionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(regionSpinnerAdapter);
         spinner.setSelection(selected);
@@ -309,7 +299,7 @@ public class MainView extends Activity {
         		i++;
         	} while(provinceCursor.moveToNext());
         }
-        ArrayAdapter provinceSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, provinces);
+        ArrayAdapter<String> provinceSpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, provinces);
         provinceSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(provinceSpinnerAdapter);
         spinner.setSelection(selected);

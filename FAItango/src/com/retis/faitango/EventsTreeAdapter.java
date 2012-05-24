@@ -9,7 +9,6 @@ import java.util.Map;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -18,13 +17,11 @@ import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
 import com.retis.faitango.database.EventProvider;
 import com.retis.faitango.database.EventTable;
-import com.retis.faitango.preference.PreferenceHelper;
 import com.retis.faitango.remote.EventFilter;
 
 public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 
-	@SuppressWarnings("unused")
-	private final String TAG = "EventsTreeAdapter";
+	//private final String TAG = "EventsTreeAdapter";
 	private static final String[] FROM = {
 		EventTable.CITY, EventTable.DATE, EventTable.TYPE, EventTable.NAME, EventTable.TIME
 	};
@@ -38,26 +35,31 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 	private Map<Integer, String> listMap = new HashMap<Integer, String>();
 	private EventFilter filter = null;
 
-
 	public EventsTreeAdapter(Cursor cursor, Context c, EventFilter f) {
 		super(c, cursor, android.R.layout.simple_expandable_list_item_1,
 				new String[] {EventTable.DATE}, new int[] {android.R.id.text1},
 				R.layout.eventrow, FROM, TO);
 		context = c;
 		filter = f;
+	}
+	
+	@Override
+	public void notifyDataSetChanged() {
+		// Prepare to display date as String in GroupView
+		Cursor cursor = getCursor();
 		cursor.moveToFirst();
 		long date;
 		while(cursor.isAfterLast() == false) {
 			SimpleDateFormat sdf = new SimpleDateFormat("E dd/MM/yyyy", Locale.ITALIAN);
 			date = cursor.getLong(cursor.getColumnIndexOrThrow(EventTable.DATE));
 			String s = sdf.format(new Date(date));
-			Log.d(TAG, "Date " + date);
-			if (!listMap.containsValue(s)) {
+			if (!listMap.containsValue(s))
 				listMap.put(cursor.getPosition(), s);
-			}
 			cursor.moveToNext();
 		}
 		cursor.moveToFirst();
+		
+		super.notifyDataSetChanged();
 	}
 
 	@Override
