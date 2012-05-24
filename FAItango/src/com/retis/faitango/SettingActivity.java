@@ -13,13 +13,10 @@ import com.retis.faitango.remote.EventFilter;
 import com.retis.faitango.remote.EventType;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 
@@ -36,7 +33,6 @@ public class SettingActivity extends PreferenceActivity {
 	private CountryListChangeListener countryListener;
 	private RegionListChangeListener regionListener;
 	private Context context;
-	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

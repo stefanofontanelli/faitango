@@ -41,7 +41,6 @@ public class EventReader {
 	private EventParser evParser;
 	private final String evFetcherType = "http";
 	private final String evParserType = "json";
-	private static boolean isRunning = false; 
 	private static final String TAG = "EventReader";
 
 	/** Create the EventReader
@@ -65,29 +64,15 @@ public class EventReader {
 		}
 	}
 
-	public synchronized static boolean isExecuting() {
-			return isRunning;
-	}
-	
 	public void abortExecution() {
 		evFetcher.stopEventFetch();
 	}
 
 	public boolean execute(EventFilter filter) {
-		synchronized (this) {
-			if (isRunning) {
-				Log.d(TAG, "Multiple reading are not allowed... NOP!");
-				return false;
-			} 
-			isRunning = true;
-		}
 		// Fetch EVENTS
 		String data = evFetcher.fetchEventList(filter);
 		if (data == null) {
 			Log.e(TAG, "DataEventFetcher failure: got null data");
-			synchronized (this) {
-				isRunning = false;
-			}
 			return false;
 		}
 		// Log.d(TAG, "Received data: " + data);
@@ -109,9 +94,6 @@ public class EventReader {
 			handleEvent(event);
 		}
 		Log.d(TAG, "All fetched events were added in the content provider.");
-		synchronized (this) {
-			isRunning = false;
-		}
 		return true;
 	}
 	
@@ -182,5 +164,4 @@ public class EventReader {
 			Log.d(TAG, "The event detail " + eventDetail + " was NOT inserted/updated.");
 		}
 	}
-	
 }

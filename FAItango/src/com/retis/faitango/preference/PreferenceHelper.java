@@ -8,6 +8,10 @@ import com.retis.faitango.remote.EventType;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources.NotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -26,6 +30,26 @@ public final class PreferenceHelper {
 	
 	public static void installPreferences(Context c){
 		 PreferenceManager.setDefaultValues(c, R.xml.preferences, false);
+	}
+	
+	public static boolean isFirstRun(Context c) {
+		boolean ret = false;
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+		PackageInfo pInfo;
+    	try {
+    		pInfo = c.getPackageManager().getPackageInfo(c.getPackageName(), PackageManager.GET_META_DATA);
+    		if (prefs.getLong( "lastRunVersionCode", 0) < pInfo.versionCode ) {
+    			android.content.SharedPreferences.Editor editor = prefs.edit();
+    			editor.putLong("lastRunVersionCode", pInfo.versionCode);
+    			editor.commit();
+    			ret = true;
+    		}
+    	} catch (NotFoundException e) {
+    		e.printStackTrace();
+    	} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+    	return ret;
 	}
 
 	public static String getRemoteServer(Context c) {

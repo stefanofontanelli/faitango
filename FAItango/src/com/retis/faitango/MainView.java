@@ -21,9 +21,9 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +44,7 @@ public class MainView extends Activity {
 	static final int DIALOG_SYNCHRONIZING = 1;
 	static final int SEARCH_DIALOG = 2;
 	static final int DIALOG_NO_RESULT = 3;
+	static final int DIALOG_FIRST_RUN = 4;
 	public static final String ALL_COUNTRIES_LABEL = "All countries";
 	public static final String ALL_REGIONS_LABEL = "All regions";
 	public static final String ALL_PROVINCES_LABEL = "All provinces";
@@ -100,9 +101,14 @@ public class MainView extends Activity {
 	protected void onResume() {
 		super.onResume();
 		registerReceiver(receiver, filter);
-		updateEventsList();
+    	if (PreferenceHelper.isFirstRun(this)) {
+    		eventsListText.setText("All Events");
+    		showDialog(DIALOG_FIRST_RUN);
+    	} else { 
+    		updateEventsList();
+    	}
 	}
-    
+    	
 	@Override protected void onPause() {
 		Log.d(TAG, "onPause start.");
 		unregisterReceiver(receiver);
@@ -169,6 +175,24 @@ public class MainView extends Activity {
 	                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
 	                synchronizing = true;
 	                doSync();
+	           }
+        	});
+        	builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        		public void onClick(DialogInterface dialog, int id) {
+        			dialog.cancel();
+        		}
+        	});
+        	return builder.create();
+        	
+        case DIALOG_FIRST_RUN:
+    		// Build the AlertDialog to confirm or cancel synchronizing. 
+        	builder = new AlertDialog.Builder(this);
+        	builder.setMessage("This is the first execution. Do you want to set preferences now?");
+        	builder.setCancelable(false);
+        	builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   Intent i = new Intent(MainView.this, SettingActivity.class);
+	        	   startActivity(i);
 	           }
         	});
         	builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -402,4 +426,5 @@ public class MainView extends Activity {
     public EventFilter getSearchFilters() {
     	return eventsListFilters;
     }
+
 }
