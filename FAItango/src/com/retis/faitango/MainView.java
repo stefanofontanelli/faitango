@@ -89,7 +89,8 @@ public class MainView extends Activity {
 		String order = EventTable.DATE + " ASC";
 		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, null, null, order);
 		startManagingCursor(cursor);
-		eventsListFilters = new EventFilter();
+		//eventsListFilters = new EventFilter();
+		eventsListFilters = PreferenceHelper.getSearchParams(this); // Show according to sync preferences
 		listAdapter = new EventsTreeAdapter(cursor, this, eventsListFilters);
 		eventsList.setAdapter(listAdapter);
 		listener = new EventsListener(this);
@@ -131,11 +132,9 @@ public class MainView extends Activity {
         	builder.setMessage("Do you want synchronize data?");
         	builder.setCancelable(false);
         	builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-	           public void onClick(DialogInterface dialog, int id) {
-	                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
-	                synchronizing = true;
-	                doSync();
-	           }
+        		public void onClick(DialogInterface dialog, int id) {        			
+        			performSynchronization();
+        		}
         	});
         	builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
         		public void onClick(DialogInterface dialog, int id) {
@@ -171,9 +170,7 @@ public class MainView extends Activity {
         	builder.setCancelable(false);
         	builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
-	                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
-	                synchronizing = true;
-	                doSync();
+	        	   performSynchronization();
 	           }
         	});
         	builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -204,6 +201,12 @@ public class MainView extends Activity {
         default:
             return null;
         }
+    }
+
+    public void performSynchronization() {
+    	MainView.this.showDialog(DIALOG_SYNCHRONIZING);
+    	synchronizing = true;
+    	doSync();
     }
 
     protected Dialog createSearchDialog() {        
@@ -344,7 +347,8 @@ public class MainView extends Activity {
     	Intent intent = null;
         switch (item.getItemId()) {
         	case R.id.main_menu_all:
-        		eventsListFilters = new EventFilter();
+        		//eventsListFilters = PreferenceHelper.getSearchParams(this); // Show according to sync preferences
+        		eventsListFilters = new EventFilter();  					// Show all in DB
 	        	updateEventsList();
 	            return true;
             case R.id.main_menu_search:
@@ -352,9 +356,8 @@ public class MainView extends Activity {
                 return true;
             case R.id.main_menu_sync:
             	Log.d(TAG, "Starting ReadingService ...");
-                MainView.this.showDialog(DIALOG_SYNCHRONIZING);
-                synchronizing = true;
-            	doSync();
+            	eventsListFilters = PreferenceHelper.getSearchParams(this); // Show according to sync preferences
+            	performSynchronization();
                 return true;
             case R.id.main_menu_setting:
 				intent = new Intent(this, SettingActivity.class);
@@ -384,13 +387,10 @@ public class MainView extends Activity {
     		dismissDialog(DIALOG_SYNCHRONIZING);
     		synchronizing = false;
     	}
+    	eventsListText.setText("Events");
     	String where = null;
-    	if (eventsListFilters == null || eventsListFilters.isEmpty()) {
-    		eventsListText.setText("All Events");
-    	} else {
-    		eventsListText.setText("Found Events");
+    	if (!eventsListFilters.isEmpty()) 
     		where = eventsListFilters.getWhereClause(cr);
-    	}
     	
     	String[] mProjection =
     	{
@@ -419,6 +419,7 @@ public class MainView extends Activity {
     private void doSync() {
     	Log.d(TAG, "Starting task to synchronize data ...");
     	Intent msgIntent = new Intent(this, ReadingService.class);
+    	msgIntent.putExtra("filter", eventsListFilters);
     	startService(msgIntent);    
     }
     

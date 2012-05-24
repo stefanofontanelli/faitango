@@ -160,7 +160,8 @@ public class EventFilter implements Parcelable, Cloneable {
 			}
 			where += EventTable.DATE + " <= " + dateTo.getTime() + " ";
 		}
-		int i = 0;
+		return where;
+		/*
 		if (!types.isEmpty()) {
 			if (where == null) {
 				where = "";
@@ -168,7 +169,8 @@ public class EventFilter implements Parcelable, Cloneable {
 			where += " AND (";
 			for (EventType t : types) {
 				i++;
-				where += "lower(" + EventTable.TYPE + ") LIKE '%" + t.name().toLowerCase() + "%' ";
+				// TODO: resId has to converted to string through contex.getString....
+				where += "lower(" + EventTable.TYPE + ") LIKE '%" + t.resId + "%' ";
 				if (i < types.size()) {
 					where += "OR ";
 				}
@@ -177,32 +179,31 @@ public class EventFilter implements Parcelable, Cloneable {
 		}
 		Log.d(TAG, "where: " + where);
 		return where;
+		*/
 	}
 	
 	protected String getWhereForProvince(String code) {
-		return EventTable.CITY + " LIKE '" + code + "%' ";
+		return "upper(" + EventTable.CITY + ") LIKE '%" + code + "%' ";
 	}
 	
 	protected String getWhereForRegion(ContentResolver cr, String name) {
 		
-		String where = null;
+		String where = "";
 		Cursor cursor = cr.query(ProvinceProvider.CONTENT_URI,
 		 		  				 null,
 		 		  				 ProvinceTable.REGION + "='" + name + "' ",
 		 		  				 null,
 		 		  				 null);
         if (cursor.moveToFirst()) {
+     		where += "(";
         	do {
-        		if (where == null) {
-        			where = "";
-        		}
-        		if (!where.equals("")) {
+        		if (!where.equals("(")) {
         			where += " OR ";
         		}
         		where += getWhereForProvince(cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE)));
         	} while(cursor.moveToNext());
+        	where += ")";
         }
-		
 		return where;
 	}
 	

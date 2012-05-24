@@ -147,7 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		insertRegion(db, 5, "Emilia-Romagna", 118);
 		insertProvince(db, 17, "Bologna", "BO", "Emilia-Romagna");
 		insertProvince(db, 18, "Ferrara", "FE", "Emilia-Romagna");
-		insertProvince(db, 19, "Forl“-Cesena", "FC", "Emilia-Romagna");
+		insertProvince(db, 19, "Forlï¿½-Cesena", "FC", "Emilia-Romagna");
 		insertProvince(db, 20, "Modena", "MO", "Emilia-Romagna");
 		insertProvince(db, 21, "Parma", "PR", "Emilia-Romagna");
 		insertProvince(db, 22, "Piacenza", "PC", "Emilia-Romagna");
@@ -258,8 +258,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		insertProvince(db, 101, "Perugia", "PG", "Umbria");
 		insertProvince(db, 102, "Terni", "TR", "Umbria");
 		
-		insertRegion(db, 19, "Valle d'Aosta", 118);
-		insertProvince(db, 103, "Aosta", "AO", "Valle d'Aosta");
+		//insertRegion(db, 19, "Valle d'Aosta", 118);
+		//insertProvince(db, 103, "Aosta", "AO", "Valle d'Aosta");
 		
 		insertRegion(db, 20, "Veneto", 118);
 		insertProvince(db, 104, "Belluno", "BL", "Veneto");

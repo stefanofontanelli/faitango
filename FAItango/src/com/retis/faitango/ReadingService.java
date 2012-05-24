@@ -1,6 +1,6 @@
 package com.retis.faitango;
 
-import com.retis.faitango.preference.PreferenceHelper;
+import com.retis.faitango.remote.EventFilter;
 import com.retis.faitango.remote.EventReader;
 import com.retis.faitango.AlarmHelper;
 import android.app.IntentService;
@@ -81,7 +81,7 @@ public class ReadingService extends IntentService {
 			return;
 		}
 		if (reader != null) {
-			if (reader.execute(PreferenceHelper.getSearchParams(this))) {
+			if (reader.execute((EventFilter)intent.getParcelableExtra("filter"))) {
 				notificationManager.notify(NOTIFICATION_ID, readingNotification);
 				broadcastIntent.putExtra("success", true);
 			} else {

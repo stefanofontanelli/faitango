@@ -72,9 +72,10 @@ public class SearchClickListener implements OnClickListener {
         		Log.d(TAG, "Type: " + t.name());
         	}
         }
+    	//PreferenceHelper.setSearchParams(context, f);
     	context.setSearchFilters(f);
-    	PreferenceHelper.setSearchParams(context, f);
-		context.updateEventsList();
+		//context.updateEventsList();
+    	context.performSynchronization();
         dialog.cancel();
 	}
 

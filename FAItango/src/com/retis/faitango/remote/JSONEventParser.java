@@ -45,7 +45,8 @@ public class JSONEventParser extends EventParser {
                 date.clear();
                 date.set(Integer.parseInt(dateFields[2]), 
      				     Integer.parseInt(dateFields[1]) - 1, 
-     				     Integer.parseInt(dateFields[0]));
+     				     Integer.parseInt(dateFields[0]),
+     				     21, 0);
                 ev.date = date.getTime();
 				ev.city = obj.getString("citta");
 				ev.type = getEventTypeFromString(obj.getString("type"));

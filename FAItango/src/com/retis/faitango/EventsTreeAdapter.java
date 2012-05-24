@@ -9,6 +9,7 @@ import java.util.Map;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -99,11 +100,14 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 		EventsTreeAdapter.childMap.clear();
 		ContentResolver cr = context.getContentResolver();
 		EventFilter f = (EventFilter)filter.clone();
-		f.dateFrom = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
-		f.dateTo = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		long time = groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE));
+		f.dateFrom = new Date(time);
+		f.dateTo = new Date(time);
 		String where = f.getWhereClause(cr);
-	
+
+		
 		cursor = cr.query(EventProvider.CONTENT_URI, null, where, null, null);
+		Log.e("puppa", "Trovati = " + cursor.getCount() + "  PROVIAMO LA WHERE= " + where);
 		cursor.moveToFirst();
 		while(cursor.isAfterLast() == false) {
 			//we associate an event ID with the position of a child

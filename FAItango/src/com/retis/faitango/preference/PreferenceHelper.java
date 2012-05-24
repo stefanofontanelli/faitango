@@ -1,6 +1,7 @@
 package com.retis.faitango.preference;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import com.retis.faitango.R;
 import com.retis.faitango.remote.EventFilter;
@@ -107,9 +108,12 @@ public final class PreferenceHelper {
 			}
 		}
 		Calendar now = Calendar.getInstance();
+		now.set(Calendar.HOUR_OF_DAY, 1);
 		filter.dateFrom = now.getTime();
-		now.add(Calendar.DAY_OF_MONTH,
-				Integer.parseInt(prefs.getString(eventSearchPeriod, "1")));
+		now.set(Calendar.HOUR_OF_DAY, 1);
+		
+		now.add(Calendar.DAY_OF_MONTH, Integer.parseInt(prefs.getString(eventSearchPeriod, "1")));
+		now.set(Calendar.HOUR_OF_DAY, 23);
 		filter.dateTo = now.getTime();
 		return filter;
 	}
