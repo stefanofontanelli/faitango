@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.retis.faitango.MainView;
-import com.retis.faitango.database.CountryProvider;
-import com.retis.faitango.database.CountryTable;
 import com.retis.faitango.database.EventTable;
 import com.retis.faitango.database.ProvinceProvider;
 import com.retis.faitango.database.ProvinceTable;
@@ -29,7 +27,7 @@ import android.util.Log;
  * 
  * @author Christian Nastasi
  */
-public class EventFilter implements Parcelable {
+public class EventFilter implements Parcelable, Cloneable {
 
 	private static final String TAG = "EventFilter";
 	public Set<EventType> types;
@@ -231,10 +229,44 @@ public class EventFilter implements Parcelable {
 	}
 	
 	public boolean isEmpty() {
+		String str = "";
+		if (province == null)
+			str += "NULL province, "; 
+		if (region == null)
+			str += "NULL regio, ";
+		if (country == null)
+			str += "NULL contry, ";
+		if (dateFrom == null)
+			str += "NULL dataFrom, ";
+		if (dateTo == null)
+			str += "NULL dateTo, ";
+		if (types.isEmpty())
+			str += "types empty ";
+		
+		Log.e(TAG, "Testing isEmpty() condition: " + str);
 		if (province != null || region != null || country != null || 
 			dateFrom != null || dateTo != null || !types.isEmpty()) {
 			return false;
 		}
 		return true;
+	}
+
+	public Object clone()  {
+		EventFilter f = new EventFilter();
+		for (EventType e : types)
+			f.types.add(e);
+		if (dateFrom != null)
+			f.dateFrom = (Date)dateFrom.clone();
+		else
+			f.dateFrom = null;
+		if (dateTo != null)
+			f.dateTo = (Date)dateTo.clone();
+		else 
+			f.dateTo = null;
+		f.country = country;
+		f.region = region;
+		f.province = province;
+		f.title = title;
+		return f;
 	}
 }

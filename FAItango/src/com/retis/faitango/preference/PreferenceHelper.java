@@ -2,6 +2,7 @@ package com.retis.faitango.preference;
 
 import java.util.Calendar;
 
+import com.retis.faitango.R;
 import com.retis.faitango.remote.EventFilter;
 import com.retis.faitango.remote.EventType;
 
@@ -22,6 +23,10 @@ public final class PreferenceHelper {
 	private static final String province = "province";
 	private static final String eventSearchPeriod = "eventSearchPeriod";
 	public static final String eventSearchPeriodChanged = "eventSearchPeriodChanged";
+	
+	public static void installPreferences(Context c){
+		 PreferenceManager.setDefaultValues(c, R.xml.preferences, false);
+	}
 
 	public static String getRemoteServer(Context c) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());

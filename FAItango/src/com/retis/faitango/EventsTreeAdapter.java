@@ -98,21 +98,11 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 		// we must be sure that the map is cleared and then filled again with actual IDs
 		EventsTreeAdapter.childMap.clear();
 		ContentResolver cr = context.getContentResolver();
-		if (filter.dateFrom != null) {
-			filter.dateFrom.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
-		} else {
-			filter.dateFrom = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
-		}
-		if (filter.dateTo != null) {
-			filter.dateTo.setTime(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
-		} else {
-			filter.dateTo = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
-		}
-		String where = filter.getWhereClause(cr);
-		/*EventTable.DATE + 
-				   " = '" +
-				   groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)) +
-				   "'";*/
+		EventFilter f = (EventFilter)filter.clone();
+		f.dateFrom = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		f.dateTo = new Date(groupCursor.getLong(groupCursor.getColumnIndexOrThrow(EventTable.DATE)));
+		String where = f.getWhereClause(cr);
+	
 		cursor = cr.query(EventProvider.CONTENT_URI, null, where, null, null);
 		cursor.moveToFirst();
 		while(cursor.isAfterLast() == false) {
