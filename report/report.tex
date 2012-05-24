@@ -1,15 +1,15 @@
-% ---------------------------------------------------------------------------- %
-%  Description: Project Report of the FAI-TANGO Android App                    %
-%                                                                              %
-%  Author(s): chris                                                            %
-%  Date: 31 March 2012 20.40                                                   %
-% ---------------------------------------------------------------------------- %
+% ---------------------------------------------------------------------------------%
+%  Description: Project Report of the FAI-TANGO Android App	%
+%                                                                              				%
+%  Author(s): chris                                                            			%
+%  Date: 31 March 2012 20.40                                                   	%
+% --------------------------------------------------------------------------------	%
 
 \documentclass[10pt, twoside]{article}
 
-% ----------------------------------------- %
-% Including Packages                        %
-% ----------------------------------------- %
+% -------------------------------------------------------------------------------- %
+% Including Packages                        						%
+% --------------------------------------------------------------------------------	%
 \usepackage{fullpage} % To use 1 inch margins
 %\usepackage{latex8}
 %\usepackage{ieeetran}
@@ -62,12 +62,6 @@
 % ----------------------------------------- %
 % Add document sections                     %
 % ----------------------------------------- %
-\small
-\todo{Things to be made:
-\begin{enumerate} 
-\item Find a name for the App. I'm currently using \app
-\end{enumerate} 
-}
 Topics:
 \begin{itemize} 
     \item Introduction: about the app
@@ -95,7 +89,6 @@ Topics:
 
 
 \section{Application description}
-\todo{Say something about: why we did this app?}
 
 The \app application allows to retrieve and present information about
 tango events registered at the \emph{FAItango} association 
@@ -114,77 +107,99 @@ use of the Android integrated calendar to automatically add remainders.
 
 \subsection*{Requirements}
 \begin{enumerate}
-    \item The tango event information is classified 
-          in \emph{brief} and \emph{detailed}.
-    \item Event whose starting date is previous than current date 
-          (handset time) are considered as \emph{past}.
-    \item The application shall retrieve the event information from the 
-          FAItango database.
-    \begin{enumerate}
-        \item Brief and detailed information are accessible through 
-              HTTP requests.
-        \item Brief information are encoded in JSON standard.
-        \item Detailed information are encoded in plain HTML.
-        \item Brief and detailed information might be accessed and encoded using
-              different mechanisms.
-    \end{enumerate}
-    \item The application shall present the event information on the handset.
-    \begin{enumerate}
-        \item The brief information shall be summarized in a sorted list.
-        \begin{enumerate}
-            \item The list is sorted by event date, closest to current date 
-                  first
-            \item Past events shall be excluded.
-        \end{enumerate}
-        \item The detailed information shall be presented upon selection of
-              the event from the brief list.
-    \end{enumerate}
-    \item The application shall allow off-line visualization of the event 
-          information.
-    \begin{enumerate}
-        \item The application shall store brief and detailed information 
-              on the handset.
-        \item Past events information should be removed.
-    \end{enumerate}
-    \item Information retrieval shall take place according to two possible 
-          paradigms: \emph{synchronization} and \emph{search}.
-    \item Synchronization
-    \begin{enumerate}
-        \item Synchronization shall accept search parameters to limit
-              event information to be retrieved:
-        \begin{enumerate}
-            \item What info?...
-        \end{enumerate}
-        \item Synchronization shall be performed in one of the following mode:
-              periodically, on-startup, manually.
-        \begin{enumerate}
-            \item Periodic synchronization shall occur according 
-                  to predefined time interval (TBD: ....)
-            \item Periodic synchronization shall occur even if the application
-                  is not executing.
-            \item On-startup synchronization shall occur when the application is
-                  started.
-            \item Manual synchronization shall occur on explicit request of the
-                  user.
-        \end{enumerate}
-    \end{enumerate}
-    \item Search
-    \begin{enumerate}
-        \item Describe...
-    \end{enumerate}
-    \item The application shall be integrated with: calendar, maps, social
-          networks.
-    \item The application shall provide off-line content to other possible
-          application.
+	\item The tango event information is classified 
+         		 in \emph{brief} and \emph{detailed}.
+	\item Event whose starting date is previous than current date 
+          	(handset time) are considered as \emph{past}.
+    	\item	The application shall retrieve the event information from the 
+          	FAItango database.
+    		\begin{enumerate}
+        			\item	\emph{Brief} and \emph{detailed} information are accessible through 
+              			HTTP requests.
+        			\item \emph{Brief} and \emph{detailed} information are encoded in JSON standard.
+        			\item Information inside \emph{detailed} maybe encoded in plain HTML.
+        			\item \emph{Brief} and \emph{detailed} information might be accessed and encoded using
+              			different mechanisms.
+    		\end{enumerate}
+	\item The application shall present the event information on the handset.
+    	\begin{enumerate}
+        		\item The \emph{brief} information shall be summarized in a sorted list.
+        			\begin{enumerate}
+            			\item The list is sorted by event date, closest to current date first
+            			\item Past events shall be excluded.
+        			\end{enumerate}
+        		\item The \emph{detailed} information shall be presented upon selection of
+              		the event from the brief list.
+    	\end{enumerate}
+    	\item The application shall allow off-line visualization of the event information.
+    		\begin{enumerate}
+        			\item The application shall store \emph{brief} and \emph{detailed} information on the handset.
+	        		\item Past events information should be removed.
+    		\end{enumerate}
+    	\item Information retrieval shall take place according to two possible 
+          	paradigms: \emph{synchronization} and \emph{search}.
+    	\item Synchronization
+    		\begin{enumerate}
+        			\item Synchronization shall accept search parameters to limit event information to be retrieved.
+        				\begin{enumerate}
+            				\item Information can be retrieved by country,
+					\item	Information can be retrieved by country and province,
+					\item	Information can be retrieved by country, province and municipality,
+					\item	Information can be retrieved by event type (concert, festival, marathon, milonga, party, show, stage, vacation),
+					\item	Information can be retrieved by time period (1 day, 7 days, 15 days, 1 month, 6 months, 12 month).
+        				\end{enumerate}
+        			\item Synchronization shall be performed in one of the following mode:
+              			periodically, on-startup, manually.
+				\begin{enumerate}
+					\item Periodic synchronization shall occur according 
+						predefined time interval (15 minutes, 30 minutes, 1 hour, 12 hours, 24 hours).
+					\item Periodic synchronization shall occur even if the application is not executing.
+            				\item On-startup synchronization shall occur when the application is started.
+					\item Manual synchronization shall occur on explicit request of the user.
+				\end{enumerate}
+		\end{enumerate}
+	\item Search
+    		\begin{enumerate}
+        			\item It shall be offline.
+			\item It shall limit event information to be showed:
+			\begin{enumerate}
+				\item by country,
+				\item	by country and province,
+				\item	by country, province and municipality,
+				\item by event type,
+				\item by time period.
+			\end{enumerate}
+			\item It shall update synchronization parameters preference.
+			\item	It shall ask the user to start synchronization when no result found.
+    		\end{enumerate}
+    	\item The application shall be integrated with: calendar, maps, social networks.
+    	\item The application shall provide off-line content to other possible application.
 \end{enumerate}
 
 \section{Architecture}
+
 The architecture proposed to comply with the application requirements
-is depicted in Figure~\ref{FIGURA}. 
+is depicted in Figure~\ref{fig:apparc}. 
 
-TODO: mettere figura!
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.39]{fig/app_structure.png}
+\end{center}
+\caption{The application architecture}
+\label{fig:apparc}
+\end{figure}
+
+The application is composed by:
+\begin{enumerate}
+	\item	the event list activity,
+	\item	the event details activity,
+	\item	the preference activity,
+	\item	the set of data providers,
+	\item	the updater service.
+\end{enumerate}
+
+The event list activity shows \emph{brief} information to the user ordered by data.
 
 
-TODO: start describing...
 
 \end{document}
