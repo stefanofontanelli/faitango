@@ -116,7 +116,7 @@ public class EventContent extends MapActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		
 		String where = EventDetailTable.EVENT + "=" + eventID;
 		Log.d(TAG, where);
 		cursor = cr.query(EventDetailProvider.CONTENT_URI, null, where, null, null);
@@ -186,4 +186,6 @@ public class EventContent extends MapActivity {
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
+
+	
 }

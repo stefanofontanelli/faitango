@@ -18,10 +18,12 @@ public class ReadingReceiver extends BroadcastReceiver {
 		Log.d(TAG, "Intent received: " + intent.getAction());
 		MainView v = (MainView) context;
 		Bundle b = intent.getExtras();
-		if (b != null && b.getBoolean("success"))
+		if (b != null && b.getBoolean("success")) {
 			v.updateEventsList();
-		else
+			Toast.makeText(context, "Synchronization done!", Toast.LENGTH_SHORT).show();
+		} else {
 			v.notifyReadingFailure();
-		Toast.makeText(context, "Unable to get event information", Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "Unable to get event information", Toast.LENGTH_LONG).show();
+		}
 	}
 }

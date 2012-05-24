@@ -164,7 +164,7 @@ public class MainView extends Activity {
             return dialog;
             
         case SEARCH_DIALOG:
-        	// Build the Dialog needed to specify search criterions.
+        	// Build the Dialog needed to specify search criterion.
             return createSearchDialog();
             
         case DIALOG_NO_RESULT:

@@ -1,14 +1,18 @@
 package com.retis.faitango.remote;
 
 import com.retis.faitango.AlarmHelper;
+import com.retis.faitango.MainView;
 import com.retis.faitango.database.EventDetailProvider;
 import com.retis.faitango.database.EventDetailTable;
 import com.retis.faitango.database.EventProvider;
 import com.retis.faitango.database.EventTable;
+
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.util.Log;
 
 /** Local (Event) DB updater <br><br>
@@ -107,29 +111,37 @@ public class EventReader {
 			event.put(EventTable.TIME, "21:00");
 			event.put(EventTable.TYPE, context.getResources().getString(ev.type.resId));
 			handleEvent(event);
-			data = evFetcher.fetchEventDetail(ev.id);
-			if (data == null) {
-				Log.e(TAG, "DataEventFetcher failure: got null data for detail of event: " + ev.id);
-				continue;
-			}
-			evParser.parseEventDetail(data);
-			DataEventDetail ed = evParser.getEventsDetails().get(0);
-			detail.put(EventDetailTable.EVENT, ev.id);
-			detail.put(EventDetailTable.TITLE, ed.title);
-			detail.put(EventDetailTable.CITY, ed.city);
-			detail.put(EventDetailTable.DATE, ed.date.getTime());
-			detail.put(EventDetailTable.CREATED, ed.created.getTime());
-			detail.put(EventDetailTable.TIME, "21:00");
-			detail.put(EventDetailTable.TYPE, context.getResources().getString(ev.type.resId));
-			detail.put(EventDetailTable.EMAIL, ed.email);
-			detail.put(EventDetailTable.DESCRIPTION, ed.description);
-			detail.put(EventDetailTable.LINK, ed.link);
-			handleEventDetail(detail);
 		}
 		Log.d(TAG, "All fetched events were added in the content provider.");
 		synchronized (this) {
 			isRunning = false;
 		}
+		return true;
+	}
+	
+
+	public boolean readDetails(long eventId) {
+		String data = evFetcher.fetchEventDetail(eventId);
+		if (data == null) {
+			Log.e(TAG, "DataEventFetcher failure: got null data for detail of event: " + eventId);
+			return false;
+		}
+		evParser.parseEventDetail(data);
+		ContentValues detail = new ContentValues();
+		DataEventDetail ed = evParser.getEventsDetails().get(0);
+		detail.put(EventDetailTable.EVENT, eventId);
+		detail.put(EventDetailTable.TITLE, ed.title);
+		detail.put(EventDetailTable.CITY, ed.city);
+		detail.put(EventDetailTable.DATE, ed.date.getTime());
+		detail.put(EventDetailTable.CREATED, ed.created.getTime());
+		detail.put(EventDetailTable.TIME, "21:00");
+		detail.put(EventDetailTable.TYPE, context.getResources().getString(ed.type.resId));
+		detail.put(EventDetailTable.EMAIL, ed.email);
+		detail.put(EventDetailTable.DESCRIPTION, ed.description);
+		detail.put(EventDetailTable.LINK, ed.link);
+		handleEventDetail(detail);
+
+		Log.d(TAG, "All fetched event details were added in the content provider.");
 		return true;
 	}
 	
@@ -174,4 +186,5 @@ public class EventReader {
 			Log.d(TAG, "The event detail " + eventDetail + " was NOT inserted/updated.");
 		}
 	}
+	
 }
