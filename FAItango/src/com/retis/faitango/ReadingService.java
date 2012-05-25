@@ -2,7 +2,6 @@ package com.retis.faitango;
 
 import com.retis.faitango.remote.EventFilter;
 import com.retis.faitango.remote.EventReader;
-import com.retis.faitango.AlarmHelper;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;

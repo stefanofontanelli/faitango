@@ -160,25 +160,6 @@ public class EventFilter implements Parcelable, Cloneable {
 		}
 		Log.d(TAG, "WHERE: " + where);
 		return where;
-		/*
-		if (!types.isEmpty()) {
-			if (where == null) {
-				where = "";
-			}
-			where += " AND (";
-			for (EventType t : types) {
-				i++;
-				// TODO: resId has to converted to string through contex.getString....
-				where += "lower(" + EventTable.TYPE + ") LIKE '%" + t.resId + "%' ";
-				if (i < types.size()) {
-					where += "OR ";
-				}
-			}
-			where += ") ";
-		}
-
-		return where;
-		*/
 	}
 	
 	protected String getWhereForProvince(String code) {
@@ -203,6 +184,7 @@ public class EventFilter implements Parcelable, Cloneable {
         	} while(cursor.moveToNext());
         	where += ")";
         }
+        cursor.close();
 		return where;
 	}
 	
@@ -225,6 +207,7 @@ public class EventFilter implements Parcelable, Cloneable {
         		where += getWhereForRegion(cr, r.getString(r.getColumnIndex(RegionTable.NAME)));
         	} while(r.moveToNext());
         }
+  		r.close();
 		return where;
 	}
 	

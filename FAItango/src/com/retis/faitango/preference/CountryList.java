@@ -12,7 +12,6 @@ import com.retis.faitango.database.CountryTable;
 
 public class CountryList extends ListPreference {
 	
-	//private static final String TAG = "CountryList";
 	private final Cursor countries;
 	private final String[] entries;
 	private final String[] entryValues;
@@ -37,6 +36,7 @@ public class CountryList extends ListPreference {
         }
         setEntries(entries);
         setEntryValues(entryValues);
+        countries.close();
     }
 
     public CountryList(Context context) {

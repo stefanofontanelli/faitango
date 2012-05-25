@@ -21,7 +21,6 @@ import com.retis.faitango.remote.EventFilter;
 
 public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 
-	//private final String TAG = "EventsTreeAdapter";
 	private static final String[] FROM = {
 		EventTable.CITY, EventTable.DATE, EventTable.TYPE, EventTable.NAME, EventTable.TIME
 	};

@@ -48,5 +48,6 @@ public class ProvinceList extends ListPreference {
 		}
 		setEntries(entries);
 		setEntryValues(entryValues);
+		provinces.close();
 	}
 }

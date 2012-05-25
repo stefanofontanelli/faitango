@@ -93,31 +93,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				EventDetailTable.EMAIL,
 				EventDetailTable.DESCRIPTION));
 
-		/*
-		insertCountry(db, 0, "All countries");
-		insertRegion(db, 0, "All regions", 118);
-		insertProvince(db, -1, "All provinces", "", "Abruzzo");
-		insertProvince(db, -2, "All provinces", "", "Basilicata");
-		insertProvince(db, -3, "All provinces", "", "Calabria");
-		insertProvince(db, -4, "All provinces", "", "Campania");
-		insertProvince(db, -5, "All provinces", "", "Emilia-Romagna");
-		insertProvince(db, -6, "All provinces", "", "Friuli-Venezia Giulia");
-		insertProvince(db, -7, "All provinces", "", "Lazio");
-		insertProvince(db, -8, "All provinces", "", "Liguria");
-		insertProvince(db, -9, "All provinces", "", "Lombardia");
-		insertProvince(db, -10, "All provinces", "", "Marche");
-		insertProvince(db, -11, "All provinces", "", "Molise");
-		insertProvince(db, -12, "All provinces", "", "Piemonte");
-		insertProvince(db, -13, "All provinces", "", "Puglia");
-		insertProvince(db, -14, "All provinces", "", "Sardegna");
-		insertProvince(db, -15, "All provinces", "", "Sicilia");
-		insertProvince(db, -16, "All provinces", "", "Toscana");
-		insertProvince(db, -17, "All provinces", "", "Trentino-Alto Adige");
-		insertProvince(db, -18, "All provinces", "", "Umbria");
-		insertProvince(db, -19, "All provinces", "", "Valle d'Aosta");
-		insertProvince(db, -20, "All provinces", "", "Veneto");
-		 */
-
 		insertCountry(db, 118, "Italia"); // The ID of Italy in FAITango events database.
 
 		insertRegion(db, 1, "Abruzzo", 118);

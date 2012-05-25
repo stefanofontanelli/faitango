@@ -87,7 +87,7 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 			HttpEntity entity = response.getEntity();
 			if (entity == null) {
 				Log.e(TAG, "Empty Response");
-				return null; // chris TODO: Throw exception?
+				return null;
 			}
 			in = new BufferedReader(new InputStreamReader(entity.getContent()));
 			StringBuffer sb = new StringBuffer("");
@@ -144,7 +144,6 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 			if (f.title != null)
 				uriQueryEventList += "titolo=" + URLEncoder.encode(f.title,"UTF-8") + "&";		
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
@@ -155,26 +154,5 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 
 	private void createHttpClient() {
 		httpClient = new DefaultHttpClient();
-		// chris TODO: shall we use some more complex stuff? Like, creating the HTTP/HTTPS socket?
-		//             SEE example below!
-
-		//DefaultHttpClient ret = null;
-
-		////sets up parameters
-		//HttpParams params = new BasicHttpParams();
-		//HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		//HttpProtocolParams.setContentCharset(params, "utf-8");
-		//params.setBooleanParameter("http.protocol.expect-continue", false);
-
-		////registers schemes for both http and https
-		//SchemeRegistry registry = new SchemeRegistry();
-		//registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		//final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
-		//sslSocketFactory.setHostnameVerifier(SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-		//registry.register(new Scheme("https", sslSocketFactory, 443));
-
-		//ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(params, registry);
-		//ret = new DefaultHttpClient(manager, params);
-		//return ret;
 	}
 }

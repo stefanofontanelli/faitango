@@ -10,7 +10,6 @@ import com.retis.faitango.remote.EventFilter;
 
 public class RegionSpinnerChangeListener implements OnItemSelectedListener {
 
-	//private static final String TAG = "RegionSpinnerChangeListener";
 	private MainView context;
 	private Spinner province;
 

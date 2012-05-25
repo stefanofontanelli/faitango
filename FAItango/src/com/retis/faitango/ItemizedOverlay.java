@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import android.graphics.drawable.Drawable;
 import com.google.android.maps.OverlayItem;
 
+@SuppressWarnings("rawtypes")
 public class ItemizedOverlay extends com.google.android.maps.ItemizedOverlay {
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	

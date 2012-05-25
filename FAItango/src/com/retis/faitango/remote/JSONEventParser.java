@@ -52,7 +52,6 @@ public class JSONEventParser extends EventParser {
 			}
 		} catch (JSONException e) {
 			Log.e(TAG, "Failure: got exception in JSON: " + e.toString());
-			// chris TODO: manage JSON parsing exceptions?
 		}
 	}
 

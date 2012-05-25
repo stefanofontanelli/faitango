@@ -137,6 +137,7 @@ public class EventReader {
 					cr.update(EventProvider.CONTENT_URI, event, where, null);
 				} while (c.moveToNext());
 			}
+			c.close();
 		} catch (Exception e) {
 			Log.e(TAG, "The event " + event + " was NOT inserted/updated.");
 		}
@@ -157,6 +158,7 @@ public class EventReader {
 					cr.update(EventProvider.CONTENT_URI, eventDetail, where, null);
 				} while (c.moveToNext());
 			}
+			c.close();
 		} catch (Exception e) {
 			Log.e(TAG, "The event detail " + eventDetail + " was NOT inserted/updated.");
 		}

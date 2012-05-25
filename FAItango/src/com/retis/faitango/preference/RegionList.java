@@ -49,5 +49,6 @@ public class RegionList extends ListPreference {
         }
         setEntries(entries);
         setEntryValues(entryValues);
+        regions.close();
     }
 }

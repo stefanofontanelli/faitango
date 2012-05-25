@@ -29,7 +29,7 @@ public class EventsListener implements OnChildClickListener {
 		Log.d(TAG, "onChildClick():   groupPos = " + Integer.toString(groupPosition) +
 				" childPos = " + Integer.toString(childPosition));
 		// Get the context of the parent, which is that of an Activity as required by the Intent
-		Context c = parent.getContext(); // Get the
+		Context c = parent.getContext();
 		Intent intent = new Intent(c, com.retis.faitango.EventContent.class);
 		// Before starting the new intent bundle the event ID so the new created activity 
 		// can fetch info from the database
@@ -57,8 +57,11 @@ public class EventsListener implements OnChildClickListener {
 		ContentResolver cr = mcontext.getContentResolver();
 		String where = EventDetailTable.EVENT + "=" + id;
 		Cursor cursor = cr.query(EventDetailProvider.CONTENT_URI, null, where, null, null);
-		if (cursor.getCount() <= 0)
+		if (cursor.getCount() <= 0) {
+			cursor.close();
 			return false;
+		}
+		cursor.close();
 		return true;
 	}
 

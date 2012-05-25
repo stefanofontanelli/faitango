@@ -14,7 +14,6 @@ import android.text.TextUtils;
 
 public class CountryProvider extends ContentProvider {
 	
-	//private static final String TAG = "CountryProvider";
 	private static final String baseDomain = "com.retis.provider.faitango.countries";
 	private static final String URI = "content://" + baseDomain + "/countries";
 	public static final Uri CONTENT_URI = Uri.parse(URI);

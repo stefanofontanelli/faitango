@@ -7,7 +7,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 
 public class CountryListChangeListener implements OnPreferenceChangeListener {
 
-	//private static final String TAG = "CountryListChangeListener";
 	private final Context context;
 	private final RegionList region;
 
@@ -24,10 +23,6 @@ public class CountryListChangeListener implements OnPreferenceChangeListener {
 		int i = list.findIndexOfValue(value);
 		CharSequence[] entryValues = list.getEntryValues();
 		String entryValue = (String) entryValues[i];
-		//CharSequence[] entries = list.getEntries();
-		//String entry = (String) entries[i];
-		//Log.d(TAG, entry);
-		//Log.d(TAG, entryValue);
 		region.load(context, entryValue);
 		return true;
 	}

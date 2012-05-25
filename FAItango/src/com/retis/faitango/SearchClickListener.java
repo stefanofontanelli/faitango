@@ -84,7 +84,7 @@ public class SearchClickListener implements OnClickListener {
 				return cursor.getString(cursor.getColumnIndex(CountryTable._ID));
 			} while(cursor.moveToNext());
 		}
-
+		cursor.close();
 		return "";
 	}
 
@@ -107,7 +107,7 @@ public class SearchClickListener implements OnClickListener {
 				return cursor.getString(cursor.getColumnIndex(ProvinceTable.CODE));
 			} while(cursor.moveToNext());
 		}
-
+		cursor.close();
 		return "";
 	}
 

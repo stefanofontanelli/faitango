@@ -177,6 +177,7 @@ public class EventContent extends MapActivity {
 			mapController.setZoom(10); 
 			mapView.invalidate();
 		}
+		cursor.close();
 	}
 
 	@Override

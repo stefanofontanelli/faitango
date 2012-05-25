@@ -89,7 +89,6 @@ public class MainView extends Activity {
 		String order = EventTable.DATE + " ASC";
 		cursor = cr.query(EventProvider.CONTENT_URI, mProjection, null, null, order);
 		startManagingCursor(cursor);
-		//eventsListFilters = new EventFilter();
 		eventsListFilters = PreferenceHelper.getSearchParams(this); // Show according to sync preferences
 		listAdapter = new EventsTreeAdapter(cursor, this, eventsListFilters);
 		eventsList.setAdapter(listAdapter);
@@ -229,7 +228,6 @@ public class MainView extends Activity {
 		Spinner countrySpinner = (Spinner) view.findViewById(R.id.searchCountrySpinner);
 		Spinner regionSpinner = (Spinner) view.findViewById(R.id.searchRegionSpinner);
 		Spinner provinceSpinner = (Spinner) view.findViewById(R.id.searchProvinceSpinner);
-		//LinearLayout layout = (LinearLayout) view.findViewById(R.id.searchLayout);
 		DatePicker from = (DatePicker) view.findViewById(R.id.searchFromDatePicker);
 		DatePicker to = (DatePicker) view.findViewById(R.id.searchToDatePicker);
 		// Set first spinner with countries. Others spinners will be configured accordingly.
@@ -276,6 +274,7 @@ public class MainView extends Activity {
 		countrySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(countrySpinnerAdapter);
 		spinner.setSelection(selected);
+		countryCursor.close();
 	}
 
 	public void setRegionSpinner(Spinner spinner, String country, String default_) {
@@ -304,6 +303,7 @@ public class MainView extends Activity {
 		regionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(regionSpinnerAdapter);
 		spinner.setSelection(selected);
+		regionCursor.close();
 	}
 
 	public void setProvinceSpinner(Spinner spinner, String region, String default_) {
@@ -329,6 +329,7 @@ public class MainView extends Activity {
 		provinceSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(provinceSpinnerAdapter);
 		spinner.setSelection(selected);
+		provinceCursor.close();
 	}
 
 	@Override
@@ -345,8 +346,7 @@ public class MainView extends Activity {
 		Intent intent = null;
 		switch (item.getItemId()) {
 		case R.id.main_menu_all:
-			//eventsListFilters = PreferenceHelper.getSearchParams(this); // Show according to sync preferences
-			eventsListFilters = new EventFilter();  					// Show all in DB
+			eventsListFilters = new EventFilter(); // Show all in DB
 			updateEventsList();
 			return true;
 		case R.id.main_menu_search:

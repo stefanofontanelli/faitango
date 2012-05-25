@@ -10,7 +10,7 @@ public final class DataEvent {
 	public String text;
 	public Date date;
 	public String city;
-	public String af; // chris TODO: what is this? give a better name
+	public String af;
 
 	public String details;
 }
