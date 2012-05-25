@@ -5,7 +5,7 @@
 %  Date: 31 March 2012 20.40                                                   	%
 % --------------------------------------------------------------------------------	%
 
-\documentclass[10pt, twoside]{article}
+\documentclass[12pt, twoside]{article}
 
 % -------------------------------------------------------------------------------- %
 % Including Packages                        						%
@@ -181,15 +181,7 @@ use of the Android integrated calendar to automatically add remainders.
 The architecture proposed to comply with the application requirements
 is depicted in Figure~\ref{fig:apparc}. 
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale=0.39]{fig/app_structure.png}
-\end{center}
-\caption{The application architecture}
-\label{fig:apparc}
-\end{figure}
-
-The application is composed by:
+The main parts of the application are:
 \begin{enumerate}
 	\item	the event list activity,
 	\item	the event details activity,
@@ -198,8 +190,71 @@ The application is composed by:
 	\item	the updater service.
 \end{enumerate}
 
-The event list activity shows \emph{brief} information to the user ordered by data.
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.39]{fig/app_structure.png}
+\end{center}
+\caption{The application architecture}
+\label{fig:apparc}
+\end{figure}
 
 
+\subsection{The event list activity}
+
+The event list activity shows \emph{brief} information about events, grouped and ordered by data.
+An example can be viewed in Figure~\ref{fig:eventlist} and Figure~\ref{fig:eventlistmenu}: the list is a collapsed set of dates when it is displayed. Each item in the list can be clicked to display a list of \emph{brief} information about events that will take place that day. Each item inside that list is clickable too and the click event display the \emph{event detail activity}.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.60]{fig/event-list-activity.png}
+\end{center}
+\caption{The event list activity's menu}
+\label{fig:eventlistmenu}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.60]{fig/allevents-brief.png}
+\end{center}
+\caption{The event list activity}
+\label{fig:eventlist}
+\end{figure}
+
+Users can access application functionalities through the menu of the event list activity, which is shown in Figure~\ref{fig:eventlistmenu}: the ``All Events'' option update the list to display all events stored in the local database, ``Search'' option display the \emph{search activity}, ``Synchronize'' run retrieving of \emph{brief} and \emph{detailed} infomation about events from remote server, ``Settings'' show the \emph{preference activity}, ``Reset Data'' drops events data from the local database.
+
+\subsection{The event detail activity}
+
+The event detail activity shows \emph{detailed} information about a specific event, as is shown in Figure~\ref{fig:eventdetailup} and Figure~\ref{fig:eventdetaildown}: it includes a long description with the location of the event and contact information. The activity includes a map which shows where event take place. The user can set a remainder in the agenda or share the event on social networks using buttons below the map.
+
+TODO: parlare di come è fatto il reminder e lo share!
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.60]{fig/event-detail-up.png}
+\end{center}
+\caption{The event detail activity}
+\label{fig:eventdetailup}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.60]{fig/event-detail-down.png}
+\end{center}
+\caption{The event detail activity: google map and other buttons}
+\label{fig:eventdetaildown}
+\end{figure}
+
+\subsection{The search activity}
+TODO
+
+\subsection{The preferences activity}
+TODO
+
+\subsection{The data providers}
+TODO
+
+\subsection{The updater service}
+
+TODO
 
 \end{document}
