@@ -30,9 +30,9 @@
 \usepackage{latexsym}
 \usepackage{lscape}
 
-% ----------------------------------------- %
-% New commands and environments             %
-% ----------------------------------------- %
+% ----------------------------------------- 						%
+% New commands and environments             				%
+% ----------------------------------------- 						%
 \newcommand{\todo}[1]{{\color{red}{TODO: \textbf{\footnotesize{#1}}}}}
 
 \newcommand{\app}{FAI-TANGO }
@@ -41,15 +41,15 @@
 \renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
 \renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}}
 
-% ----------------------------------------- %
-% Body (Title, author, abstract, sections)  %
-% ----------------------------------------- %
+% --------------------------------------------------------------------------------	%
+% Body (Title, author, abstract, sections)  					%
+% -------------------------------------------------------------------------------- %
 %\graphicspath{{../figures/}}
 %\DeclareGraphicsExtensions{.jpg}
 %\DeclareGraphicsExtensions{.eps}
 %\pagestyle{empty}
 \title{\app Android App}
-\author{Juri Lelli, Stefano Fontanelli, Christian Nastasi} 
+\author{Juri Lelli, Christian Nastasi, Stefano Fontanelli} 
 
 \begin{document}
 \maketitle
@@ -59,7 +59,7 @@
 % ----------------------------------------- %
 %\begin{abstract} There is no abstract.  \end{abstract}
 
-% ----------------------------------------- %
+% ----------------------------------------- 	%
 % Add document sections                     %
 % ----------------------------------------- %
 Topics:
@@ -208,25 +208,44 @@ An example can be viewed in Figure~\ref{fig:eventlist} and Figure~\ref{fig:event
 \begin{center}
 \includegraphics[scale=0.60]{fig/event-list-activity.png}
 \end{center}
-\caption{The event list activity's menu}
+\caption{The event list activity's menu.}
 \label{fig:eventlistmenu}
 \end{figure}
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[scale=0.60]{fig/allevents-brief.png}
+\includegraphics[scale=0.50]{fig/allevents-brief.png}
 \end{center}
-\caption{The event list activity}
+\caption{The event list activity.}
 \label{fig:eventlist}
 \end{figure}
 
-Users can access application functionalities through the menu of the event list activity, which is shown in Figure~\ref{fig:eventlistmenu}: the ``All Events'' option update the list to display all events stored in the local database, ``Search'' option display the \emph{search activity}, ``Synchronize'' run retrieving of \emph{brief} and \emph{detailed} infomation about events from remote server, ``Settings'' show the \emph{preference activity}, ``Reset Data'' drops events data from the local database.
+Users can access application functionalities through the menu of the event list activity, which is shown in Figure~\ref{fig:eventlistmenu}:
+\begin{enumerate}
+	\item	the ``All Events'' option update the list to display all events stored in the local database,
+	\item	``Search'' option display the \emph{search dialog} (Figure~\ref{fig:searchdialog}) 
+		which can be used to filter events by multiple criterions;
+		\begin{enumerate}
+			\item by country or by country and province or by country, province and municipality,
+			\item by event type,
+			\item by time period,
+		\end{enumerate}
+	\item	``Synchronize'' run retrieving of \emph{brief} and \emph{detailed} infomation about events from remote server,
+	\item	``Settings'' show the \emph{preference activity}  (Figure~\ref{fig:preference}) ,
+	\item	``Reset Data'' drops events data from the local database.
+\end{enumerate}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.50]{fig/search-activity.png}
+\end{center}
+\caption{The search activity.}
+\label{fig:searchdialog}
+\end{figure}
 
 \subsection{The event detail activity}
 
 The event detail activity shows \emph{detailed} information about a specific event, as is shown in Figure~\ref{fig:eventdetailup} and Figure~\ref{fig:eventdetaildown}: it includes a long description with the location of the event and contact information. The activity includes a map which shows where event take place. The user can set a remainder in the agenda or share the event on social networks using buttons below the map.
-
-TODO: parlare di come è fatto il reminder e lo share!
 
 \begin{figure}[h]
 \begin{center}
@@ -244,11 +263,28 @@ TODO: parlare di come è fatto il reminder e lo share!
 \label{fig:eventdetaildown}
 \end{figure}
 
-\subsection{The search activity}
-TODO
-
 \subsection{The preferences activity}
-TODO
+
+The preference activity allows to change application settings. They are grouped in three category:
+\begin{enumerate}
+	\item	connection settings,\\
+		the setting ``Server'' store the address of remote server from which events information can be pulled;
+	\item synchronization settings,\\
+		the setting ``Synchronization Type'' is used to set synchronization policy: on-startup, periodic, manual;\\
+		the setting ``Synchronization Period'' sets the time period of periodic synchronization;
+	\item synchronization parameters,\\
+		it groups criterions used to limit data pulled from the server when application performs synchronization.
+\end{enumerate}
+
+Preferences are used by other application components in various way, for example ``Server'' setting is read by the update service to get information from the right place; ``Synchronization Type'' and ``Synchronization Period'' are used by update service and application to enable/disable or refresh alarm needed to trigger synchronization; ``Synchronization Parameters'' are read by application to populate widgets of the search dialog, which save back changed in preferences; the update service use ``Synchronization Parameters'' to filter and limit data returned back by the server during synchronizations.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.60]{fig/preference.png}
+\end{center}
+\caption{The preference activity.}
+\label{fig:preference}
+\end{figure}
 
 \subsection{The data providers}
 TODO
