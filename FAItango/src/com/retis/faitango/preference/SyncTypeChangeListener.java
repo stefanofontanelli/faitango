@@ -1,6 +1,8 @@
 package com.retis.faitango.preference;
 
 import com.retis.faitango.AlarmHelper;
+import com.retis.faitango.SettingActivity;
+
 import android.content.Context;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -23,9 +25,11 @@ public class SyncTypeChangeListener implements OnPreferenceChangeListener {
 		String value = (String) v;
 		Log.d(TAG, "SyncType Preference changed: " + value);
 		if (value.contentEquals("2")) {
+			((SettingActivity)context).enableSyncPeriod(true);
 			alarmHelper.set(PreferenceHelper.getSyncPeriod(context));
 		} else {
 			alarmHelper.cancel();
+			((SettingActivity)context).enableSyncPeriod(false);
 		}
 		return true;
 	}

@@ -12,7 +12,6 @@ public class AlarmHelper  {
 
 	private static final String TAG = "AlarmHelper";
 	private AlarmManager alarms;
-	private Intent intentToFire;
 	private PendingIntent alarmIntent;
 	private Context context;
 	private static AlarmHelper singleton = null;
@@ -25,8 +24,7 @@ public class AlarmHelper  {
 	private AlarmHelper(Context c) {
 		context = c;
 		alarms = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		intentToFire = new Intent(ALARM_ACTION);
-		alarmIntent = PendingIntent.getBroadcast(context, 0, intentToFire, 0);
+		alarmIntent = null;
 	}
 
 	/** Get the singleton instance
@@ -42,8 +40,16 @@ public class AlarmHelper  {
 	}
 
 	public void set(long period) {
-		cancel();
 		Log.d(TAG, "Set alarm");
+		cancel();
+        // Encode the EventFilter in the passed Intent
+		Intent passedIntent = new Intent(context, ReadingService.class);
+        passedIntent.putExtra("filter", PreferenceHelper.getSearchParams(context));
+        passedIntent.putExtra("background", true);
+        // NOTE: The FLAG_UPDATE_CURRENT is necessary for proper forwarding of passedIntent.
+        //       It shall cause the extras field (thus the EventFilter) to be updated when the
+        //       PendingIntent.getSercive() is called again. See PendingIntent reference.
+        alarmIntent = PendingIntent.getService(context, 0, passedIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarms.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 				   				   SystemClock.elapsedRealtime() + period,
 				   				   period,
@@ -59,6 +65,8 @@ public class AlarmHelper  {
 	
 	public void cancel() {
 		Log.d(TAG, "Cancel alarm");
-		alarms.cancel(alarmIntent);
+		if (alarmIntent != null)
+			alarms.cancel(alarmIntent);
+		alarmIntent = null;
 	}
 }

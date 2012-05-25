@@ -22,7 +22,6 @@ public class ReadingService extends IntentService {
 	private Intent notificationIntent;
 	private PendingIntent contentIntent;
 	private Intent broadcastIntent;
-	private AlarmHelper alarmHelper;
 	public static final int NOTIFICATION_ID = 1;
 	public static final String SYNC_COMPLETED = "com.retis.faitango.SYNC_COMPLETED";
 	private boolean abortReceived;
@@ -49,7 +48,6 @@ public class ReadingService extends IntentService {
 											   contentIntent);
 		readingNotification.flags |= Notification.FLAG_AUTO_CANCEL;
 		broadcastIntent = new Intent(SYNC_COMPLETED);
-		alarmHelper = AlarmHelper.instance(this);
 	}
 	
 	@Override
@@ -68,7 +66,6 @@ public class ReadingService extends IntentService {
 				Log.e(TAG, "Error while creating the EventReader: ", e);
 			}
 			abortReceived = false;
-			alarmHelper.refresh(this);
 		}
 	    return super.onStartCommand(intent, flags, startId);
 	}
@@ -84,7 +81,10 @@ public class ReadingService extends IntentService {
 		if (reader != null) {
 			if (reader.execute((EventFilter)intent.getParcelableExtra("filter"))) {
 				Log.d(TAG, "reading executed with success");
-				notificationManager.notify(NOTIFICATION_ID, readingNotification);
+				if (intent.getBooleanExtra("background", false)) {
+					notificationManager.notify(NOTIFICATION_ID, readingNotification);
+					return;
+				}
 				broadcastIntent.putExtra("success", true);
 			} else {
 				Log.d(TAG, "reading executed with failure");

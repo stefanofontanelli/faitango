@@ -34,6 +34,10 @@ public class SettingActivity extends PreferenceActivity {
 	private RegionListChangeListener regionListener;
 	private Context context;
 
+	public void enableSyncPeriod(boolean v) {
+		syncPeriod.setEnabled(v);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,6 +63,8 @@ public class SettingActivity extends PreferenceActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
+		syncPeriod.setEnabled(PreferenceHelper.isSyncPeriodic(this));
+		
 		EventFilter f = PreferenceHelper.getSearchParams(this);
 		region.load(context, f.country);
 		province.load(context, f.region);
