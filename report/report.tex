@@ -187,7 +187,7 @@ The main parts of the application are:
 	\item	the event details activity,
 	\item	the preference activity,
 	\item	the set of content providers,
-	\item	the updater service.
+	\item	the update service.
 \end{enumerate}
 
 \begin{figure}[h]
@@ -237,9 +237,9 @@ Users can access application functionalities through the menu of the event list 
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[scale=0.50]{fig/search-activity.png}
+\includegraphics[scale=0.50]{fig/search-dialog.png}
 \end{center}
-\caption{The search activity.}
+\caption{The search dialog.}
 \label{fig:searchdialog}
 \end{figure}
 
@@ -263,7 +263,7 @@ The event detail activity shows \emph{detailed} information about a specific eve
 \label{fig:eventdetaildown}
 \end{figure}
 
-\subsection{The preferences activity}
+\subsection{The preference activity}
 
 The preference activity allows to change application settings. They are grouped in three category:
 \begin{enumerate}
@@ -299,7 +299,19 @@ All data used inside the application is accessed using content providers. Applic
 
 We use content providers to manage access to data set because they encapsulate information and provide mechanisms for defining data security, also they are the standard interface to access from other applications.
 
-\subsection{The updater service}
-TODO
+\subsection{The update service}
+
+The update service handle synchronization requests.
+It is built using an IntentService which uses a worker thread to handle all start requests, one at a time.
+We use IntentService because synchronization doesn't require that the service handle multiple requests simultaneously.
+The IntentService is started:
+\begin{enumerate}
+	\item by the event activity when the user choose the synchronization option from the activity menu,
+	\item	by the application start if the user chose on-startup synchronization preference,
+	\item by a repeating alarm if the user chose periodic synchronization.
+\end{enumerate}
+
+The service get data from the remote server specified in the preferences then parse JSON data returned by it and use content providers to insert information about events in the database.
+The service notify the end of update process using a status bar notification.
 
 \end{document}
