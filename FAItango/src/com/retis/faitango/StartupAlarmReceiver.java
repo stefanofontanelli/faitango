@@ -8,12 +8,10 @@ import android.util.Log;
 public class StartupAlarmReceiver extends BroadcastReceiver {
 
 	private static final String TAG = "StartupAlarmReceiver";
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		// TODO Auto-generated method stub
-		Log.d(TAG, "Refresh the alarm.");
+		Log.d(TAG, "onReceive: Refresh the alarm");
 		AlarmHelper.instance(context).refresh(context);
 	}
-
 }

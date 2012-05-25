@@ -21,7 +21,7 @@ import android.util.Log;
 
 
 public class SettingActivity extends PreferenceActivity {
-	
+
 	private static final String TAG = "SettingActivity";
 	private ListPreference syncType;
 	private ListPreference syncPeriod;
@@ -37,7 +37,7 @@ public class SettingActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate ...");
+		Log.d(TAG, "onCreate");
 		addPreferencesFromResource(R.xml.preferences);
 		context = getApplicationContext();
 		syncType = (ListPreference) findPreference("syncType");
@@ -54,46 +54,44 @@ public class SettingActivity extends PreferenceActivity {
 		regionListener = new RegionListChangeListener(context, province);
 		region.setOnPreferenceChangeListener(regionListener);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
-		Log.d(TAG, "Context: " + this.getApplicationContext());
-		
 		EventFilter f = PreferenceHelper.getSearchParams(this);
 		region.load(context, f.country);
 		province.load(context, f.region);
-	    
+
 		if (f.country == null) {
 			f.country = "";
 		}
-	    country.setDefaultValue(f.country);
-	    country.setValue(f.country);
-	    Log.d(TAG, "COUNTRY " + f.country);
-	    
-	    if (f.region == null) {
+		country.setDefaultValue(f.country);
+		country.setValue(f.country);
+		Log.d(TAG, "COUNTRY " + f.country);
+
+		if (f.region == null) {
 			f.region = "";
 		}
-	    region.setDefaultValue(f.region);
-	    region.setValue(f.region);
-	    Log.d(TAG, "REGION " + f.region);
-	    
-	    if (f.province == null) {
+		region.setDefaultValue(f.region);
+		region.setValue(f.region);
+		Log.d(TAG, "REGION " + f.region);
+
+		if (f.province == null) {
 			f.province = "";
 		}
-	    province.setDefaultValue(f.province);
-	    province.setValue(f.province);
-	    Log.d(TAG, "PROVINCE " + f.province);
-	    
-	    for (EventType t : EventType.values()) {
-	    	CheckBoxPreference p = (CheckBoxPreference) findPreference(t.name());
+		province.setDefaultValue(f.province);
+		province.setValue(f.province);
+		Log.d(TAG, "PROVINCE " + f.province);
+
+		for (EventType t : EventType.values()) {
+			CheckBoxPreference p = (CheckBoxPreference) findPreference(t.name());
 			if (f.types.contains(t)) {
 				p.setChecked(true);
-				Log.d(TAG, "Event type: " + t.name() + " -> TRUE");
+				Log.d(TAG, "Event type: " + context.getString(t.resId) + " -> TRUE");
 			} else {
 				p.setChecked(false);
-				Log.d(TAG, "Event type: " + t.name() + " -> FALSE");
+				Log.d(TAG, "Event type: " + context.getString(t.resId) + " -> FALSE");
 			}
 		}
 	}

@@ -43,7 +43,7 @@ public class AlarmHelper  {
 
 	public void set(long period) {
 		cancel();
-		Log.d(TAG, "Set alarm.");
+		Log.d(TAG, "Set alarm");
 		alarms.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 				   				   SystemClock.elapsedRealtime() + period,
 				   				   period,
@@ -51,14 +51,14 @@ public class AlarmHelper  {
 	}
 	
 	public void refresh(Context context) {
-		Log.d(TAG, "Refresh alarm.");
+		Log.d(TAG, "Refresh alarm");
 		if (PreferenceHelper.isSyncPeriodic(context)) {
 			set(PreferenceHelper.getSyncPeriod(context));
 		}
 	}
 	
 	public void cancel() {
-		Log.d(TAG, "Cancel alarm.");
+		Log.d(TAG, "Cancel alarm");
 		alarms.cancel(alarmIntent);
 	}
 }

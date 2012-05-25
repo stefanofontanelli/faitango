@@ -14,7 +14,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class EventDetailProvider extends ContentProvider {
-	
+
 	private static final String TAG = "EventDetailProvider";
 	private static final String baseDomain = "com.retis.provider.faitango.eventdetails";
 	private static final String URI = "content://" + baseDomain + "/eventdetails";
@@ -29,7 +29,7 @@ public class EventDetailProvider extends ContentProvider {
 	}
 	private SQLiteDatabase db;
 	private DatabaseHelper dbHelper;
-	
+
 	@Override
 	public boolean onCreate() {
 		Context context = getContext();
@@ -37,31 +37,31 @@ public class EventDetailProvider extends ContentProvider {
 		db = dbHelper.getWritableDatabase();
 		return (db == null) ? false : true;
 	}
-	
+
 	@Override
 	public String getType(Uri uri) {
 		switch (uriMatcher.match(uri)) {
-			case EVENTDETAILS:
-				return "vnd.android.cursor.dir/vnd.faitango.eventdetails";
-			case EVENTDETAIL_ID:
-				return "vnd.android.cursor.item/vnd.faitango.eventdetails";
-			default:
-				throw new IllegalArgumentException("Unsupported URI: " + uri);
+		case EVENTDETAILS:
+			return "vnd.android.cursor.dir/vnd.faitango.eventdetails";
+		case EVENTDETAIL_ID:
+			return "vnd.android.cursor.item/vnd.faitango.eventdetails";
+		default:
+			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
 	}
-	
+
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sort) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(EventDetailTable.TABLE_NAME);
 		switch (uriMatcher.match(uri)) {
-			case EVENTDETAIL_ID:
-				qb.appendWhere(EventDetailTable._ID + "=" + uri.getPathSegments().get(1));
-				Log.d("EventDetailProvider", EventDetailTable._ID + "=" + uri.getPathSegments().get(1));
-				break;
-			default:
-				Log.d("EventDetailProvider", "default");
-				break;
+		case EVENTDETAIL_ID:
+			qb.appendWhere(EventDetailTable._ID + "=" + uri.getPathSegments().get(1));
+			Log.d(TAG, EventDetailTable._ID + "=" + uri.getPathSegments().get(1));
+			break;
+		default:
+			Log.d(TAG, "default WHERE condition");
+			break;
 		}
 		String orderBy;
 		if (TextUtils.isEmpty(sort)) {
@@ -69,59 +69,58 @@ public class EventDetailProvider extends ContentProvider {
 		} else {
 			orderBy = sort;
 		}
-		Log.d("EventDetailProvider", selection);
 		Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
 	}
-	
+
 	@Override
 	public Uri insert(Uri _uri, ContentValues _initialValues) {
 		long rowID = db.insert(EventDetailTable.TABLE_NAME, null, _initialValues);
 		if (rowID > 0) {
 			Uri uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
 			getContext().getContentResolver().notifyChange(uri, null);
-			Log.d(TAG, "Added the row: " + rowID);// + ", values: " + _initialValues);
+			Log.d(TAG, "Append row: " + rowID);
 			return uri;
 		}
 		throw new SQLException("Failed to insert row into " + _uri);
 	}
-	
+
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
 		int count;
 		switch (uriMatcher.match(uri)) {
-			case EVENTDETAILS:
-				count = db.delete(EventDetailTable.TABLE_NAME, where, whereArgs);
+		case EVENTDETAILS:
+			count = db.delete(EventDetailTable.TABLE_NAME, where, whereArgs);
 			break;
-			case EVENTDETAIL_ID:
-				String segment = uri.getPathSegments().get(1);
-				count = db.delete(EventDetailTable.TABLE_NAME, EventDetailTable._ID + "="
-						+ segment + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : ""), whereArgs);
+		case EVENTDETAIL_ID:
+			String segment = uri.getPathSegments().get(1);
+			count = db.delete(EventDetailTable.TABLE_NAME, EventDetailTable._ID + "="
+					+ segment + (!TextUtils.isEmpty(where) ? " AND (" + where + ")" : ""), whereArgs);
 			break;
-			default:
-				throw new IllegalArgumentException("Unsupported URI: " + uri);
+		default:
+			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}		
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
-	
+
 	@Override
 	public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
 		int count;
 		switch (uriMatcher.match(uri)) {
-			case EVENTDETAILS:
-				count = db.update(EventDetailTable.TABLE_NAME, values, where, whereArgs);
-				Log.d(TAG, "Update values: " + values);
+		case EVENTDETAILS:
+			count = db.update(EventDetailTable.TABLE_NAME, values, where, whereArgs);
+			Log.d(TAG, "Update values: " + values);
 			break;
-			case EVENTDETAIL_ID:
-				String segment = uri.getPathSegments().get(1);
-				count = db.update(EventDetailTable.TABLE_NAME, values, EventDetailTable._ID
-						+ "=" + segment + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
-				Log.d(TAG, "Update values: " + values + " in row: " + segment);
+		case EVENTDETAIL_ID:
+			String segment = uri.getPathSegments().get(1);
+			count = db.update(EventDetailTable.TABLE_NAME, values, EventDetailTable._ID
+					+ "=" + segment + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+			Log.d(TAG, "Update values: " + values + " in row: " + segment);
 			break;
-			default:
-				throw new IllegalArgumentException("Unknown URI " + uri);
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;

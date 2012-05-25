@@ -1,11 +1,6 @@
 package com.retis.faitango.preference;
 
 import java.util.Calendar;
-import java.util.Date;
-
-import com.retis.faitango.R;
-import com.retis.faitango.remote.EventFilter;
-import com.retis.faitango.remote.EventType;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +10,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources.NotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.retis.faitango.R;
+import com.retis.faitango.remote.EventFilter;
+import com.retis.faitango.remote.EventType;
 
 
 public final class PreferenceHelper {
@@ -81,7 +80,6 @@ public final class PreferenceHelper {
 	}
 
 	public static EventFilter getSearchParams(Context c) {
-		Log.d(TAG, "Context: " + c.getApplicationContext());
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		EventFilter filter = new EventFilter();
 		filter.country = prefs.getString(country, "");

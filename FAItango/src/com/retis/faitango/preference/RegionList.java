@@ -1,14 +1,15 @@
 package com.retis.faitango.preference;
 
-import com.retis.faitango.MainView;
-import com.retis.faitango.database.RegionProvider;
-import com.retis.faitango.database.RegionTable;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
 import android.util.Log;
+
+import com.retis.faitango.MainView;
+import com.retis.faitango.database.RegionProvider;
+import com.retis.faitango.database.RegionTable;
 
 public class RegionList extends ListPreference {
 	
@@ -30,6 +31,7 @@ public class RegionList extends ListPreference {
     	ContentResolver cr = context.getContentResolver();
     	String where = null;
     	if (country != null && country != "") {
+    		Log.d(TAG, "WHERE: " + where);
     		where = RegionTable.COUNTRY + "=" + country;
     	}
         regions = cr.query(RegionProvider.CONTENT_URI, null, where, null, null);
@@ -42,7 +44,6 @@ public class RegionList extends ListPreference {
         	do {
         		entries[i] = regions.getString(regions.getColumnIndex(RegionTable.NAME));
         		entryValues[i] = regions.getString(regions.getColumnIndex(RegionTable.NAME));
-        		//Log.d(TAG, entries[i] + " = " + entryValues[i]);
         		i++;
         	} while(regions.moveToNext());
         }

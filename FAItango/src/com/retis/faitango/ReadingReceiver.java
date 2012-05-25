@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-import android.app.Activity;
 
 public class ReadingReceiver extends BroadcastReceiver {
 
@@ -23,7 +22,7 @@ public class ReadingReceiver extends BroadcastReceiver {
 			Toast.makeText(context, "Synchronization done!", Toast.LENGTH_SHORT).show();
 		} else {
 			v.notifyReadingFailure();
-			Toast.makeText(context, "Unable to get event information", Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "Synchronization aborted!", Toast.LENGTH_LONG).show();
 		}
 	}
 }

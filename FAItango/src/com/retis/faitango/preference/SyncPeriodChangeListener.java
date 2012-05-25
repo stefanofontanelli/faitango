@@ -20,7 +20,7 @@ public class SyncPeriodChangeListener implements OnPreferenceChangeListener {
 	
 	@Override
 	public boolean onPreferenceChange(Preference p, Object v) {
-		Log.d(TAG, "SyncPeriod Preference is changed: " + (String) v);
+		Log.d(TAG, "SyncPeriod Preference changed: " + (String) v);
 		alarmHelper.cancel();
 		alarmHelper.set(Long.decode((String) v));
 		return true;

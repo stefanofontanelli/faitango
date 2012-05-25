@@ -9,7 +9,6 @@ import java.util.Map;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -107,7 +106,6 @@ public class EventsTreeAdapter extends SimpleCursorTreeAdapter {
 
 		
 		cursor = cr.query(EventProvider.CONTENT_URI, null, where, null, null);
-		Log.e("puppa", "Trovati = " + cursor.getCount() + "  PROVIAMO LA WHERE= " + where);
 		cursor.moveToFirst();
 		while(cursor.isAfterLast() == false) {
 			//we associate an event ID with the position of a child

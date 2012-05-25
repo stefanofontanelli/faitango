@@ -34,7 +34,7 @@ public class ReadingService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d(TAG, "onCreate ...");
+		Log.d(TAG, "onCreate");
 		
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NOTIFICATION_ID);
@@ -75,16 +75,19 @@ public class ReadingService extends IntentService {
 	
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d(TAG, "Handling intent ...");
+		Log.d(TAG, "onHandleIntent");
 		if (abortReceived) {
+			// If the Intent was meant to abort previous operations, do nothing here
 			stopSelf();
 			return;
 		}
 		if (reader != null) {
 			if (reader.execute((EventFilter)intent.getParcelableExtra("filter"))) {
+				Log.d(TAG, "reading executed with success");
 				notificationManager.notify(NOTIFICATION_ID, readingNotification);
 				broadcastIntent.putExtra("success", true);
 			} else {
+				Log.d(TAG, "reading executed with failure");
 				broadcastIntent.putExtra("success", false);
 			}
 			sendBroadcast(broadcastIntent);

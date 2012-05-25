@@ -14,15 +14,15 @@ import android.text.TextUtils;
 
 public class CountryProvider extends ContentProvider {
 	
-	private static final String TAG = "CountryProvider";
+	//private static final String TAG = "CountryProvider";
 	private static final String baseDomain = "com.retis.provider.faitango.countries";
 	private static final String URI = "content://" + baseDomain + "/countries";
 	public static final Uri CONTENT_URI = Uri.parse(URI);
 	private static final int COUNTRIES = 1;
 	private static final int COUNTRY_ID = 2;
 	private static final UriMatcher uriMatcher;
-	// Populate the UriMatcher object, where a URI ending in ÔitemsÕ will correspond to a request for all items, 
-	// and Ôitems/[rowID]Õ represents a single row.
+	// Populate the UriMatcher object, where a URI ending in ï¿½itemsï¿½ will correspond to a request for all items, 
+	// and ï¿½items/[rowID]ï¿½ represents a single row.
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		uriMatcher.addURI(baseDomain, "countries", COUNTRIES);

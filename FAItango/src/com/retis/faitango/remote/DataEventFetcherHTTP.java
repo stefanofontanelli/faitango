@@ -54,11 +54,10 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 
 	@Override
 	public String fetchEventList(EventFilter filter) {
-		Log.d(TAG, "Fetch events list using: " + filter);
 		createHttpClient();
 		createQueryEventList(filter);
 		String response = performHttpGet(uriPathEventList, uriQueryEventList);
-		Log.d(TAG, "Response: " + response);
+		Log.d(TAG, "Fetch Event List. Response: " + response);
 		return response;
 	}
 
@@ -69,7 +68,7 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 		String response = performHttpGet(uriPathEventDetail, uriQueryEventDetail);
 		return response;
 	}
-	
+
 	@Override
 	public void stopEventFetch() {
 		request.abort();
@@ -79,11 +78,11 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 
 		String responseMessage = null;
 		BufferedReader in = null;
-		
+
 		try {
 			String uri = uriScheme + "://" + uriHost + uriPath + "?" + uriQuery;
 			request.setURI(new URI(uri));
-			Log.d(TAG, "URI is: " + request.getURI().toASCIIString());
+			Log.d(TAG, "Fetching URI is: " + request.getURI().toASCIIString());
 			HttpResponse response = httpClient.execute(request);			
 			HttpEntity entity = response.getEntity();
 			if (entity == null) {
@@ -103,8 +102,7 @@ public class DataEventFetcherHTTP extends DataEventFetcher {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			Log.d(TAG, "Receiving IOException: Maybe an abort() on HttpGet has occurred");
-			//request = new HttpGet();
+			Log.w(TAG, "Receiving IOException: Maybe an abort() on HttpGet has occurred");
 		} finally {
 			if (in != null) {
 				try {

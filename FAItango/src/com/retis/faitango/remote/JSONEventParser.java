@@ -1,12 +1,10 @@
 package com.retis.faitango.remote;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
-
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
@@ -21,13 +19,13 @@ public class JSONEventParser extends EventParser {
 			throw new RuntimeException(e);
 		} 
 	}
-	
+
 	private static final String TAG = "JSONEventParser";
-	
+
 	public JSONEventParser(Context context) {
 		super(context);
 	}
-	
+
 	@Override
 	public void parseEventList(String input) { 
 		try {
@@ -38,19 +36,18 @@ public class JSONEventParser extends EventParser {
 				DataEvent ev = new DataEvent();
 				ev.id = obj.getLong("id");
 				ev.text = obj.getString("tx");
-                // ugly.. but web site JSON doesn't have a proper date field :-/
-                String[] datetmp = obj.getString("dt").split(" ");
-                String[] dateFields = datetmp[1].split("/");
-                Calendar date = Calendar.getInstance();
-                date.clear();
-                date.set(Integer.parseInt(dateFields[2]), 
-     				     Integer.parseInt(dateFields[1]) - 1, 
-     				     Integer.parseInt(dateFields[0]),
-     				     21, 0);
-                ev.date = date.getTime();
+				// ugly.. but web site JSON doesn't have a proper date field :-/
+				String[] datetmp = obj.getString("dt").split(" ");
+				String[] dateFields = datetmp[1].split("/");
+				Calendar date = Calendar.getInstance();
+				date.clear();
+				date.set(Integer.parseInt(dateFields[2]), 
+						Integer.parseInt(dateFields[1]) - 1, 
+						Integer.parseInt(dateFields[0]),
+						21, 0); // Time is not available: we set it to 21:00 
+				ev.date = date.getTime();
 				ev.city = obj.getString("citta");
 				ev.type = getEventTypeFromString(obj.getString("type"));
-				Log.d(TAG, "Parsed Event: @" + ev.date + " Date: " + ev.date.getTime());
 				events.add(ev);
 			}
 		} catch (JSONException e) {
@@ -68,22 +65,22 @@ public class JSONEventParser extends EventParser {
 				JSONObject obj = jArray.getJSONObject(i);
 				DataEventDetail ev = new DataEventDetail();
 				ev.title = obj.getString("tx");
-                // ugly.. but web site JSON doesn't have a proper date field :-/
-                String[] datetmp = obj.getString("dt").split(" ");
-                String[] dateFields = datetmp[1].split("/");
-                Calendar date = Calendar.getInstance();
-                date.clear();
-                date.set(Integer.parseInt(dateFields[2]), 
-     				     Integer.parseInt(dateFields[1]) - 1, 
-     				     Integer.parseInt(dateFields[0]));
-                ev.date = date.getTime();
-                datetmp = obj.getString("dt_ins").split(" ");
-                dateFields = datetmp[1].split("/");
-                date.clear();
-                date.set(Integer.parseInt(dateFields[2]), 
-    				     Integer.parseInt(dateFields[1]) - 1, 
-    				     Integer.parseInt(dateFields[0]));
-                ev.created = date.getTime();
+				// ugly.. but web site JSON doesn't have a proper date field :-/
+				String[] datetmp = obj.getString("dt").split(" ");
+				String[] dateFields = datetmp[1].split("/");
+				Calendar date = Calendar.getInstance();
+				date.clear();
+				date.set(Integer.parseInt(dateFields[2]), 
+						Integer.parseInt(dateFields[1]) - 1, 
+						Integer.parseInt(dateFields[0]));
+				ev.date = date.getTime();
+				datetmp = obj.getString("dt_ins").split(" ");
+				dateFields = datetmp[1].split("/");
+				date.clear();
+				date.set(Integer.parseInt(dateFields[2]), 
+						Integer.parseInt(dateFields[1]) - 1, 
+						Integer.parseInt(dateFields[0]));
+				ev.created = date.getTime();
 				ev.city = obj.getString("citta");
 				ev.type = getEventTypeFromString(obj.getString("type"));
 				ev.email = obj.getString("email");

@@ -1,18 +1,18 @@
 package com.retis.faitango.preference;
 
-import com.retis.faitango.MainView;
-import com.retis.faitango.database.CountryProvider;
-import com.retis.faitango.database.CountryTable;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
-import android.util.Log;
+
+import com.retis.faitango.MainView;
+import com.retis.faitango.database.CountryProvider;
+import com.retis.faitango.database.CountryTable;
 
 public class CountryList extends ListPreference {
 	
-	private static final String TAG = "CountryList";
+	//private static final String TAG = "CountryList";
 	private final Cursor countries;
 	private final String[] entries;
 	private final String[] entryValues;
@@ -32,7 +32,6 @@ public class CountryList extends ListPreference {
         	do {
         		entries[i] = countries.getString(countries.getColumnIndex(CountryTable.NAME));
         		entryValues[i] = countries.getString(countries.getColumnIndex(CountryTable._ID));
-        		//Log.d(TAG, entries[i] + " = " + entryValues[i]);
         		i++;
         	} while(countries.moveToNext());
         }

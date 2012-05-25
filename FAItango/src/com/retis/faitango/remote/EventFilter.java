@@ -131,8 +131,6 @@ public class EventFilter implements Parcelable, Cloneable {
 	}
 	
 	public String getWhereClause(ContentResolver cr) {
-		Log.d(TAG, "getWhereClause ...");
-		
 		String where = null;
 		
 		if (province != null && !province.equals("") && !province.equals(MainView.ALL_PROVINCES_LABEL)) {
@@ -160,6 +158,7 @@ public class EventFilter implements Parcelable, Cloneable {
 			}
 			where += EventTable.DATE + " <= " + dateTo.getTime() + " ";
 		}
+		Log.d(TAG, "WHERE: " + where);
 		return where;
 		/*
 		if (!types.isEmpty()) {
@@ -177,7 +176,7 @@ public class EventFilter implements Parcelable, Cloneable {
 			}
 			where += ") ";
 		}
-		Log.d(TAG, "where: " + where);
+
 		return where;
 		*/
 	}
@@ -230,21 +229,6 @@ public class EventFilter implements Parcelable, Cloneable {
 	}
 	
 	public boolean isEmpty() {
-		String str = "";
-		if (province == null)
-			str += "NULL province, "; 
-		if (region == null)
-			str += "NULL regio, ";
-		if (country == null)
-			str += "NULL contry, ";
-		if (dateFrom == null)
-			str += "NULL dataFrom, ";
-		if (dateTo == null)
-			str += "NULL dateTo, ";
-		if (types.isEmpty())
-			str += "types empty ";
-		
-		Log.e(TAG, "Testing isEmpty() condition: " + str);
 		if (province != null || region != null || country != null || 
 			dateFrom != null || dateTo != null || !types.isEmpty()) {
 			return false;

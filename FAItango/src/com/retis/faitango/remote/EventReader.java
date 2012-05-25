@@ -75,7 +75,6 @@ public class EventReader {
 			Log.e(TAG, "DataEventFetcher failure: got null data");
 			return false;
 		}
-		// Log.d(TAG, "Received data: " + data);
 		// Parse EVENTS
 		evParser.parseEventList(data);
 		// Insert EVENTS.
@@ -96,7 +95,7 @@ public class EventReader {
 		Log.d(TAG, "All fetched events were added in the content provider.");
 		return true;
 	}
-	
+
 
 	public boolean readDetails(long eventId) {
 		String data = evFetcher.fetchEventDetail(eventId);
@@ -122,9 +121,8 @@ public class EventReader {
 		Log.d(TAG, "All fetched event details were added in the content provider.");
 		return true;
 	}
-	
+
 	public void handleEvent(ContentValues event) {
-		Log.d(TAG, "Handle event: " + event);
 		try {
 			ContentResolver cr = context.getContentResolver();
 			String where = EventTable._ID + " = " + event.getAsString("_id");
@@ -134,18 +132,17 @@ public class EventReader {
 			} else if (c.moveToFirst()) {
 				do {
 					event.put(EventTable._ID,
-							  c.getLong(c.getColumnIndex(EventTable._ID)));
+							c.getLong(c.getColumnIndex(EventTable._ID)));
 					where = EventTable._ID + " = " + event.getAsString("_id");
 					cr.update(EventProvider.CONTENT_URI, event, where, null);
 				} while (c.moveToNext());
 			}
 		} catch (Exception e) {
-			Log.d(TAG, "The event " + event + " was NOT inserted/updated.");
+			Log.e(TAG, "The event " + event + " was NOT inserted/updated.");
 		}
 	}
-	
+
 	public void handleEventDetail(ContentValues eventDetail) {
-		//Log.d(TAG, "Handle event detail: " + eventDetail);
 		try {
 			ContentResolver cr = context.getContentResolver();
 			String where = EventDetailTable._ID + " = " + eventDetail.getAsString("event");
@@ -155,13 +152,13 @@ public class EventReader {
 			} else if (c.moveToFirst()) {
 				do {
 					eventDetail.put(EventDetailTable._ID,
-							  		c.getLong(c.getColumnIndex(EventDetailTable._ID)));
+							c.getLong(c.getColumnIndex(EventDetailTable._ID)));
 					where = EventDetailTable._ID + " = " + eventDetail.getAsString("id");
 					cr.update(EventProvider.CONTENT_URI, eventDetail, where, null);
 				} while (c.moveToNext());
 			}
 		} catch (Exception e) {
-			Log.d(TAG, "The event detail " + eventDetail + " was NOT inserted/updated.");
+			Log.e(TAG, "The event detail " + eventDetail + " was NOT inserted/updated.");
 		}
 	}
 }

@@ -51,16 +51,16 @@ public class EventContent extends MapActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.eventcont);
-		
+
 		myContext = this.getApplicationContext();
-		
+
 		// Retrieve the event ID and use it later (onResume) to query the DB for event info
 		Bundle extras = getIntent().getExtras();
 		eventID = extras.getString("id");
 		Log.d(TAG, "onCreate(): event ID = " + eventID);
 
 		cr = getContentResolver();
-		
+
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 
@@ -75,7 +75,7 @@ public class EventContent extends MapActivity {
 		final Button calButton = (Button) findViewById(R.id.calbutton);
 		calButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.d(TAG, "Remainder button pressed!");
+				Log.d(TAG, "Remainder button pressed");
 
 				// Statically add 3 hours, since we have no ending time 
 				long start = beginTime.getTime() + ((21 * 3600000));
@@ -94,11 +94,11 @@ public class EventContent extends MapActivity {
 		final Button shareButton = (Button) findViewById(R.id.shareButton);
 		shareButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.d(TAG, "share button pressed!");
+				Log.d(TAG, "share button pressed");
 
 				String subj = myContext.getResources().getString(R.string.shareJoin, title);
 				String text = myContext.getResources().getString(R.string.shareWhat, city, time, link);
-				
+
 				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 				sharingIntent.setType("text/plain");
 				sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
@@ -116,16 +116,14 @@ public class EventContent extends MapActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		String where = EventDetailTable.EVENT + "=" + eventID;
-		Log.d(TAG, where);
+		Log.d(TAG, "WHERE:" + where);
 		cursor = cr.query(EventDetailProvider.CONTENT_URI, null, where, null, null);
 		startManagingCursor(cursor);
-		Log.d(TAG, Integer.toString(cursor.getCount()));
-		Log.d(TAG, Integer.toString(cursor.getColumnCount()));
-		Log.d(TAG, cursor.getColumnName(cursor.getColumnIndex(EventDetailTable.TYPE)));
 		cursor.moveToFirst();
 
+		Log.d(TAG, "Found: " + Integer.toString(cursor.getCount()));
 		if (cursor.getCount() > 0) {
 			textView = (TextView) findViewById(R.id.textDetEventType);
 			title = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.TYPE));
@@ -147,12 +145,11 @@ public class EventContent extends MapActivity {
 
 			textView = (TextView) findViewById(R.id.textDetTime);
 			textView.setText(cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.TIME)));
-			
+
 			link = cursor.getString(cursor.getColumnIndexOrThrow(EventDetailTable.LINK));
 
 			try {
 				List<Address> foundAddress = geocoder.getFromLocationName(city, 1);
-				Log.d(TAG, Integer.toString(foundAddress.size()));
 				if (foundAddress.size() == 0) { //if no address found, display an error
 					Dialog locationError = new AlertDialog.Builder(this)
 					.setIcon(0)
@@ -186,6 +183,4 @@ public class EventContent extends MapActivity {
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
-
-	
 }
