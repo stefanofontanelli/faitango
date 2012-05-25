@@ -143,8 +143,8 @@ use of the Android integrated calendar to automatically add remainders.
         			\item Synchronization shall accept search parameters to limit event information to be retrieved.
         				\begin{enumerate}
             				\item Information can be retrieved by country,
-					\item	Information can be retrieved by country and province,
-					\item	Information can be retrieved by country, province and municipality,
+					\item	Information can be retrieved by country and region,
+					\item	Information can be retrieved by country, region and province,
 					\item	Information can be retrieved by event type (concert, festival, marathon, milonga, party, show, stage, vacation),
 					\item	Information can be retrieved by time period (1 day, 7 days, 15 days, 1 month, 6 months, 12 month).
         				\end{enumerate}
@@ -164,8 +164,8 @@ use of the Android integrated calendar to automatically add remainders.
 			\item It shall limit event information to be showed:
 			\begin{enumerate}
 				\item by country,
-				\item	by country and province,
-				\item	by country, province and municipality,
+				\item	by country and region,
+				\item	by country, region and province,
 				\item by event type,
 				\item by time period.
 			\end{enumerate}
@@ -186,7 +186,7 @@ The main parts of the application are:
 	\item	the event list activity,
 	\item	the event details activity,
 	\item	the preference activity,
-	\item	the set of data providers,
+	\item	the set of content providers,
 	\item	the updater service.
 \end{enumerate}
 
@@ -226,7 +226,7 @@ Users can access application functionalities through the menu of the event list 
 	\item	``Search'' option display the \emph{search dialog} (Figure~\ref{fig:searchdialog}) 
 		which can be used to filter events by multiple criterions;
 		\begin{enumerate}
-			\item by country or by country and province or by country, province and municipality,
+			\item by country or by country and region or by country, region and province,
 			\item by event type,
 			\item by time period,
 		\end{enumerate}
@@ -286,11 +286,20 @@ Preferences are used by other application components in various way, for example
 \label{fig:preference}
 \end{figure}
 
-\subsection{The data providers}
-TODO
+\subsection{The set of content providers}
+
+All data used inside the application is accessed using content providers. Application define five content providers:
+\begin{enumerate}
+	\item a provider to read/write countries,
+	\item a provider to read/write region,
+	\item a provider to read/write provinces,
+	\item a provider to read/write events,
+	\item a provider to read/write events details.
+\end{enumerate}
+
+We use content providers to manage access to data set because they encapsulate information and provide mechanisms for defining data security, also they are the standard interface to access from other applications.
 
 \subsection{The updater service}
-
 TODO
 
 \end{document}
